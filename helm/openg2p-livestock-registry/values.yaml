@@ -256,9 +256,15 @@ dashboardApi:
   # CORS origins. Browsers are not expected to call the service directly.
   allowedOrigins: []
   # Extra environment variables, as NAME: value. Values may use templates.
+  # AUTH_IAM_URL, the namespace's IAM Service (for example
+  # http://commons-services-iam-staff-portal-api-pub), turns on the service's
+  # client-credentials authentication: every chart request then needs the
+  # dashboard's token (role charts:read on the client livestock-registry-dashboard-api).
+  # The trusted Keycloak realms are read from that IAM, so no realm URL is
+  # configured. The development pipeline sets it.
   env: {}
   # Optional hostname route for developers and tools, on a PRIVATE Istio
-  # gateway only (the service has no authentication), e.g.
+  # gateway only (callers need a token once AUTH_IAM_URL is set), e.g.
   #   host: dashboard-api.live.openg2p.test
   #   gateway: internal
   virtualService:

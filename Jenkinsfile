@@ -222,6 +222,7 @@ EOF
                                 --set dashboardApi.virtualService.enabled=true
                                 --set dashboardApi.virtualService.host=dashboard-api.${HELM_NAMESPACE_DEV}.openg2p.test
                                 --set dashboardApi.virtualService.gateway=internal
+                                --set dashboardApi.env.AUTH_IAM_URL=http://commons-services-iam-staff-portal-api-pub
                             "
 
                             helm template \${HELM_RELEASE} ./helm/openg2p-livestock-registry -n \${HELM_NAMESPACE_DEV} \

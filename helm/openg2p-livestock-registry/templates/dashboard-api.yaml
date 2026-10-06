@@ -12,8 +12,10 @@ and reporting-views-refresh.yaml keeps current. Enable reporting.views with it,
 or every chart answers 500 with `relation "lr_rpt_holding" does not exist`.
 
 The dashboards BFF calls the ClusterIP Service at
-http://<release>-dashboard-api.<namespace>. The service has no authentication,
-so it is never published publicly. dashboardApi.virtualService optionally
+http://<release>-dashboard-api.<namespace>. With dashboardApi.env.AUTH_IAM_URL
+set to the namespace's IAM Service, the service accepts only the dashboards'
+client-credentials tokens (see its docs/security.md). Either way it is never
+published publicly. dashboardApi.virtualService optionally
 routes a hostname on a PRIVATE Istio gateway (e.g. live/internal) for
 developers and tools. Do not attach it to a public gateway.
 
