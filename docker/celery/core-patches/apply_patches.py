@@ -51,21 +51,23 @@ from openg2p_registry_livestock_extension.tasks.audit_log_retention_beat_produce
 # ─── Schedule it — once a day. A housekeeping job, not high-frequency data
 # pipeline work like the producers above it, so a fixed interval rather than
 # a new Settings field is enough here.
+# Anchored on the schedule dict's last entry, which registry-platform 1.2 made
+# register_export_beat_producer.
 apply(
     f"{BASE}/app.py",
-    '''    "import_file_process_beat_producer": {
-        "task": "import_file_process_beat_producer",
+    '''    "register_export_beat_producer": {
+        "task": "register_export_beat_producer",
         "schedule": (
-            _config.import_file_process_beat_producer_frequency
+            _config.register_export_beat_producer_frequency
             or _config.default_beat_producer_frequency
         ),
     },
 }
 celery_app.conf.timezone = "UTC"''',
-    '''    "import_file_process_beat_producer": {
-        "task": "import_file_process_beat_producer",
+    '''    "register_export_beat_producer": {
+        "task": "register_export_beat_producer",
         "schedule": (
-            _config.import_file_process_beat_producer_frequency
+            _config.register_export_beat_producer_frequency
             or _config.default_beat_producer_frequency
         ),
     },

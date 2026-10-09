@@ -458,24 +458,12 @@ apply(
 
 apply(
     f"{BASE}/services/intake_form_data_service.py",
-    '''        existing_rows = await self._get_intake_rows(intake_class, submission.submission_id, session)
-        incoming_ids = await self._upsert_intake_rows(
-            intake_class,
-            submission,
-            section_payload or [],
-            existing_rows,
-            created_by,
-            session,
+    # Anchored on the end of the upsert call and the delete that follows it,
+    # as registry-platform 1.2 writes them.
+    '''            domain_service=domain_service,
         )
-        await self._delete_missing_intake_rows(existing_rows, incoming_ids, session)''',
-    '''        existing_rows = await self._get_intake_rows(intake_class, submission.submission_id, session)
-        incoming_ids = await self._upsert_intake_rows(
-            intake_class,
-            submission,
-            section_payload or [],
-            existing_rows,
-            created_by,
-            session,
+        deleted_ids = await self._delete_missing_intake_rows(existing_rows, incoming_ids, session)''',
+    '''            domain_service=domain_service,
         )
 
         if domain_service and incoming_ids:
@@ -490,7 +478,7 @@ apply(
             await domain_service.post_intake_upsert(upserted_rows, session)
             await session.flush()
 
-        await self._delete_missing_intake_rows(existing_rows, incoming_ids, session)''',
+        deleted_ids = await self._delete_missing_intake_rows(existing_rows, incoming_ids, session)''',
     "intake_form_data_service.py: call post_intake_upsert after section save",
 )
 

@@ -47,6 +47,28 @@ if (!URL_TARGET) {
 const PATTERN =
   /(\(0,(\w+)\.jsxs\)\("div",\{className:"flex items-center gap-8",children:\[)/g;
 
+// 1.2+: the Configuration component's own button, as the server chunk writes
+// it (inline handler and children) and as the client chunk's compiler memo
+// writes it (both held in locals).
+const CONFIG_BUTTON = [
+  /\(0,(\w+)\.jsxs\)\("button",\{onClick:\(\)=>\{\w+\.push\("\/configuration\/registry\/details"\)\},className:"flex items-center gap-2 hover:opacity-80",children:\[.*?\("configuration"\)\}\)\]\}\)/g,
+  /\(0,(\w+)\.jsxs\)\("button",\{onClick:\w+,className:"flex items-center gap-2 hover:opacity-80",children:\[\w+,\w+\]\}\)/g,
+];
+const CONFIG_ICON = "/images/config/config_icon.png";
+
+function patchConfigButton(source) {
+  for (const re of CONFIG_BUTTON) {
+    const hits = source.match(re) || [];
+    if (hits.length !== 1) continue;
+    return source.replace(
+      re,
+      (call, jsx) =>
+        `(0,${jsx}.jsxs)("div",{className:"flex items-center gap-8",children:[${button(jsx)}${call}]})`
+    );
+  }
+  return source;
+}
+
 // Matches the sibling Configuration control, so the two read as a pair.
 const BUTTON_CLASS = "flex items-center gap-2 hover:opacity-80";
 const LABEL_CLASS = "text-[16px] text-neutral-first";
@@ -92,8 +114,13 @@ let patched = 0;
 const renamed = []; // [{from, to}] — static chunks only; used to bust browser caches
 for (const file of walk(ROOT)) {
   const before = fs.readFileSync(file, "utf8");
-  if (!before.includes("flex items-center gap-8")) continue;
-  const after = before.replace(PATTERN, (_m, open, jsx) => open + button(jsx));
+  let after = before;
+  if (before.includes("flex items-center gap-8")) {
+    after = before.replace(PATTERN, (_m, open, jsx) => open + button(jsx));
+  }
+  if (after === before && before.includes(CONFIG_ICON)) {
+    after = patchConfigButton(before);
+  }
   if (after !== before) {
     fs.writeFileSync(file, after);
     patched += 1;
