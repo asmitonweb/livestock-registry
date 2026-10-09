@@ -5,7 +5,7 @@ docker/db-seed/geo/ethiopia_geo_seed.sql.gz: the shared Ethiopia hierarchy
 (14 regions, 125 zones, 1,379 woredas, 19,535 kebeles), loaded into a geo table
 whose place *names* must be unique. Rows go in region-first and a repeated name
 is skipped, so 14 regions, 121 zones, 1,240 woredas and 17,598 kebeles load
-(see the seed's header). The form's lists (docs/odk/media/*_odk.csv) must offer
+(see the seed's header). The form's lists (odk/media/*_odk.csv) must offer
 those and only those: a place the form offers but Master Data lacks cannot be
 resolved on ingest. This replays the seed's rule and compares.
 """
@@ -17,7 +17,7 @@ import re
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 SEED = REPO / "docker/db-seed/geo/ethiopia_geo_seed.sql.gz"
-MEDIA = REPO / "docs/odk/media"
+MEDIA = REPO / "odk/media"
 _ROW = re.compile(r"\('(?:region|zone|woreda|kebele)-ET(\d+)', 'level-(\w+)', '((?:[^']|'')*)', (?:NULL|'(?:[^']|'')*')\)")
 
 
@@ -55,22 +55,23 @@ def test_the_form_offers_what_master_data_loads():
 def test_lists_are_what_the_generator_builds():
     import importlib.util
 
-    spec = importlib.util.spec_from_file_location("build_location_media", REPO / "docs/odk/build_location_media.py")
+    spec = importlib.util.spec_from_file_location("build_location_media", REPO / "odk/build_location_media.py")
     builder = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(builder)
     for name, text in builder.build(builder.loaded_places(), builder._region_keys()).items():
         assert (MEDIA / name).read_bytes().decode("utf-8") == text, (
-            f"{name} is stale: run python docs/odk/build_location_media.py"
+            f"{name} is stale: run python odk/build_location_media.py"
         )
 
 
 def test_places_the_cascade_cannot_reach_are_only_the_name_clashes():
-    """Zones named like their region (Addis Ababa, Harari, Sidama, and Amhara.s
+    """Zones named like their region (Addis Ababa, Harari, Sidama, and Amhara's
     Oromia special zone, named like the Oromia region) are dropped by the
     name-unique load, and the three special woredas have no parent; neither
-    Master Data.s cascade nor the form.s reaches these 63 woredas and 297 kebeles. Moving livestock.s Master
-    Data to the id-keyed shared hierarchy (as farmer and crop use) removes this;
-    until then, a change here means the seed or the lists changed."""
+    Master Data's cascade nor the form's reaches these 63 woredas and 297
+    kebeles. Moving livestock's Master Data to the id-keyed shared hierarchy
+    (as farmer and crop use) removes this; until then, a change here means the
+    seed or the lists changed."""
     zones = {row["name"] for row in _csv("zone_odk.csv")}
     regions = {row["name"] for row in _csv("region_odk.csv")}
     assert {row["region"] for row in _csv("zone_odk.csv")} <= regions

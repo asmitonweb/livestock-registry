@@ -17,8 +17,8 @@ Values stay as the form and ls_odk_transform.j2 use them: regions by key
 transform's region_map reads), zones and woredas as ET codes, kebeles as the
 P-code number (10101101001).
 
-    python docs/odk/build_location_media.py          # rewrite media/*_odk.csv
-    python docs/odk/build_location_media.py --check  # exit 1 if they are stale
+    python odk/build_location_media.py          # rewrite media/*_odk.csv
+    python odk/build_location_media.py --check  # exit 1 if they are stale
 
 test/test_odk_location_media.py runs the check.
 """
@@ -33,7 +33,7 @@ import re
 import sys
 
 HERE = pathlib.Path(__file__).resolve().parent
-REPO = HERE.parent.parent
+REPO = HERE.parent
 SEED = REPO / "docker/db-seed/geo/ethiopia_geo_seed.sql.gz"
 MEDIA = HERE / "media"
 
@@ -101,7 +101,7 @@ def main(argv: list[str]) -> int:
     stale = [name for name, text in files.items() if (MEDIA / name).read_bytes().decode("utf-8") != text]
     if "--check" in argv:
         if stale:
-            print(f"stale, rerun docs/odk/build_location_media.py: {stale}", file=sys.stderr)
+            print(f"stale, rerun odk/build_location_media.py: {stale}", file=sys.stderr)
             return 1
         print("location lists match the livestock Master Data seed")
         return 0
