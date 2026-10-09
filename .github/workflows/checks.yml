@@ -21,4 +21,4 @@ jobs:
       - name: openg2p-registry pin lockstep
         run: python -m pytest test/test_rp_pin_lockstep.py -q
       - name: ODK forms, transform and ingestion log
-        run: python -m pytest test/test_odk_forms.py test/test_odk_transform.py test/test_odk_ingest_events.py -q
+        run: python -m pytest test/test_odk_forms.py test/test_odk_transform.py test/test_odk_ingest_events.py test/test_odk_location_media.py -q

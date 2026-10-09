@@ -2,7 +2,7 @@
 
 The connector polls ODK Central and posts each submission to the registry's
 Partner API, which queues it for the celery workers to transform and save as an
-intake. See `odk/README.md` for the form, the photos and the ingestion logs.
+intake. See `docs/odk/README.md` for the form, the photos and the ingestion logs.
 
 | Piece | Where |
 | --- | --- |
@@ -48,7 +48,7 @@ UI image's nginx expects. Roll back with `helm rollback livestock-connector <rev
    on conflict (partner_id) do nothing;
    ```
 
-3. Publish the form in `odk/` on ODK Central with their media.
+3. Publish the form in `docs/odk/` on ODK Central with their media.
 4. Create the pipeline in the connector UI (form `livestock_registry`, data model `MY_DATA_MODEL`, partner header `livestock-partner`, `resolve_nav_links` and `embed_attachments` on). db-seed already
    loads the registry side (`zz_livestock_odk_ingestion.sql`: data model `MY_DATA_MODEL`,
    its routing and the transform's catalogue row).

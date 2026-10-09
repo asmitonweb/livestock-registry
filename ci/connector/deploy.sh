@@ -120,7 +120,7 @@ kubectl run "connector-check-$$" --rm -i --restart=Never -n "$NAMESPACE" \
 cat <<EOF
 
 Next, if this is a fresh environment:
-  1. Publish the XLSForm in ODK Central and attach its media CSVs (odk/README.md).
+  1. Publish the XLSForm in ODK Central and attach its media CSVs (docs/odk/README.md).
   2. Register the partner the connector posts as:
        insert into g2p_partners (partner_id, partner_mnemonic, keymanager_reference_id, is_active)
        values ('livestock-partner', 'livestock-partner', 'livestock-partner-key-ref', true)
