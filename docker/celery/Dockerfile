@@ -7,7 +7,7 @@
 # runs as worker or beat, selected at runtime via CELERY_APP.
 #
 # Build context = repo root (so livestock-extension/ is reachable).
-ARG RP_VERSION=1.2.1
+ARG RP_VERSION=1.2.2-rc.544
 FROM openg2p/openg2p-registry-celery:${RP_VERSION}
 
 # Option C: select livestock's domain model (coexists with the base image's

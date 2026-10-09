@@ -13,7 +13,7 @@ pipeline {
         ECR_REGISTRY   = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
         ECR_PATH       = "openg2p/livestock-registry"
 
-        RP_VERSION     = "1.2.1"
+        RP_VERSION     = "1.2.2-rc.544"
 
         HELM_RELEASE   = "livestock-registry"
         HELM_NAMESPACE = "live"

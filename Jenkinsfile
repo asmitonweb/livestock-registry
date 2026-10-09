@@ -13,7 +13,7 @@ pipeline {
     environment {
         AWS_REGION       = 'ap-south-1'
         ECR_PATH         = 'openg2p/livestock-registry'
-        RP_VERSION       = '1.2.1' // TODO verify — see header note
+        RP_VERSION       = '1.2.2-rc.544' // TODO verify — see header note
         HELM_RELEASE     = 'livestock-registry'
         HELM_NAMESPACE   = 'live'
         // The chart actually running in staging's `live` today — NOT this

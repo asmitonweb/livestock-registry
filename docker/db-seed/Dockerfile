@@ -10,7 +10,7 @@
 #
 # Build context = repo root (so livestock-extension/ and docker/db-seed/ are both
 # reachable).
-ARG RP_VERSION=1.2.1
+ARG RP_VERSION=1.2.2-rc.544
 FROM openg2p/openg2p-registry-db-seed:${RP_VERSION}
 
 # The RP db-seed image ships the reference registry's seed; clear it so only

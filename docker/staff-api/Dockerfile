@@ -11,7 +11,7 @@
 # the openg2p-registry chart dependency pinned in helm/openg2p-livestock-registry/Chart.yaml.
 #
 # Build context = repo root (so livestock-extension/ is reachable).
-ARG RP_VERSION=1.2.1
+ARG RP_VERSION=1.2.2-rc.544
 FROM openg2p/openg2p-registry-staff-api:${RP_VERSION}
 
 # Option C: select livestock's domain model (coexists with the base image's
