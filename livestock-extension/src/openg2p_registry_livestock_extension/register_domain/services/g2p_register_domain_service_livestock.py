@@ -15,6 +15,7 @@ from .domain_validation_utils import (
     sync_farmer_identity_to_livestock,
     validation_error,
 )
+from .embedded_files import persist_embedded_files
 
 _logger = logging.getLogger("g2p-register-domain-service")
 
@@ -89,6 +90,9 @@ class G2PRegisterDomainServiceLivestock(AuditSnapshotMixin, G2PRegisterDomainSer
 
     async def validate_domain_attributes(self, records: list[dict]):
         for record in records:
+            # A record photo sent inline (ODK, or the intake 'file' widget) is
+            # uploaded and replaced by its document_id before anything is saved.
+            await persist_embedded_files(record, ("record_image_document_id",), purpose="livestock")
             # NOT required here, unlike the Farmer register's own copy of
             # these two fields: the "Farmer Details" section's farmer_id/
             # fayda_fan_id are a display-only mirror of the linked Farmer and

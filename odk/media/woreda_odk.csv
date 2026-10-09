@@ -1,0 +1,1241 @@
+list_name,name,label,zone
+woreda,ET010101,Tahtay Adiyabo,ET0101
+woreda,ET010103,Zana,ET0101
+woreda,ET010104,Tahtay Koraro,ET0101
+woreda,ET010105,Asgede,ET0101
+woreda,ET010106,Tselemti,ET0101
+woreda,ET010107,Sheraro town,ET0101
+woreda,ET010108,Shire Endaslasie town,ET0101
+woreda,ET010109,Laelay Koraro,ET0101
+woreda,ET010110,Seyemti Adyabo,ET0101
+woreda,ET010111,Adi Daero,ET0101
+woreda,ET010112,Maekel Adiyabo,ET0101
+woreda,ET010113,Tsimbla,ET0101
+woreda,ET010114,Endabaguna town,ET0101
+woreda,ET010115,Laelay Tselemti,ET0101
+woreda,ET010116,May Tsebri town,ET0101
+woreda,ET010201,Chila,ET0102
+woreda,ET010202,Aheferom,ET0102
+woreda,ET010203,Endaba Tsahma,ET0102
+woreda,ET010204,Adwa,ET0102
+woreda,ET010205,Laelay Maychew,ET0102
+woreda,ET010206,Tahtay Maychew,ET0102
+woreda,ET010207,Adet,ET0102
+woreda,ET010208,Kola Tembien,ET0102
+woreda,ET010209,Naeder,ET0102
+woreda,ET010210,Abergele (TG),ET0102
+woreda,ET010211,Abyi  Adi town,ET0102
+woreda,ET010212,Adwa town,ET0102
+woreda,ET010213,Axum town,ET0102
+woreda,ET010214,Rama Adi Arbaete,ET0102
+woreda,ET010215,Ahsea,ET0102
+woreda,ET010216,Egela,ET0102
+woreda,ET010217,Hahayle,ET0102
+woreda,ET010218,Endafelasi,ET0102
+woreda,ET010219,Emba Sieneti,ET0102
+woreda,ET010220,Enticho town,ET0102
+woreda,ET010221,Keyhe tekli,ET0102
+woreda,ET010222,Tanqua Melashe,ET0102
+woreda,ET010301,Gulo Mekeda,ET0103
+woreda,ET010302,Erob,ET0103
+woreda,ET010303,Sebuha Saesie,ET0103
+woreda,ET010304,Ganta Afeshum,ET0103
+woreda,ET010305,Hawzen,ET0103
+woreda,ET010306,Kilte Awulaelo,ET0103
+woreda,ET010307,Atsbi,ET0103
+woreda,ET010308,Adigrat town,ET0103
+woreda,ET010309,Wukro town,ET0103
+woreda,ET010310,Bizet,ET0103
+woreda,ET010311,Edaga Hamus town,ET0103
+woreda,ET010312,Hawzen town,ET0103
+woreda,ET010313,Freweyni town,ET0103
+woreda,ET010314,Tsaeda Emba,ET0103
+woreda,ET010315,Atsbi town,ET0103
+woreda,ET010316,Agulae,ET0103
+woreda,ET010317,Geraleta,ET0103
+woreda,ET010318,Zala Anbesa town,ET0103
+woreda,ET010401,Selewa,ET0104
+woreda,ET010402,Bora (TG),ET0104
+woreda,ET010403,Neqsege,ET0104
+woreda,ET010404,Emba Alaje,ET0104
+woreda,ET010405,Endamehoni,ET0104
+woreda,ET010406,Raya Azebo,ET0104
+woreda,ET010407,Raya Alamata,ET0104
+woreda,ET010408,Ofla,ET0104
+woreda,ET010409,Maichew town,ET0104
+woreda,ET010410,Korem town,ET0104
+woreda,ET010411,Alamata town,ET0104
+woreda,ET010412,Mekhoni town,ET0104
+woreda,ET010413,Zata,ET0104
+woreda,ET010414,Chercher,ET0104
+woreda,ET010501,Kafta Humera,ET0105
+woreda,ET010502,Welkait,ET0105
+woreda,ET010503,Tsegede (TG),ET0105
+woreda,ET010504,Setit Humera town,ET0105
+woreda,ET010505,May Kadra,ET0105
+woreda,ET010506,Dansha town,ET0105
+woreda,ET010507,Awra (TG),ET0105
+woreda,ET010508,Korarit,ET0105
+woreda,ET010509,May Gaba,ET0105
+woreda,ET010601,Saharti,ET0106
+woreda,ET010602,Enderta,ET0106
+woreda,ET010603,Hintalo,ET0106
+woreda,ET010604,Degua Temben,ET0106
+woreda,ET010605,Hagere Selam town,ET0106
+woreda,ET010606,Samre,ET0106
+woreda,ET010607,Adigudom,ET0106
+woreda,ET010608,Wajirat,ET0106
+woreda,ET010701,Kuiha Sub City,ET0107
+woreda,ET010702,Hadnet Sub City,ET0107
+woreda,ET010703,Ayder Sub City,ET0107
+woreda,ET010704,Hawelti Sub City,ET0107
+woreda,ET010705,Adihaki Sub City,ET0107
+woreda,ET010706,Qedamay Weyane Sub City,ET0107
+woreda,ET010707,Semen Sub City,ET0107
+woreda,ET020101,Dubti,ET0201
+woreda,ET020102,Elidar,ET0201
+woreda,ET020103,Asayita,ET0201
+woreda,ET020104,Afambo,ET0201
+woreda,ET020105,Mile,ET0201
+woreda,ET020106,Chifra,ET0201
+woreda,ET020107,Dubti town,ET0201
+woreda,ET020108,Kori,ET0201
+woreda,ET020109,Adar,ET0201
+woreda,ET020111,Asayita town,ET0201
+woreda,ET020112,Mile town,ET0201
+woreda,ET020113,Chifra town,ET0201
+woreda,ET020198,Samera Logiya town,ET0201
+woreda,ET020201,Erebti,ET0202
+woreda,ET020202,Kunneba,ET0202
+woreda,ET020203,Abaala,ET0202
+woreda,ET020204,Megale,ET0202
+woreda,ET020205,Berahile,ET0202
+woreda,ET020206,Dalol,ET0202
+woreda,ET020207,Afdera,ET0202
+woreda,ET020208,Bidu,ET0202
+woreda,ET020209,Abaala town,ET0202
+woreda,ET020210,Wasama,ET0202
+woreda,ET020301,Amibara,ET0203
+woreda,ET020302,Awash Fantale,ET0203
+woreda,ET020303,Gewane,ET0203
+woreda,ET020304,Dulecha,ET0203
+woreda,ET020305,Gala'alu,ET0203
+woreda,ET020306,Arguba,ET0203
+woreda,ET020307,Hanruka,ET0203
+woreda,ET020308,Abida,ET0203
+woreda,ET020309,Borimodaytu,ET0203
+woreda,ET020310,Werer,ET0203
+woreda,ET020396,Awash town,ET0203
+woreda,ET020401,Awra (AF),ET0204
+woreda,ET020402,Euwa,ET0204
+woreda,ET020403,Teru,ET0204
+woreda,ET020404,Yalo,ET0204
+woreda,ET020405,Gulina,ET0204
+woreda,ET020406,Mabay,ET0204
+woreda,ET020501,Telalek,ET0205
+woreda,ET020502,Samurobi,ET0205
+woreda,ET020503,Dawe,ET0205
+woreda,ET020504,Dalefage,ET0205
+woreda,ET020505,Hadelela,ET0205
+woreda,ET020601,Gerani,ET0206
+woreda,ET020602,Kilalu,ET0206
+woreda,ET020603,Yangudi,ET0206
+woreda,ET020604,Sibaybi,ET0206
+woreda,ET030101,Addi Arekay,ET0301
+woreda,ET030102,Beyeda,ET0301
+woreda,ET030103,Janamora,ET0301
+woreda,ET030104,Debark,ET0301
+woreda,ET030105,Dabat,ET0301
+woreda,ET030106,Dabat town,ET0301
+woreda,ET030107,Debark City Administration,ET0301
+woreda,ET030108,Dabat Ketema Astedader,ET0301
+woreda,ET030119,Telemt,ET0301
+woreda,ET030198,Debark town,ET0301
+woreda,ET030201,Ebenat,ET0302
+woreda,ET030202,Libokemekem,ET0302
+woreda,ET030203,Fogera,ET0302
+woreda,ET030204,Farta,ET0302
+woreda,ET030205,Lay Gayint,ET0302
+woreda,ET030206,Tach Gayint,ET0302
+woreda,ET030207,Semada,ET0302
+woreda,ET030208,East Esite,ET0302
+woreda,ET030209,Dera (AM),ET0302
+woreda,ET030210,Debre Tabor town,ET0302
+woreda,ET030211,Andabet/ West Esite,ET0302
+woreda,ET030212,Guna Begemider,ET0302
+woreda,ET030213,Mena Meketewa,ET0302
+woreda,ET030214,Sede Muja,ET0302
+woreda,ET030215,Nefas Mewicha town,ET0302
+woreda,ET030216,Wegeda town,ET0302
+woreda,ET030217,Ebenat town,ET0302
+woreda,ET030218,Hamusit town,ET0302
+woreda,ET030293,Woreta town,ET0302
+woreda,ET030298,Mekan Eyesuse,ET0302
+woreda,ET030299,Addis Zemen town,ET0302
+woreda,ET030301,Bugna,ET0303
+woreda,ET030302,Raya Kobo,ET0303
+woreda,ET030303,Gidan,ET0303
+woreda,ET030304,Meket,ET0303
+woreda,ET030305,Wadla,ET0303
+woreda,ET030306,Hara town,ET0303
+woreda,ET030307,Guba Lafto,ET0303
+woreda,ET030308,Habru,ET0303
+woreda,ET030309,Woldiya town,ET0303
+woreda,ET030310,Lasta,ET0303
+woreda,ET030311,Dawunt,ET0303
+woreda,ET030312,Gazo,ET0303
+woreda,ET030313,Angot,ET0303
+woreda,ET030314,Filakit town,ET0303
+woreda,ET030315,Gashena town,ET0303
+woreda,ET030397,Mersa town,ET0303
+woreda,ET030398,Lalibela town,ET0303
+woreda,ET030399,Kobo town,ET0303
+woreda,ET030401,Argoba,ET0304
+woreda,ET030402,Tenta,ET0304
+woreda,ET030403,Kutaber,ET0304
+woreda,ET030404,Ambasel,ET0304
+woreda,ET030405,Thehulederie,ET0304
+woreda,ET030406,Delanta,ET0304
+woreda,ET030407,Kalu,ET0304
+woreda,ET030408,Albuko,ET0304
+woreda,ET030409,Dessie Zuria,ET0304
+woreda,ET030410,Legambo,ET0304
+woreda,ET030411,Sayint,ET0304
+woreda,ET030412,Borena /Debresina,ET0304
+woreda,ET030413,Kelela,ET0304
+woreda,ET030414,Jama,ET0304
+woreda,ET030415,Were Ilu,ET0304
+woreda,ET030416,Wegedie,ET0304
+woreda,ET030417,Kombolcha town,ET0304
+woreda,ET030418,Dessie town,ET0304
+woreda,ET030419,Mehal Sayint,ET0304
+woreda,ET030420,Legehida,ET0304
+woreda,ET030421,Mekdela,ET0304
+woreda,ET030422,Worebabu,ET0304
+woreda,ET030423,Wereilu town,ET0304
+woreda,ET030424,Wegel tena town,ET0304
+woreda,ET030425,Degolo town,ET0304
+woreda,ET030426,Kelala town,ET0304
+woreda,ET030427,Akeseta town,ET0304
+woreda,ET030428,Tulu Awlia town,ET0304
+woreda,ET030429,Harbu town,ET0304
+woreda,ET030430,Wegedie town,ET0304
+woreda,ET030498,Mekane Selame,ET0304
+woreda,ET030499,Hike town,ET0304
+woreda,ET030501,Mida Woremo,ET0305
+woreda,ET030502,Merhabete,ET0305
+woreda,ET030503,Ensaro,ET0305
+woreda,ET030504,Moretna Jiru,ET0305
+woreda,ET030505,Menze Gera Midir,ET0305
+woreda,ET030506,Gishe Rabel,ET0305
+woreda,ET030507,Antsokiya,ET0305
+woreda,ET030508,Eferatana Gidem,ET0305
+woreda,ET030509,Menze Mama Midir,ET0305
+woreda,ET030510,Tarema Ber,ET0305
+woreda,ET030511,Mojan Wedera,ET0305
+woreda,ET030512,Kewet,ET0305
+woreda,ET030513,Angolelana Tera,ET0305
+woreda,ET030514,Assagirt,ET0305
+woreda,ET030515,Ankober,ET0305
+woreda,ET030516,Hagere Mariam,ET0305
+woreda,ET030517,Berehet,ET0305
+woreda,ET030518,Minjar Shenkora,ET0305
+woreda,ET030519,Basona Worena,ET0305
+woreda,ET030520,Debre Berhan town,ET0305
+woreda,ET030521,Menze Keya Gabriel,ET0305
+woreda,ET030522,Menze Lalo Midir,ET0305
+woreda,ET030523,Siya Debirna Wayu,ET0305
+woreda,ET030524,Tulefa town,ET0305
+woreda,ET030525,Arerti town,ET0305
+woreda,ET030526,Molale town,ET0305
+woreda,ET030527,Debre Sina town,ET0305
+woreda,ET030528,Enewari town,ET0305
+woreda,ET030529,Molale Town Administration,ET0305
+woreda,ET030530,Debre sina Town Adminstration,ET0305
+woreda,ET030531,Bulga Town Administration,ET0305
+woreda,ET030532,Arerti Town Administration,ET0305
+woreda,ET030595,Shoa Robit,ET0305
+woreda,ET030597,Mehal Meda town,ET0305
+woreda,ET030598,Ataye town,ET0305
+woreda,ET030599,Aleme Ketma town,ET0305
+woreda,ET030601,Bibugn,ET0306
+woreda,ET030602,Hulet Ej Enese,ET0306
+woreda,ET030603,Goncha Siso Enebse,ET0306
+woreda,ET030604,Enebse Sarmder,ET0306
+woreda,ET030605,Enarj Enawga,ET0306
+woreda,ET030606,Enemay,ET0306
+woreda,ET030607,Debay Telatgen,ET0306
+woreda,ET030608,Debre Elias,ET0306
+woreda,ET030609,Michakel,ET0306
+woreda,ET030610,Guzamn,ET0306
+woreda,ET030611,Baso Liben,ET0306
+woreda,ET030612,Awabel,ET0306
+woreda,ET030613,Dejen,ET0306
+woreda,ET030614,Shebel Bernta,ET0306
+woreda,ET030615,Debre Markos town,ET0306
+woreda,ET030616,Senan,ET0306
+woreda,ET030617,Aneded,ET0306
+woreda,ET030618,Amanuel town,ET0306
+woreda,ET030619,Sedae,ET0306
+woreda,ET030620,Gindewoin town,ET0306
+woreda,ET030621,Debrework town,ET0306
+woreda,ET030622,Lumame town,ET0306
+woreda,ET030623,Merto Lemariyam town,ET0306
+woreda,ET030694,Mota town,ET0306
+woreda,ET030698,Dejen town,ET0306
+woreda,ET030699,Bechena town,ET0306
+woreda,ET030705,Sekela,ET0307
+woreda,ET030706,Quarit,ET0307
+woreda,ET030707,Dega Damot,ET0307
+woreda,ET030708,Dembecha,ET0307
+woreda,ET030709,Jabi Tehnan,ET0307
+woreda,ET030710,Bure (AM),ET0307
+woreda,ET030711,Wemberma,ET0307
+woreda,ET030714,Finote Selam town,ET0307
+woreda,ET030716,Shendi town,ET0307
+woreda,ET030717,Denbecha town,ET0307
+woreda,ET030720,Jiga town,ET0307
+woreda,ET030798,Bure town,ET0307
+woreda,ET030801,Zequala,ET0308
+woreda,ET030802,Sekota,ET0308
+woreda,ET030803,Dehana,ET0308
+woreda,ET030804,Gaz Gibla,ET0308
+woreda,ET030805,Abergele (AM),ET0308
+woreda,ET030806,Sahila,ET0308
+woreda,ET030807,Sekota town,ET0308
+woreda,ET030808,Tsagbeji,ET0308
+woreda,ET030809,Amde Work town,ET0308
+woreda,ET030901,Dangila,ET0309
+woreda,ET030902,Banja,ET0309
+woreda,ET030903,Ankasha,ET0309
+woreda,ET030904,Guangua,ET0309
+woreda,ET030905,Fagta Lakoma,ET0309
+woreda,ET030906,Jawi,ET0309
+woreda,ET030907,Guagusa Shikudad,ET0309
+woreda,ET030908,Ayehu Guwagusa,ET0309
+woreda,ET030909,Agew Gimija Bet town,ET0309
+woreda,ET030910,Addis Kidame town,ET0309
+woreda,ET030911,Tilili town,ET0309
+woreda,ET030912,Fendika town,ET0309
+woreda,ET030996,Injibara town,ET0309
+woreda,ET030997,Zigem town,ET0309
+woreda,ET030998,Dangila town,ET0309
+woreda,ET030999,Chagni town,ET0309
+woreda,ET031001,Dewa Cheffa,ET0310
+woreda,ET031002,Bati,ET0310
+woreda,ET031003,Jilye Tumuga,ET0310
+woreda,ET031004,Artuma Fursi,ET0310
+woreda,ET031005,Dewa Harewa,ET0310
+woreda,ET031006,Kemisie town,ET0310
+woreda,ET031007,Chef Robit town,ET0310
+woreda,ET031008,Senbete town,ET0310
+woreda,ET031099,Bati town,ET0310
+woreda,ET031102,Fasilo,ET0314
+woreda,ET031103,Amba Giorgis town,ET0311
+woreda,ET031104,Shawra town,ET0311
+woreda,ET031105,Kolla Debba town,ET0311
+woreda,ET031106,Chilga 1,ET0311
+woreda,ET031107,Tegede,ET0311
+woreda,ET031108,Lay Armacho,ET0311
+woreda,ET031109,Wegera,ET0311
+woreda,ET031110,Gonder Zuria,ET0311
+woreda,ET031111,East Dembia,ET0311
+woreda,ET031112,Chilga 2,ET0311
+woreda,ET031115,Alefa,ET0311
+woreda,ET031116,West Belesa,ET0311
+woreda,ET031117,East Belesa,ET0311
+woreda,ET031118,Gondar town,ET0311
+woreda,ET031119,Masero Denb /Central Armacho,ET0311
+woreda,ET031120,Tach Armacho,ET0311
+woreda,ET031121,Takusa,ET0311
+woreda,ET031122,Kinfaz Begela,ET0311
+woreda,ET031125,West Dembiya,ET0311
+woreda,ET031199,Aykel town,ET0311
+woreda,ET031205,Adagn Ager Chaqo,ET0312
+woreda,ET031206,Mirab Armacho,ET0312
+woreda,ET031213,Metema,ET0312
+woreda,ET031214,Quara,ET0312
+woreda,ET031223,Midre Genet,ET0312
+woreda,ET031224,Metema Yohanes town,ET0312
+woreda,ET031292,Gende Wuha town,ET0312
+woreda,ET031301,Semen Achefer,ET0313
+woreda,ET031302,Merawi town,ET0313
+woreda,ET031303,Yilmana Densa,ET0313
+woreda,ET031304,Mecha,ET0313
+woreda,ET031305,Debub Achefer,ET0313
+woreda,ET031306,Debub Mecha,ET0313
+woreda,ET031307,Gonje,ET0313
+woreda,ET031308,Dure Bete,ET0313
+woreda,ET031309,Adet town,ET0313
+woreda,ET031401,Bahir Dar town,ET0314
+woreda,ET031402,Bahirdar Zuria,ET0314
+woreda,ET031403,Zege town,ET0314
+woreda,ET031404,Deq,ET0314
+woreda,ET031405,Meshenti town,ET0314
+woreda,ET031406,Tis Abay town,ET0314
+woreda,ET031506,Mirabbelesa,ET0311
+woreda,ET031507,Misrak Belesa,ET0311
+woreda,ET031511,Mirabdembiya,ET0311
+woreda,ET031512,Misrak Dembiya,ET0311
+woreda,ET031513,Chilga,ET0311
+woreda,ET031702,Bahirdar Zuriya,ET0313
+woreda,ET040101,Mana Sibu,ET0401
+woreda,ET040102,Nejo,ET0401
+woreda,ET040103,Gimbi,ET0401
+woreda,ET040104,Lalo Asabi,ET0401
+woreda,ET040105,Kiltu Kara,ET0401
+woreda,ET040106,Boji Dirmeji,ET0401
+woreda,ET040107,Ayira,ET0401
+woreda,ET040108,Jarso (West Wellega),ET0401
+woreda,ET040109,Gudetu Kondole,ET0401
+woreda,ET040110,Boji Chekorsa,ET0401
+woreda,ET040111,Babo,ET0401
+woreda,ET040112,Yubdo,ET0401
+woreda,ET040113,Gaji,ET0401
+woreda,ET040114,Haru,ET0401
+woreda,ET040115,Nole Kaba,ET0401
+woreda,ET040116,Begi,ET0401
+woreda,ET040117,Homa,ET0401
+woreda,ET040118,Sayo Nole,ET0401
+woreda,ET040119,Guliso,ET0401
+woreda,ET040193,Gimbi town,ET0401
+woreda,ET040197,Leta Sibu,ET0401
+woreda,ET040198,Mendi town,ET0401
+woreda,ET040199,Nejo town,ET0401
+woreda,ET040201,Limu (OR),ET0402
+woreda,ET040202,Ibantu,ET0402
+woreda,ET040203,Gida Ayana,ET0402
+woreda,ET040204,Haro Limu,ET0402
+woreda,ET040205,Boneya Boshe,ET0402
+woreda,ET040206,Wayu Tuka,ET0402
+woreda,ET040207,Bila Seyo,ET0402
+woreda,ET040208,Gobu Seyo,ET0402
+woreda,ET040209,Sibu Sire,ET0402
+woreda,ET040210,Diga,ET0402
+woreda,ET040211,Sasiga,ET0402
+woreda,ET040212,Leka Dulecha,ET0402
+woreda,ET040213,Guto Gida,ET0402
+woreda,ET040214,Jimma Arjo,ET0402
+woreda,ET040215,Nunu Kumba,ET0402
+woreda,ET040216,Wama Hagalo,ET0402
+woreda,ET040217,Kiremu,ET0402
+woreda,ET040218,Anger Gute Town,ET0402
+woreda,ET040297,Nekemte town,ET0402
+woreda,ET040301,Darimu,ET0403
+woreda,ET040302,Alge Sachi,ET0403
+woreda,ET040309,Yayu,ET0403
+woreda,ET040310,Metu Zuria,ET0403
+woreda,ET040311,Ale,ET0403
+woreda,ET040312,Bure (OR),ET0403
+woreda,ET040313,Sale Nono,ET0403
+woreda,ET040314,Becho (Ilu Aba Bora),ET0403
+woreda,ET040315,Bilo Nopha,ET0403
+woreda,ET040316,Hurumu,ET0403
+woreda,ET040317,Didu,ET0403
+woreda,ET040319,Halu /Huka,ET0403
+woreda,ET040320,Metu town,ET0403
+woreda,ET040324,Dorani,ET0403
+woreda,ET040401,Limu Seka,ET0404
+woreda,ET040402,Limu Kosa,ET0404
+woreda,ET040403,Sekoru,ET0404
+woreda,ET040404,Tiro Afeta,ET0404
+woreda,ET040405,Kersa (Jimma),ET0404
+woreda,ET040406,Mena (Jimma),ET0404
+woreda,ET040407,Goma,ET0404
+woreda,ET040408,Gera,ET0404
+woreda,ET040409,Seka Chekorsa,ET0404
+woreda,ET040410,Dedo,ET0404
+woreda,ET040411,Omo Nada,ET0404
+woreda,ET040412,Sigmo,ET0404
+woreda,ET040413,Setema,ET0404
+woreda,ET040414,Shebe Sambo,ET0404
+woreda,ET040415,Chora (Jimma),ET0404
+woreda,ET040416,Gumay,ET0404
+woreda,ET040417,Agaro town,ET0404
+woreda,ET040418,Jimma town,ET0404
+woreda,ET040490,Mancho,ET0404
+woreda,ET040491,Omo Beyam,ET0404
+woreda,ET040495,Botor Tolay,ET0404
+woreda,ET040499,Nono Benja,ET0404
+woreda,ET040500,Illu Galan,ET0405
+woreda,ET040501,Ginde Beret,ET0405
+woreda,ET040502,Jeldu,ET0405
+woreda,ET040503,Ambo Zuria,ET0405
+woreda,ET040504,Mida Kegn,ET0405
+woreda,ET040505,Cheliya,ET0405
+woreda,ET040506,Bako Tibe,ET0405
+woreda,ET040507,Dano,ET0405
+woreda,ET040508,Nono,ET0405
+woreda,ET040509,Tikur Enchini,ET0405
+woreda,ET040510,Dendi,ET0405
+woreda,ET040511,Ejere /Addis Alem,ET0405
+woreda,ET040512,Holeta town,ET0405
+woreda,ET040513,Adda Berga,ET0405
+woreda,ET040514,Meta Robi,ET0405
+woreda,ET040515,Ambo town,ET0405
+woreda,ET040516,Abuna Ginde Beret,ET0405
+woreda,ET040517,Toke Kutaye,ET0405
+woreda,ET040518,Jibat,ET0405
+woreda,ET040519,Ifata,ET0405
+woreda,ET040520,Welmera,ET0405
+woreda,ET040590,Ejersa Lafo,ET0405
+woreda,ET040592,Cobi,ET0405
+woreda,ET040594,Meta Walkite,ET0405
+woreda,ET040597,Liban Jawi,ET0405
+woreda,ET040601,Wara Jarso,ET0406
+woreda,ET040602,Dera (OR),ET0406
+woreda,ET040603,Hidabu Abote,ET0406
+woreda,ET040604,Kuyu,ET0406
+woreda,ET040605,Degem,ET0406
+woreda,ET040606,Gerar Jarso,ET0406
+woreda,ET040607,Debre Libanos,ET0406
+woreda,ET040608,Wuchale,ET0406
+woreda,ET040609,Abichugna Gne'a,ET0406
+woreda,ET040610,Kimbibit,ET0406
+woreda,ET040611,Sheno town,ET0406
+woreda,ET040612,Jida,ET0406
+woreda,ET040613,Fiche town,ET0406
+woreda,ET040614,Yaya Gulele,ET0406
+woreda,ET040616,Garba Guracha,ET0406
+woreda,ET040617,Aleltu,ET0406
+woreda,ET040619,Bereh,ET0406
+woreda,ET040620,Sululta,ET0406
+woreda,ET040621,Chancho town,ET0406
+woreda,ET040622,Mulo,ET0406
+woreda,ET040623,Sendafa town,ET0406
+woreda,ET040701,Fentale,ET0407
+woreda,ET040702,Boset,ET0407
+woreda,ET040703,Adama,ET0407
+woreda,ET040704,Lome (OR),ET0407
+woreda,ET040705,Gimbichu,ET0407
+woreda,ET040706,Ada'a,ET0407
+woreda,ET040707,Dugda,ET0407
+woreda,ET040708,Adama Tulu Jido Kombolcha,ET0407
+woreda,ET040709,Bishoftu town,ET0407
+woreda,ET040710,Bora (OR),ET0407
+woreda,ET040711,Liben Chukala,ET0407
+woreda,ET040712,Akaki,ET0407
+woreda,ET040714,Adama town,ET0407
+woreda,ET040797,Mojo town,ET0407
+woreda,ET040798,Batu town,ET0407
+woreda,ET040799,Metehara town,ET0407
+woreda,ET040801,Merti,ET0408
+woreda,ET040802,Aseko,ET0408
+woreda,ET040803,Golocha,ET0408
+woreda,ET040804,Jeju,ET0408
+woreda,ET040805,Dodota,ET0408
+woreda,ET040806,Ziway Dugda,ET0408
+woreda,ET040807,Hitosa,ET0408
+woreda,ET040808,Sude,ET0408
+woreda,ET040809,Chole,ET0408
+woreda,ET040810,Amigna,ET0408
+woreda,ET040811,Seru,ET0408
+woreda,ET040812,Robe,ET0408
+woreda,ET040813,Tena,ET0408
+woreda,ET040814,Shirka,ET0408
+woreda,ET040815,Degeluna Tijo,ET0408
+woreda,ET040816,Tiyo,ET0408
+woreda,ET040817,Munessa,ET0408
+woreda,ET040818,Limu Bilbilo,ET0408
+woreda,ET040819,Guna,ET0408
+woreda,ET040820,Sire,ET0408
+woreda,ET040821,Lude Hitosa,ET0408
+woreda,ET040822,Diksis,ET0408
+woreda,ET040823,Bele Gesgar,ET0408
+woreda,ET040824,Inkolo Wabe,ET0408
+woreda,ET040825,Asela town,ET0408
+woreda,ET040893,Shanan Kolu,ET0408
+woreda,ET040894,Bokoji town,ET0408
+woreda,ET040895,Dera town,ET0408
+woreda,ET040901,Mieso,ET0409
+woreda,ET040902,Doba,ET0409
+woreda,ET040903,Tulo (OR),ET0409
+woreda,ET040904,Mesela /Shen Duggoo,ET0409
+woreda,ET040905,Chiro town,ET0409
+woreda,ET040906,Anchar,ET0409
+woreda,ET040907,Goba Koricha,ET0409
+woreda,ET040908,Habro,ET0409
+woreda,ET040909,Daro Lebu,ET0409
+woreda,ET040910,Boke,ET0409
+woreda,ET040911,Kuni /Oda Bultum,ET0409
+woreda,ET040912,Gemechis,ET0409
+woreda,ET040913,Chiro Zuria,ET0409
+woreda,ET040914,Bedesa town,ET0409
+woreda,ET040915,Hawi Gudina,ET0409
+woreda,ET040918,Machara_Miceta Town Administration,ET0409
+woreda,ET040919,Gelemso Town Administration,ET0409
+woreda,ET040920,Hirna Town Administration,ET0409
+woreda,ET040991,Gumbi Bordede,ET0409
+woreda,ET040998,Burqua Dhintu,ET0409
+woreda,ET041000,Babile town,ET0410
+woreda,ET041001,Kombolcha,ET0410
+woreda,ET041002,Jarso (East Hararghe),ET0410
+woreda,ET041003,Gursum (OR),ET0410
+woreda,ET041004,Babile (OR),ET0410
+woreda,ET041005,Fedis,ET0410
+woreda,ET041006,Haro Maya,ET0410
+woreda,ET041007,Kurfa Chele,ET0410
+woreda,ET041008,Kersa (East Hararge),ET0410
+woreda,ET041009,Meta,ET0410
+woreda,ET041010,Goro Gutu,ET0410
+woreda,ET041011,Deder,ET0410
+woreda,ET041012,Melka Balo,ET0410
+woreda,ET041013,Bedeno,ET0410
+woreda,ET041014,Midhaga Tola,ET0410
+woreda,ET041015,Chinaksen,ET0410
+woreda,ET041016,Girawa,ET0410
+woreda,ET041017,Golo Oda,ET0410
+woreda,ET041018,Meyu Muleke,ET0410
+woreda,ET041019,Maya town,ET0410
+woreda,ET041020,Mekanisa Oromo,ET0410
+woreda,ET041021,Aweday Ketema,ET0410
+woreda,ET041089,Goro Muti,ET0410
+woreda,ET041097,Deder town,ET0410
+woreda,ET041098,Kumbi,ET0410
+woreda,ET041101,Agarfa,ET0411
+woreda,ET041102,Gasera,ET0411
+woreda,ET041103,Sinana,ET0411
+woreda,ET041105,Goba,ET0411
+woreda,ET041107,Gura Damole,ET0411
+woreda,ET041108,Berbere,ET0411
+woreda,ET041110,Goba (OR),ET0411
+woreda,ET041111,Harena Buluk,ET0411
+woreda,ET041112,Mena (Bale),ET0411
+woreda,ET041116,Goro (Bale),ET0411
+woreda,ET041119,Robe town,ET0411
+woreda,ET041120,Goba town,ET0411
+woreda,ET041122,Dinsho,ET0411
+woreda,ET041207,Yabelo,ET0412
+woreda,ET041210,Moyale (OR),ET0412
+woreda,ET041211,Dire,ET0412
+woreda,ET041212,Teltale,ET0412
+woreda,ET041216,Miyo,ET0412
+woreda,ET041219,Dilo,ET0412
+woreda,ET041223,Gomole,ET0412
+woreda,ET041290,Guchi,ET0412
+woreda,ET041291,Dubluk,ET0412
+woreda,ET041295,Elwaya,ET0412
+woreda,ET041296,Yabelo town,ET0412
+woreda,ET041301,Ameya,ET0413
+woreda,ET041302,Wenchi,ET0413
+woreda,ET041303,Waliso,ET0413
+woreda,ET041304,Dawo,ET0413
+woreda,ET041305,Ilu,ET0413
+woreda,ET041306,Sebeta Hawas,ET0413
+woreda,ET041307,Kersana Malima,ET0413
+woreda,ET041308,Tole,ET0413
+woreda,ET041309,Becho (SW Shewa),ET0413
+woreda,ET041310,Seden Sodo,ET0413
+woreda,ET041311,Woliso town,ET0413
+woreda,ET041312,Goro (SW Shewa),ET0413
+woreda,ET041314,Sodo Daci,ET0413
+woreda,ET041401,Uraga,ET0414
+woreda,ET041402,Bore,ET0414
+woreda,ET041403,Adola,ET0414
+woreda,ET041404,Wadera,ET0414
+woreda,ET041405,Odo Shakiso,ET0414
+woreda,ET041408,Dama,ET0414
+woreda,ET041409,Arda Jila,ET0414
+woreda,ET041410,Girja /Harenfema,ET0414
+woreda,ET041411,Ana Sora,ET0414
+woreda,ET041412,Saba Boru,ET0414
+woreda,ET041482,Aga Wayu,ET0414
+woreda,ET041490,Haro Walabu,ET0414
+woreda,ET041492,Adola town,ET0414
+woreda,ET041499,Shakiso town,ET0414
+woreda,ET041501,Bule Hora,ET0415
+woreda,ET041502,Kercha,ET0415
+woreda,ET041503,Kercha town,ET0415
+woreda,ET041509,Hambela Wamena,ET0415
+woreda,ET041513,Abaya,ET0415
+woreda,ET041515,Dugda Dawa,ET0415
+woreda,ET041517,Gelana (West Guji),ET0415
+woreda,ET041518,Melka Soda,ET0415
+woreda,ET041587,Bule Hora town,ET0415
+woreda,ET041594,Suro Berguda,ET0415
+woreda,ET041596,Birbirsa Kojowa,ET0415
+woreda,ET041603,Chora (Buno Bedele),ET0416
+woreda,ET041604,Dega,ET0416
+woreda,ET041605,Dabo Hana,ET0416
+woreda,ET041606,Gechi,ET0416
+woreda,ET041607,Borecha,ET0416
+woreda,ET041608,Dedesa,ET0416
+woreda,ET041618,Meko,ET0416
+woreda,ET041621,Bedele town,ET0416
+woreda,ET041622,Bedele Zuria,ET0416
+woreda,ET041623,Chwaka,ET0416
+woreda,ET041700,Dodola town,ET0417
+woreda,ET041701,Siraro,ET0417
+woreda,ET041702,Shala,ET0417
+woreda,ET041703,Arsi Negele,ET0417
+woreda,ET041704,Kofele,ET0417
+woreda,ET041705,Kore,ET0417
+woreda,ET041706,Gedeb Asasa,ET0417
+woreda,ET041707,Dodola,ET0417
+woreda,ET041708,Kokosa,ET0417
+woreda,ET041709,Nenesebo,ET0417
+woreda,ET041710,Adaba,ET0417
+woreda,ET041711,Shashemene town,ET0417
+woreda,ET041712,Shashemene,ET0417
+woreda,ET041713,Kofele town,ET0417
+woreda,ET041783,Heban Arsi,ET0417
+woreda,ET041797,Wondo,ET0417
+woreda,ET041799,Arsi Negele town,ET0417
+woreda,ET041801,Hawa Galan,ET0418
+woreda,ET041802,Yama Logi Welel,ET0418
+woreda,ET041803,Dale Wabera,ET0418
+woreda,ET041804,Gawo Kebe,ET0418
+woreda,ET041805,Sayo,ET0418
+woreda,ET041806,Denbi Dollo town,ET0418
+woreda,ET041807,Anfilo,ET0418
+woreda,ET041808,Dale Sadi,ET0418
+woreda,ET041809,Gidami,ET0418
+woreda,ET041810,Jimma Horo,ET0418
+woreda,ET041811,Lalo Kile,ET0418
+woreda,ET041812,Sedi Chenka,ET0418
+woreda,ET041901,Horo,ET0419
+woreda,ET041902,Shambu town,ET0419
+woreda,ET041903,Guduru,ET0419
+woreda,ET041904,Ababo,ET0419
+woreda,ET041905,Abay Chomen,ET0419
+woreda,ET041906,Jimma Genete,ET0419
+woreda,ET041907,Jimma Rare,ET0419
+woreda,ET041908,Jarte Jardega,ET0419
+woreda,ET041909,Amuru,ET0419
+woreda,ET041910,Abe Dongoro,ET0419
+woreda,ET041911,Choman Guduru,ET0419
+woreda,ET041912,Horo Buluk,ET0419
+woreda,ET041913,Sulula Finca'a,ET0419
+woreda,ET042001,Burayu,ET0420
+woreda,ET042002,Eka Tafo,ET0420
+woreda,ET042003,Furi,ET0420
+woreda,ET042005,Galan Gudo,ET0420
+woreda,ET042006,Gefersa Guje,ET0420
+woreda,ET042007,Koye,ET0420
+woreda,ET042008,Kura Jida,ET0420
+woreda,ET042009,Mana Abichu,ET0420
+woreda,ET042010,Melka Nonno,ET0420
+woreda,ET042011,Sebeta,ET0420
+woreda,ET042094,Galan,ET0420
+woreda,ET042101,Gololcha Bale,ET0421
+woreda,ET042102,Lege Hida,ET0421
+woreda,ET042103,Ginir,ET0421
+woreda,ET042104,Rayitu,ET0421
+woreda,ET042105,Seweyna,ET0421
+woreda,ET042106,Dawe Ketchen,ET0421
+woreda,ET042107,Ginir town,ET0421
+woreda,ET042201,Negele town,ET0422
+woreda,ET042202,Liben,ET0422
+woreda,ET042203,Meda Welabu,ET0422
+woreda,ET042204,Oborso,ET0422
+woreda,ET042205,Gora Dola,ET0422
+woreda,ET042206,Gumi Idalo,ET0422
+woreda,ET042207,Arero,ET0422
+woreda,ET042208,Wachile,ET0422
+woreda,ET042209,Dhas,ET0422
+woreda,ET042222,Assela,ET0422
+woreda,ET042323,Bishoftu Town Admnistration,ET0423
+woreda,ET042525,Dukam,ET0425
+woreda,ET042828,Nekemte,ET0428
+woreda,ET043131,Shashamane Ketema Astedader,ET0431
+woreda,ET043333,Robe Ketema Astedader,ET0433
+woreda,ET043434,Ambo,ET0434
+woreda,ET043535,Batu_city Admnstration,ET0435
+woreda,ET043636,Modjo,ET0436
+woreda,ET043737,Holeta,ET0437
+woreda,ET043838,Woliso,ET0438
+woreda,ET043939,Bishan Guracha City Adiminestration,ET0439
+woreda,ET044007,Dawe Serer,ET0421
+woreda,ET044102,Goro Dola,ET0422
+woreda,ET044103,Negele Ketema Astedader,ET0422
+woreda,ET044105,Gumi Eldalo,ET0422
+woreda,ET044108,Dhasi,ET0422
+woreda,ET050101,Ayisha,ET0501
+woreda,ET050102,Dembel,ET0501
+woreda,ET050103,Shinile,ET0501
+woreda,ET050104,Erer (SM),ET0501
+woreda,ET050105,Afdem,ET0501
+woreda,ET050106,Hadhagala,ET0501
+woreda,ET050107,Miesso,ET0501
+woreda,ET050198,Gota-Biki,ET0501
+woreda,ET050199,Gablalu,ET0501
+woreda,ET050202,Gursum (SM),ET0502
+woreda,ET050203,Babile (SM),ET0502
+woreda,ET050204,Shabeeley,ET0502
+woreda,ET050205,Aw-Bare,ET0502
+woreda,ET050206,Kebribeyah,ET0502
+woreda,ET050207,Harshin,ET0502
+woreda,ET050213,Debub Jigjiga,ET0502
+woreda,ET050283,Tuliguled,ET0502
+woreda,ET050290,Goljano,ET0502
+woreda,ET050293,Jigjiga town,ET0502
+woreda,ET050295,Wajale town,ET0502
+woreda,ET050296,Kebribayah town,ET0502
+woreda,ET050297,Koran /Mulla,ET0502
+woreda,ET050298,Haroreys,ET0502
+woreda,ET050299,Harawo,ET0502
+woreda,ET050301,Degehamedo,ET0503
+woreda,ET050302,Degehabur,ET0503
+woreda,ET050303,Aware,ET0503
+woreda,ET050304,Gashamo,ET0503
+woreda,ET050305,Gunagado,ET0503
+woreda,ET050306,Bilcil-Bur,ET0503
+woreda,ET050307,Degahabur town,ET0503
+woreda,ET050382,Yocale,ET0503
+woreda,ET050392,Daror,ET0503
+woreda,ET050394,Burqod,ET0503
+woreda,ET050395,Ararso,ET0503
+woreda,ET050399,Dig,ET0503
+woreda,ET050402,Fik,ET0504
+woreda,ET050403,Salahad,ET0504
+woreda,ET050404,Hamero,ET0504
+woreda,ET050407,Lagahida,ET0504
+woreda,ET050408,Meyumuluka,ET0504
+woreda,ET050497,Qubi,ET0504
+woreda,ET050498,Yahob,ET0504
+woreda,ET050499,Wangey,ET0504
+woreda,ET050501,Shaygosh,ET0505
+woreda,ET050502,Kebridehar,ET0505
+woreda,ET050503,Shilabo,ET0505
+woreda,ET050504,Debeweyin,ET0505
+woreda,ET050586,Marsin,ET0505
+woreda,ET050592,Kebridehar town,ET0505
+woreda,ET050595,Goglo,ET0505
+woreda,ET050596,Lasdhankayre,ET0505
+woreda,ET050597,Higloley,ET0505
+woreda,ET050598,El-Ogaden,ET0505
+woreda,ET050599,Bodaley,ET0505
+woreda,ET050601,East Imi,ET0506
+woreda,ET050602,Adadle,ET0506
+woreda,ET050603,Danan,ET0506
+woreda,ET050604,Gode,ET0506
+woreda,ET050605,Kelafo,ET0506
+woreda,ET050606,Mustahil,ET0506
+woreda,ET050607,Ferfer,ET0506
+woreda,ET050608,Berocano,ET0506
+woreda,ET050609,Beerano,ET0506
+woreda,ET050610,Elelle,ET0506
+woreda,ET050611,Gode Council,ET0506
+woreda,ET050696,Godey town,ET0506
+woreda,ET050698,Elale,ET0506
+woreda,ET050699,Aba-Korow,ET0506
+woreda,ET050701,Danod,ET0507
+woreda,ET050702,Bokh,ET0507
+woreda,ET050703,Galadi,ET0507
+woreda,ET050704,Warder,ET0507
+woreda,ET050705,Daratole,ET0507
+woreda,ET050706,Lehel Yuob,ET0507
+woreda,ET050707,Gelahemur,ET0507
+woreda,ET050708,Warder ketema astedader,ET0507
+woreda,ET050798,Lehel-Yucub,ET0507
+woreda,ET050799,Galhamur,ET0507
+woreda,ET050802,Charati,ET0508
+woreda,ET050804,Elkare /Serer,ET0508
+woreda,ET050805,West Imi,ET0508
+woreda,ET050806,Hargele,ET0508
+woreda,ET050807,Barey,ET0508
+woreda,ET050808,Dolobay,ET0508
+woreda,ET050809,Raso,ET0508
+woreda,ET050898,Kohle /Qoxle,ET0508
+woreda,ET050899,God-God,ET0508
+woreda,ET050901,Filtu,ET0509
+woreda,ET050902,Dolo Ado,ET0509
+woreda,ET050903,Goro Baqaqsa,ET0509
+woreda,ET050904,Guradamole,ET0509
+woreda,ET050991,Deka Suftu,ET0509
+woreda,ET050999,Bokolmayo,ET0509
+woreda,ET051001,Ayun,ET0510
+woreda,ET051002,Elwayne,ET0510
+woreda,ET051003,Garbo,ET0510
+woreda,ET051005,Sagag,ET0510
+woreda,ET051006,Dihun,ET0510
+woreda,ET051095,Horshagah,ET0510
+woreda,ET051096,Hararey,ET0510
+woreda,ET051103,Moyale (SM),ET0511
+woreda,ET051104,Hudet,ET0511
+woreda,ET051187,Mubarek,ET0511
+woreda,ET051198,Qada Duma,ET0511
+woreda,ET060108,Woreda And,ET0603
+woreda,ET060109,Woreda Hulet,ET0603
+woreda,ET060200,Gilgel Beles town,ET0602
+woreda,ET060201,Dangur,ET0602
+woreda,ET060202,Guba,ET0602
+woreda,ET060203,Wembera,ET0602
+woreda,ET060204,Mandura,ET0602
+woreda,ET060205,Dibate,ET0602
+woreda,ET060206,Pawe,ET0602
+woreda,ET060207,Bulen,ET0602
+woreda,ET060301,Menge,ET0603
+woreda,ET060302,Kurmuk,ET0603
+woreda,ET060303,Abrahmo,ET0603
+woreda,ET060304,Sherkole,ET0603
+woreda,ET060305,Bambasi,ET0603
+woreda,ET060306,Bilidigilu,ET0603
+woreda,ET060307,Homosha,ET0603
+woreda,ET060308,Undulu,ET0603
+woreda,ET060309,Assosa town Administration,ET0603
+woreda,ET060310,Bambasi town,ET0603
+woreda,ET060311,Ura,ET0603
+woreda,ET060400,Kamashi town,ET0604
+woreda,ET060401,Zayi,ET0604
+woreda,ET060402,Sedal,ET0604
+woreda,ET060404,Dembe,ET0604
+woreda,ET060405,Mezniga,ET0604
+woreda,ET060508,Maokomo Special,ET0605
+woreda,ET070001,Kebena SP woreda,ET0700
+woreda,ET070102,Abeshege,ET0701
+woreda,ET070103,Ezha,ET0701
+woreda,ET070104,Gedebano Gutazer Welene,ET0701
+woreda,ET070108,Endiguagn,ET0701
+woreda,ET070109,Gumer,ET0701
+woreda,ET070110,Cheha,ET0701
+woreda,ET070111,Enemor Ener,ET0701
+woreda,ET070112,Muhur Na Aklil,ET0701
+woreda,ET070113,Geta,ET0701
+woreda,ET070114,Welkite town,ET0701
+woreda,ET070116,Emdebir town,ET0701
+woreda,ET070120,Enor Ener,ET0701
+woreda,ET070201,Misha,ET0702
+woreda,ET070202,Gombora,ET0702
+woreda,ET070203,Lemmo,ET0702
+woreda,ET070204,Shashogo,ET0702
+woreda,ET070205,Misrak Badawacho,ET0702
+woreda,ET070206,Soro,ET0702
+woreda,ET070207,Duna,ET0702
+woreda,ET070208,Analemmo,ET0702
+woreda,ET070209,Mirab Badowach,ET0702
+woreda,ET070210,Gibe,ET0702
+woreda,ET070211,Hosaena town,ET0702
+woreda,ET070212,Shone town,ET0702
+woreda,ET070213,Gimbichu town,ET0702
+woreda,ET070214,Jajura town,ET0702
+woreda,ET070215,Ameka,ET0702
+woreda,ET070216,Siraro Badawacho,ET0702
+woreda,ET070217,Mirab Soro,ET0702
+woreda,ET070302,Angacha,ET0703
+woreda,ET070303,Kediada Gambela,ET0703
+woreda,ET070304,Kacha Bira,ET0703
+woreda,ET070305,Hadero Tunto,ET0703
+woreda,ET070306,Doyogena,ET0703
+woreda,ET070307,Damboya,ET0703
+woreda,ET070308,Durame town,ET0703
+woreda,ET070309,Adilo,ET0703
+woreda,ET070310,Shinshincho town,ET0703
+woreda,ET070312,Hadero town,ET0703
+woreda,ET070401,Butajira town,ET0704
+woreda,ET070402,Bui town,ET0704
+woreda,ET070403,Sodo,ET0704
+woreda,ET070404,Meskan,ET0704
+woreda,ET070405,Misrak Meskan,ET0704
+woreda,ET070406,Debub Sodo,ET0704
+woreda,ET070501,Semen Ari,ET0705
+woreda,ET070502,Gelila Ketema Astedader,ET0705
+woreda,ET070503,Woba Ari,ET0705
+woreda,ET070504,Debub Ari,ET0705
+woreda,ET070505,Baka Dawela Ari,ET0705
+woreda,ET070506,Jinka Ketema Astedader,ET0705
+woreda,ET070601,Salamago,ET0812
+woreda,ET070602,Malle,ET0812
+woreda,ET070603,Bena Tsemay,ET0812
+woreda,ET070604,Hamer,ET0812
+woreda,ET070605,Turmi Ketema Astedader,ET0812
+woreda,ET070606,Nyangatom,ET0812
+woreda,ET070607,Dasenech,ET0812
+woreda,ET070801,Kolango Zuriya,ET0806
+woreda,ET070802,Kolango Ketema Astedader,ET0806
+woreda,ET071101,Amaro Liyu Wereda,ET0711
+woreda,ET071301,Dilla Bedecha Town,ET0713
+woreda,ET071302,Dilla Sessa Town,ET0713
+woreda,ET071303,Dilla Harowelabo Town,ET0713
+woreda,ET071401,Kulito town,ET0714
+woreda,ET071402,Wera,ET0714
+woreda,ET071403,Atote Ulo,ET0714
+woreda,ET071404,Wera Djo,ET0714
+woreda,ET072001,Alicho Woriro,ET0720
+woreda,ET072003,Lanfero,ET0720
+woreda,ET072004,Mierab Azenet Berbere,ET0720
+woreda,ET072005,Dalocha,ET0720
+woreda,ET072006,Sankura,ET0720
+woreda,ET072007,Misrak Azenet Berbere,ET0720
+woreda,ET072008,Wulbareg,ET0720
+woreda,ET072009,Tora town,ET0720
+woreda,ET072010,Worabe town,ET0720
+woreda,ET072011,Kibet town,ET0720
+woreda,ET072012,Mito,ET0720
+woreda,ET072013,Misrak Siltie,ET0720
+woreda,ET072501,Mareko SP woreda,ET0725
+woreda,ET072601,Tembaro SP woreda,ET0726
+woreda,ET080101,Boloso Sore,ET0801
+woreda,ET080102,Damot Gale,ET0801
+woreda,ET080103,Damot Woide,ET0801
+woreda,ET080104,Humbo,ET0801
+woreda,ET080105,Sodo Zuria,ET0801
+woreda,ET080106,Kindo Koyesha,ET0801
+woreda,ET080107,Ofa,ET0801
+woreda,ET080108,Boloso Bombe,ET0801
+woreda,ET080109,Damot Sore,ET0801
+woreda,ET080110,Kindo Daddaye,ET0801
+woreda,ET080111,Damot Pullasa,ET0801
+woreda,ET080112,Duguna Fango,ET0801
+woreda,ET080113,Sodo town,ET0801
+woreda,ET080114,Areka town,ET0801
+woreda,ET080115,Boditi town,ET0801
+woreda,ET080116,Tebela town,ET0801
+woreda,ET080117,Gesuba town,ET0801
+woreda,ET080118,Gununo Hamus town,ET0801
+woreda,ET080119,Hobicha Abaya,ET0801
+woreda,ET080120,Kawo Koyesha,ET0801
+woreda,ET080121,Abela Abaya,ET0801
+woreda,ET080122,Bayera Koyesha,ET0801
+woreda,ET080123,BaleAwassa town,ET0801
+woreda,ET080201,Arba Minch town,ET0802
+woreda,ET080202,Arba Minch Zuria,ET0802
+woreda,ET080203,Birbir town,ET0802
+woreda,ET080204,Bonke,ET0802
+woreda,ET080205,Boreda,ET0802
+woreda,ET080206,Chencha town,ET0802
+woreda,ET080207,Chencha Zuriya,ET0802
+woreda,ET080208,Daramalo,ET0802
+woreda,ET080209,Dita,ET0802
+woreda,ET080210,Gacho Baba,ET0802
+woreda,ET080211,Garda Marta,ET0802
+woreda,ET080212,Geressie,ET0802
+woreda,ET080213,Geressie town,ET0802
+woreda,ET080214,Kemba town,ET0802
+woreda,ET080215,Kemba Zuria,ET0802
+woreda,ET080216,Kogota /Ezo,ET0802
+woreda,ET080217,Kucha,ET0802
+woreda,ET080218,Kucha Alpha,ET0802
+woreda,ET080219,Mirab Abaya,ET0802
+woreda,ET080220,Selamber town,ET0802
+woreda,ET080301,Beto town,ET0803
+woreda,ET080302,Buleqi town,ET0803
+woreda,ET080303,Denba Gofa,ET0803
+woreda,ET080304,Gezei Gofa,ET0803
+woreda,ET080305,Laha town,ET0803
+woreda,ET080306,Melekoza,ET0803
+woreda,ET080307,Melo Gada,ET0803
+woreda,ET080308,O'yida,ET0803
+woreda,ET080309,Sawla town,ET0803
+woreda,ET080310,Uba Debre Tsehay,ET0803
+woreda,ET080311,Zala,ET0803
+woreda,ET080401,Basketo SP Woreda,ET0804
+woreda,ET080402,Laska town,ET0804
+woreda,ET080403,Aleta Wondo,ET0804
+woreda,ET080404,Aleta Wondo City Administration,ET0804
+woreda,ET080405,Teticha,ET0804
+woreda,ET080406,Bursa,ET0804
+woreda,ET080407,Chirone,ET0804
+woreda,ET080408,Hula,ET0804
+woreda,ET080409,Dara Otilcho,ET0804
+woreda,ET080410,Dara,ET0804
+woreda,ET080501,Baka Dawula,ET0805
+woreda,ET080502,Bura,ET0805
+woreda,ET080503,Daye Ketema Astedader,ET0805
+woreda,ET080504,Gelila town,ET0805
+woreda,ET080505,Chebe Gambeltu,ET0805
+woreda,ET080506,Jinka town,ET0805
+woreda,ET080507,Chire,ET0805
+woreda,ET080508,North Ari,ET0805
+woreda,ET080509,Hoko,ET0805
+woreda,ET080511,South Ari,ET0805
+woreda,ET080513,Wub Ari,ET0805
+woreda,ET080702,Gidole town,ET0807
+woreda,ET080802,Kele town,ET0808
+woreda,ET080901,Kena,ET0809
+woreda,ET080902,Karat Zuria,ET0809
+woreda,ET080903,Karat town,ET0809
+woreda,ET080904,Segen Zuria,ET0809
+woreda,ET080905,Kolme,ET0809
+woreda,ET081101,Wenago,ET0811
+woreda,ET081102,Yirgachefe,ET0811
+woreda,ET081103,Kochere,ET0811
+woreda,ET081104,Bule,ET0811
+woreda,ET081105,Dila Zuria,ET0811
+woreda,ET081106,Gedeb,ET0811
+woreda,ET081107,Rape,ET0811
+woreda,ET081108,Churso,ET0811
+woreda,ET081109,Dila town,ET0811
+woreda,ET081110,Gedeb town,ET0811
+woreda,ET081111,Yirgachefe town,ET0811
+woreda,ET081112,Chelelektu town,ET0811
+woreda,ET081113,Wonago town,ET0811
+woreda,ET081202,Dasenech /Kuraz,ET0812
+woreda,ET081204,Malie,ET0812
+woreda,ET081205,Nyngatom,ET0812
+woreda,ET081207,Turmi town,ET0812
+woreda,ET090301,Gachit,ET1105
+woreda,ET090302,Menit Goldia,ET1105
+woreda,ET090303,Menit Shasha,ET1105
+woreda,ET090304,Gori Gesha,ET1105
+woreda,ET090305,Bero,ET1105
+woreda,ET090306,Surma,ET1105
+woreda,ET090307,Maji,ET1105
+woreda,ET090604,Gena Bosa,ET1104
+woreda,ET100106,Agena Ketema Astedader,ET0701
+woreda,ET100108,Arekit Ketema Astedader,ET0701
+woreda,ET100112,Gunchire Ketema Astedader,ET0701
+woreda,ET100307,Enseno Ketema Astedader,ET0704
+woreda,ET100509,Dalocha Ketema Astedader,ET0720
+woreda,ET100515,Alem Gebeya Ketema Astedader,ET0720
+woreda,ET100604,Halaba Ketema Astedader,ET0714
+woreda,ET100703,Homecho Town Adminstration,ET0702
+woreda,ET100709,Fonko Town Administration,ET0702
+woreda,ET100711,Bonosha Town Administration,ET0702
+woreda,ET100801,Dori Saja,ET0724
+woreda,ET100802,Fofa,ET0724
+woreda,ET100803,Toba,ET0724
+woreda,ET100804,Saja Ketama Astedader,ET0724
+woreda,ET100902,Mudula Ketema Astedader,ET0707
+woreda,ET101010,Angecha Ketema Astedader,ET0703
+woreda,ET101011,Damboya Keteme Astededar,ET0703
+woreda,ET110101,Anderacha,ET1101
+woreda,ET110102,Masha,ET1101
+woreda,ET110103,Yeki,ET1101
+woreda,ET110104,Tepi,ET1101
+woreda,ET110105,Masha town,ET1101
+woreda,ET110201,Saylem,ET1102
+woreda,ET110202,Gesha,ET1102
+woreda,ET110203,Gewata,ET1102
+woreda,ET110204,Gimbo,ET1102
+woreda,ET110205,Adiyio,ET1102
+woreda,ET110206,Tullo,ET1102
+woreda,ET110207,Cheta,ET1102
+woreda,ET110208,Decha,ET1102
+woreda,ET110209,Chena,ET1102
+woreda,ET110210,Bita,ET1102
+woreda,ET110211,Bonga town,ET1102
+woreda,ET110212,Goba (SP),ET1102
+woreda,ET110213,Shisho Ande,ET1102
+woreda,ET110214,Wacha town,ET1102
+woreda,ET110215,Deka town,ET1102
+woreda,ET110216,Awurada town,ET1102
+woreda,ET110217,Shishinda town,ET1102
+woreda,ET110301,Sheko,ET1103
+woreda,ET110302,Gurafereda,ET1103
+woreda,ET110303,Debub Bench,ET1103
+woreda,ET110304,Shay Bench,ET1103
+woreda,ET110305,Semen Bench,ET1103
+woreda,ET110306,Gidi Bench,ET1103
+woreda,ET110307,Mizan Aman town,ET1103
+woreda,ET110308,Size town,ET1103
+woreda,ET110401,Tocha,ET1104
+woreda,ET110402,Mareka,ET1104
+woreda,ET110403,Loma,ET1104
+woreda,ET110404,Gena,ET1104
+woreda,ET110405,Esara,ET1104
+woreda,ET110406,Kachi,ET1104
+woreda,ET110407,Tercha Zuriya,ET1104
+woreda,ET110408,Mari Mansa,ET1104
+woreda,ET110409,Disa,ET1104
+woreda,ET110410,Zabagazo,ET1104
+woreda,ET110411,Tercha town,ET1104
+woreda,ET110412,Gesa town,ET1104
+woreda,ET110502,Menit Goldiye,ET1105
+woreda,ET110509,Bachuma town,ET1105
+woreda,ET110510,Jemu town,ET1105
+woreda,ET110511,Maji Tum town,ET1105
+woreda,ET110601,Konta Koysha,ET1106
+woreda,ET110602,Chida town,ET1106
+woreda,ET110603,Amaya town,ET1106
+woreda,ET110604,Elahanchano,ET1106
+woreda,ET110605,Ameya Zuria,ET1106
+woreda,ET120101,Akobo,ET1201
+woreda,ET120102,Lare,ET1201
+woreda,ET120103,Jikawo,ET1201
+woreda,ET120104,Wantawo,ET1201
+woreda,ET120105,Makuey,ET1201
+woreda,ET120200,Gambela National Park,ET1202
+woreda,ET120201,Abobo,ET1202
+woreda,ET120202,Gambela Zuria,ET1202
+woreda,ET120203,Gog,ET1202
+woreda,ET120204,Jore,ET1202
+woreda,ET120205,Dima (GM),ET1202
+woreda,ET120206,Gambela town,ET1202
+woreda,ET120301,Godere,ET1203
+woreda,ET120308,Mengesh,ET1203
+woreda,ET120407,Itang,ET1204
+woreda,ET130101,Sofi,ET1301
+woreda,ET130102,Shenkor,ET1301
+woreda,ET130103,Jinela,ET1301
+woreda,ET130104,Hakim,ET1301
+woreda,ET130105,Erer (HR),ET1301
+woreda,ET130106,Dire Teyara,ET1301
+woreda,ET130107,Amir Nur,ET1301
+woreda,ET130108,Aboker,ET1301
+woreda,ET130109,Abadir,ET1301
+woreda,ET140101,Akaki Kality Sub City,ET1401
+woreda,ET140102,Nifas Silk Lafto Sub City,ET1401
+woreda,ET140103,Kolfe Keraniyo Sub City,ET1401
+woreda,ET140104,Bole Sub City,ET1401
+woreda,ET140105,Lideta Sub City,ET1401
+woreda,ET140106,Kirkos Sub City,ET1401
+woreda,ET140107,Yeka Sub City,ET1401
+woreda,ET140108,Addis Ketema Sub City,ET1401
+woreda,ET140109,Arada Sub City,ET1401
+woreda,ET140110,Gulele Sub City,ET1401
+woreda,ET140111,Lemi Kura Sub City,ET1401
+woreda,ET140201,Wereda 01,ET1402
+woreda,ET140202,Wereda 02,ET1402
+woreda,ET140203,Wereda 03,ET1402
+woreda,ET140204,Wereda 04,ET1402
+woreda,ET140205,Wereda 05,ET1402
+woreda,ET140206,Wereda 06,ET1402
+woreda,ET140207,Wereda 07,ET1402
+woreda,ET140208,Wereda 08,ET1402
+woreda,ET140209,Wereda 09,ET1402
+woreda,ET140210,Wereda 10,ET1402
+woreda,ET140311,Wereda 11,ET1403
+woreda,ET140312,Wereda 12,ET1403
+woreda,ET140313,Wereda 13,ET1403
+woreda,ET140314,Wereda 14,ET1403
+woreda,ET140315,Wereda 15,ET1403
+woreda,ET150101,01 Woreda Astedadar,ET1501
+woreda,ET150102,02 Woreda Astedadar,ET1501
+woreda,ET150103,Sabian,ET1501
+woreda,ET150104,Malka Jabti /M.Jebdu),ET1501
+woreda,ET150105,Legehare,ET1501
+woreda,ET150106,06 Woreda Astedadar,ET1501
+woreda,ET150107,07 Woreda Astedadar,ET1501
+woreda,ET150108,08 Woreda Astedadar,ET1501
+woreda,ET150109,Addis Ketema (DD),ET1501
+woreda,ET150110,Gende Kore,ET1501
+woreda,ET150111,Dechatu,ET1501
+woreda,ET150112,Hafat Issa,ET1501
+woreda,ET150113,Kazira,ET1501
+woreda,ET150114,Police Maret,ET1501
+woreda,ET150201,Aseliso,ET1502
+woreda,ET150206,Jeldessa,ET1502
+woreda,ET150207,Wahil,ET1502
+woreda,ET150208,Biyoawale,ET1502
+woreda,ET160001,Shebe Dino,ET1600
+woreda,ET160002,Hawassa Zuria,ET1600
+woreda,ET160003,Arbegona,ET1600
+woreda,ET160004,Dale,ET1600
+woreda,ET160005,Aleta Wendo,ET1600
+woreda,ET160007,Hulla,ET1600
+woreda,ET160008,Bensa,ET1600
+woreda,ET160009,Aroresa,ET1600
+woreda,ET160010,Boricha,ET1600
+woreda,ET160011,Gorche,ET1600
+woreda,ET160012,Malga,ET1600
+woreda,ET160013,Wonosho,ET1600
+woreda,ET160016,Aleta Chuko,ET1600
+woreda,ET160017,Bona Zuria,ET1600
+woreda,ET160018,Hawasa town,ET1600
+woreda,ET160019,Wondo-Genet,ET1600
+woreda,ET160020,Yirgalem town,ET1600
+woreda,ET160021,Aleta Wondo town,ET1600
+woreda,ET160022,Leku town,ET1600
+woreda,ET160023,Hawela,ET1600
+woreda,ET160025,Dara Otilicho,ET1600
+woreda,ET160028,Shafamo,ET1600
+woreda,ET160029,Chabe Gambeltu,ET1600
+woreda,ET160030,Daye town,ET1600
+woreda,ET160031,Hokko,ET1600
+woreda,ET160032,Bilate Zuria,ET1600
+woreda,ET160033,Darara,ET1600
+woreda,ET160034,Daella,ET1600
+woreda,ET160035,Chuko town,ET1600
+woreda,ET160036,Wondo-Genet town,ET1600
+woreda,ET160037,Loka Abaya,ET1600

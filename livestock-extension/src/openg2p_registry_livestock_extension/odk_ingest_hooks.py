@@ -95,7 +95,7 @@ def _patch_request_response_helper():
 
             orig_construct = rrh.RequestResponseHelper._construct_data_model_response
             def patched_construct(self, response_template_store_id, response):
-                _logger.error("ODK Hook: Ingestion response constructing: %s", response)
+                _logger.debug("ODK Hook: Ingestion response constructing: %s", response)
                 if hasattr(response, "model_dump"):
                     try:
                         content = response.model_dump(mode="json")
@@ -130,6 +130,8 @@ def _patch_ingest_controller():
                 return await orig_controller_ingest(self, *args, **kwargs)
             except Exception as ex:
                 _logger.exception("ODK Hook: Exception in G2PIngestController.ingest_data:")
+                from .odk_ingest_events import log_request_failed
+                log_request_failed(ex)
                 return JSONResponse(
                     content=jsonable_encoder({
                         "response_header": {
@@ -764,22 +766,30 @@ def _patch_celery_transformation_worker():
             tw._ls_orig_transform_json = orig_transform_json
 
             def patched_transform_json(incoming_classified_data, enriched_data_json, session):
+                from .odk_ingest_events import log_received, log_transform_failed, log_transformed
+
+                ingest_id = getattr(incoming_classified_data, "ingest_id", None)
+                payload = enriched_data_json
+                if isinstance(payload, dict):
+                    if "body" in payload and isinstance(payload["body"], dict):
+                        payload = payload["body"].get("message", {}).get("payload", payload)
+                    elif "message" in payload and isinstance(payload["message"], dict):
+                        payload = payload["message"].get("payload", payload)
+                log_received(ingest_id, payload)
                 tmpl = _load_transform_template()
                 if tmpl:
                     try:
-                        payload = enriched_data_json
-                        if isinstance(payload, dict):
-                            if "body" in payload and isinstance(payload["body"], dict):
-                                payload = payload["body"].get("message", {}).get("payload", payload)
-                            elif "message" in payload and isinstance(payload["message"], dict):
-                                payload = payload["message"].get("payload", payload)
-
                         rendered = tmpl.render(expanded=payload)
                         transformed = json.loads(rendered)
                         _logger.info("ODK Hook: Successfully transformed enriched data using local ls_odk_transform.j2")
+                        log_transformed(ingest_id, transformed)
                         return transformed
                     except Exception as err_tmpl:
                         _logger.error("ODK Hook: Error rendering local transformation template: %s", err_tmpl)
+                        log_transform_failed(
+                            ingest_id, err_tmpl,
+                            "falling back to the platform's transform; fix ls_odk_transform.j2 for this payload",
+                        )
                 return orig_transform_json(incoming_classified_data, enriched_data_json, session)
 
             tw._transform_enriched_data_json = patched_transform_json
@@ -1236,10 +1246,18 @@ def _patch_celery_ingest_worker():
             worker_mod._ls_orig_process_ingestion_async = orig_process_ingestion_async
 
             async def resilient_process_ingestion_async(ingest_id: str) -> None:
+                from sqlalchemy.ext.asyncio import async_sessionmaker as _log_sessionmaker
+                from .odk_ingest_events import log_ingest_outcome
+
+                def _log_session_maker():
+                    eng = getattr(worker_mod, "_async_engine", None) or _get_registry_engine()
+                    return _log_sessionmaker(bind=eng, expire_on_commit=False)
+
                 _odk_local.is_odk = True
                 try:
                     try:
                         await orig_process_ingestion_async(ingest_id)
+                        await log_ingest_outcome(ingest_id, _log_session_maker())
                     except Exception as ex:
                         from openg2p_registry_core.models import IncomingClassifiedData, ProcessStatusEnum
                         from sqlalchemy.ext.asyncio import async_sessionmaker
@@ -1268,6 +1286,8 @@ def _patch_celery_ingest_worker():
                                     await fail_session.commit()
                         except Exception as ex_mark:
                             _logger.error("ODK Hook: Could not mark ingestion failure: %s", ex_mark)
+
+                        await log_ingest_outcome(ingest_id, _log_session_maker(), error=ex)
 
                         # Return cleanly without re-raising to Celery.
                         # This prevents task retries, avoids queue blockage, and stops worker crashes.

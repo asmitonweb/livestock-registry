@@ -1,4 +1,8 @@
 -- Pre-configure the Livestock Registry ODK Central pipeline in the connector database.
+--
+-- The ODK Central host, project and login are psql variables, never committed:
+--   psql -v odk_base_url=https://<central> -v odk_project_id=<id> --        -v odk_email=<account> -v odk_password=<password> --        -f local/postgres/seed_connector_pipelines.sql
+-- Nothing is seeded while any of them is empty.
 \connect connector
 
 CREATE TABLE IF NOT EXISTS connector_definitions (
@@ -32,6 +36,12 @@ CREATE TABLE IF NOT EXISTS connector_definitions (
     updated_at timestamp without time zone DEFAULT now() NOT NULL
 );
 
+\if :{?odk_base_url} \else \set odk_base_url '' \endif
+\if :{?odk_project_id} \else \set odk_project_id '' \endif
+\if :{?odk_email} \else \set odk_email '' \endif
+\if :{?odk_password} \else \set odk_password '' \endif
+SELECT (:'odk_base_url' <> '' AND :'odk_project_id' <> '' AND :'odk_email' <> '' AND :'odk_password' <> '') AS odk_configured \gset
+\if :odk_configured
 INSERT INTO connector_definitions (
     connector_id, name, platform, transport_type, enabled, paused, data_model_mnemonic,
     g2p_sender_id, g2p_register_mnemonic,
@@ -47,9 +57,18 @@ INSERT INTO connector_definitions (
     'MY_DATA_MODEL',
     'Livestock',
     'Livestock',
-    '{"base_url": "https://odk.13.207.43.8.nip.io", "project_id": 14, "form_id": "livestock_registry", "resolve_nav_links": true, "strict_incremental": false, "target_url": "http://partner-api:8000/partner/ingest_data", "target_headers": {"partner-id": "livestock-partner", "Content-Type": "application/json"}}',
+    json_build_object(
+        'base_url', rtrim(:'odk_base_url', '/'),
+        'project_id', (:'odk_project_id')::int,
+        'form_id', 'livestock_registry',
+        'resolve_nav_links', true,
+        'embed_attachments', true,
+        'strict_incremental', false,
+        'target_url', 'http://partner-api:8000/partner/ingest_data',
+        'target_headers', json_build_object('partner-id', 'livestock-partner', 'Content-Type', 'application/json')
+    )::text,
     'odk_session',
-    '{"email": "vilbertraj21@gmail.com", "password": "odksandbox"}',
+    json_build_object('email', :'odk_email', 'password', :'odk_password')::text,
     'hmac_sha256'
 )
 ON CONFLICT (connector_id) DO UPDATE SET
@@ -65,3 +84,6 @@ ON CONFLICT (connector_id) DO UPDATE SET
     auth_type = EXCLUDED.auth_type,
     auth_secret_json = EXCLUDED.auth_secret_json,
     webhook_verifier = EXCLUDED.webhook_verifier;
+\else
+\echo 'odk_base_url / odk_project_id / odk_email / odk_password not set: no connector pipeline seeded'
+\endif

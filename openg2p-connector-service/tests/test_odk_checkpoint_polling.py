@@ -144,6 +144,7 @@ async def test_timestamp_mode_emits_structured_checkpoint(monkeypatch):
             "base_url": "http://odk.test",
             "project_id": 4,
             "form_id": "f1",
+            "embed_attachments": False,  # these tests are about the cursor
             "page_size": 10,
             "max_pages": 1,
         }
@@ -185,6 +186,7 @@ async def test_boundary_ids_skip_already_seen_records_at_same_watermark(monkeypa
             "base_url": "http://odk.test",
             "project_id": 4,
             "form_id": "f1",
+            "embed_attachments": False,  # these tests are about the cursor
             "page_size": 10,
             "max_pages": 1,
         },
@@ -209,6 +211,7 @@ async def test_strict_incremental_raises_on_501(monkeypatch):
             "base_url": "http://odk.test",
             "project_id": 4,
             "form_id": "f1",
+            "embed_attachments": False,  # these tests are about the cursor
             "max_pages": 1,
             "strict_incremental": True,
             "full_scan_on_incremental_unsupported": False,
@@ -237,6 +240,7 @@ async def test_explicit_full_scan_opt_in_recovers_from_501(monkeypatch):
             "base_url": "http://odk.test",
             "project_id": 4,
             "form_id": "f1",
+            "embed_attachments": False,  # these tests are about the cursor
             "max_pages": 1,
             "strict_incremental": True,
             "full_scan_on_incremental_unsupported": True,
@@ -295,6 +299,7 @@ async def test_sequence_mode_still_works_for_servers_that_support_id(monkeypatch
             "base_url": "http://odk.test",
             "project_id": 4,
             "form_id": "f1",
+            "embed_attachments": False,  # these tests are about the cursor
             "incremental_mode": "sequence",
             "max_pages": 1,
         }
@@ -317,6 +322,7 @@ async def test_sequence_cursor_is_round_tripped_to_filter(monkeypatch):
             "base_url": "http://odk.test",
             "project_id": 4,
             "form_id": "f1",
+            "embed_attachments": False,  # these tests are about the cursor
             "incremental_mode": "sequence",
             "max_pages": 1,
         },
@@ -341,6 +347,7 @@ async def test_legacy_last_submission_id_filters_in_sequence_mode(monkeypatch):
             "base_url": "http://odk.test",
             "project_id": 4,
             "form_id": "f1",
+            "embed_attachments": False,  # these tests are about the cursor
             "incremental_mode": "sequence",
             "max_pages": 1,
         },
@@ -365,6 +372,7 @@ async def test_first_poll_with_no_state_uses_orderby_only(monkeypatch):
             "base_url": "http://odk.test",
             "project_id": 4,
             "form_id": "f1",
+            "embed_attachments": False,  # these tests are about the cursor
             "max_pages": 1,
         }
     )
@@ -391,6 +399,7 @@ async def test_subsequent_poll_uses_ge_filter_against_watermark(monkeypatch):
             "base_url": "http://odk.test",
             "project_id": 4,
             "form_id": "f1",
+            "embed_attachments": False,  # these tests are about the cursor
             "max_pages": 1,
         },
         poll_state={"_checkpoint": prev_cp.to_dict()},

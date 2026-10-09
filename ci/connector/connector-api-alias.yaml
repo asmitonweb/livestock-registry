@@ -1,0 +1,39 @@
+# The connector UI's nginx proxies its API calls to a fixed upstream:
+#
+#   location ~ ^/(connectors|runs|dlq|metadata|webhook|health|ping) {
+#     proxy_pass http://connector-api:8050;
+#
+# That name is baked into the image (openg2p-connector-ui/nginx.conf), while the
+# chart names its service after the release — livestock-connector-api, on port 80.
+# nginx resolves upstreams at startup, so without a service called exactly
+# connector-api the UI pod dies with:
+#
+#   [emerg] host not found in upstream "connector-api"
+#
+# crop works because someone created this service there by hand; it carries no
+# helm ownership, so nothing recreates it. This file is the same service, kept
+# in git and applied by deploy.sh, so a fresh environment comes up complete.
+#
+# The better fix is to stop hardcoding the upstream in the image now that this
+# repository builds it. Until then, this alias stays.
+apiVersion: v1
+kind: Service
+metadata:
+  name: connector-api
+  # No namespace on purpose: deploy.sh applies this with -n "$NAMESPACE", and a
+  # namespace pinned here would make kubectl refuse any other one.
+  labels:
+    app.kubernetes.io/name: openg2p-connector
+    app.kubernetes.io/component: api-alias
+    app.kubernetes.io/part-of: livestock-connector
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: openg2p-connector
+    app.kubernetes.io/instance: livestock-connector
+    app.kubernetes.io/component: api
+  ports:
+    - name: http
+      port: 8050
+      targetPort: 8050
+      protocol: TCP

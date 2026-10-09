@@ -78,6 +78,14 @@
 
 {% set livestock_list = d.get('livestock', []) %}
 
+{#- The record photo. The connector sends an ODK photo inline as
+    {"__type": "File", ...} (embed_attachments); the Livestock service uploads
+    it on save and stores the document id in record_image_document_id. A bare
+    file name means the file did not come along, so it is left out. The form
+    asks no photo today: an image question named livestock_photo, at the top
+    level or in the farmer group, is all it takes to start sending one. -#}
+{% set livestock_photo = d.get('livestock_photo') or f.get('livestock_photo') %}
+
 {
   "ls_farmer_identity": [
     {
@@ -122,6 +130,9 @@
       "fayda_fan_id": {{ fayda_val | tojson }},
       "total_animals": {{ livestock_list | length }},
       "registration_date": {{ submission_date | tojson }},
+      {% if livestock_photo is mapping and livestock_photo.get('__type') == 'File' -%}
+      "record_image_document_id": {{ livestock_photo | tojson }},
+      {% endif -%}
       "status": "ACTIVE",
       "state": "CONFIRMED"
     }
@@ -386,7 +397,7 @@
           "event_type": "AI" if ("AI" in raw_et or "INSEMINATION" in raw_et) else "NATURAL",
           "breeding_date": be.get('breeding_date'),
           "sire_or_semen_id": be.get('sire_or_semen_id'),
-          "location": "HOME" if "HOME" in raw_bloc else ("VETERINARY" if "VET" in raw_bloc else ("MARKET" if "MARKET" in raw_bloc else ("QUARANTINE_CENTER" if "QUARANTINE" in raw_bloc else ("FIELD" if "FIELD" in raw_loc else "OTHER")))),
+          "location": "HOME" if "HOME" in raw_bloc else ("VETERINARY" if "VET" in raw_bloc else ("MARKET" if "MARKET" in raw_bloc else ("QUARANTINE_CENTER" if "QUARANTINE" in raw_bloc else ("FIELD" if "FIELD" in raw_bloc else "OTHER")))),
           "location_details": be.get('location_details'),
           "ai_technician_name": ai.get('ai_technician_name') or ai.get('ai_technician_id') or be.get('ai_technician_name'),
           "ai_technique": ai.get('ai_technique') or be.get('ai_technique'),

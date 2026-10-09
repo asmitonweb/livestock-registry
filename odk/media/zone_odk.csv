@@ -1,0 +1,122 @@
+list_name,name,label,region
+zone,ET0101,North Western,tigray
+zone,ET0102,Central,tigray
+zone,ET0103,Eastern,tigray
+zone,ET0104,Southern,tigray
+zone,ET0105,Western,tigray
+zone,ET0106,South Eastern,tigray
+zone,ET0107,Mekelle,tigray
+zone,ET0201,Awsi /Zone 1,afar
+zone,ET0202,Kilbati /Zone2,afar
+zone,ET0203,Gabi /Zone 3,afar
+zone,ET0204,Fanti /Zone 4,afar
+zone,ET0205,Hari /Zone 5,afar
+zone,ET0206,Mahi /Zone 6,afar
+zone,ET0301,North Gondar,amhara
+zone,ET0302,South Gondar,amhara
+zone,ET0303,North Wello,amhara
+zone,ET0304,South Wello,amhara
+zone,ET0305,North Shewa (AM),amhara
+zone,ET0306,East Gojam,amhara
+zone,ET0307,West Gojam,amhara
+zone,ET0308,Wag Hamra,amhara
+zone,ET0309,Awi,amhara
+zone,ET0311,Central Gondar,amhara
+zone,ET0312,West Gondar,amhara
+zone,ET0313,North Gojam,amhara
+zone,ET0314,Bahir Dar,amhara
+zone,ET0401,West Wellega,oromia
+zone,ET0402,East Wellega,oromia
+zone,ET0403,Ilu Aba Bora,oromia
+zone,ET0404,Jimma,oromia
+zone,ET0405,West Shewa,oromia
+zone,ET0406,North Shewa (OR),oromia
+zone,ET0407,East Shewa,oromia
+zone,ET0408,Arsi,oromia
+zone,ET0409,West Hararge,oromia
+zone,ET0410,East Hararge,oromia
+zone,ET0411,Bale,oromia
+zone,ET0412,Borena,oromia
+zone,ET0413,South West Shewa,oromia
+zone,ET0414,Guji,oromia
+zone,ET0415,West Guji,oromia
+zone,ET0416,Buno Bedele,oromia
+zone,ET0417,West Arsi,oromia
+zone,ET0418,Kelem Wellega,oromia
+zone,ET0419,Horo Gudru Wellega,oromia
+zone,ET0420,Shager,oromia
+zone,ET0421,East Bale,oromia
+zone,ET0422,East Borena,oromia
+zone,ET0423,Bishoftu Liyu Zone,oromia
+zone,ET0425,Dukam Liyu Zone,oromia
+zone,ET0428,Nekemte Liyu Zone,oromia
+zone,ET0429,Jimma Liyu,oromia
+zone,ET0431,Shashamane Liyu Zone,oromia
+zone,ET0433,Robe Liyu Zone,oromia
+zone,ET0434,Ambo City Admin,oromia
+zone,ET0435,Batu Liyu Zone,oromia
+zone,ET0436,Modjo Liyu Zone,oromia
+zone,ET0437,Holeta Liyu Zone,oromia
+zone,ET0438,Woliso Liyu Zone,oromia
+zone,ET0439,Bishan Guracha Liyu Zone,oromia
+zone,ET0501,Siti,somali
+zone,ET0502,Fafan,somali
+zone,ET0503,Jarar,somali
+zone,ET0504,Erer,somali
+zone,ET0505,Korahe,somali
+zone,ET0506,Shabelle,somali
+zone,ET0507,Doolo,somali
+zone,ET0508,Afder,somali
+zone,ET0509,Liban,somali
+zone,ET0510,Nogob,somali
+zone,ET0511,Daawa,somali
+zone,ET0602,Metekel,benishangul
+zone,ET0603,Assosa,benishangul
+zone,ET0604,Kamashi,benishangul
+zone,ET0605,Mao Komo Special,benishangul
+zone,ET0701,Guraghe,central_ethiopia
+zone,ET0702,Hadiya,central_ethiopia
+zone,ET0703,Kembata,central_ethiopia
+zone,ET0704,East Guraghe,central_ethiopia
+zone,ET0705,Kebena Special,central_ethiopia
+zone,ET0706,Mareko Special,central_ethiopia
+zone,ET0707,Tembaro Special,central_ethiopia
+zone,ET0711,korey,central_ethiopia
+zone,ET0713,Dilla City Admin,central_ethiopia
+zone,ET0714,Halaba,central_ethiopia
+zone,ET0720,Siltie,central_ethiopia
+zone,ET0724,Yem,central_ethiopia
+zone,ET0801,Wolayita,south_ethiopian
+zone,ET0802,Gamo,south_ethiopian
+zone,ET0803,Gofa,south_ethiopian
+zone,ET0804,Basketo,south_ethiopian
+zone,ET0805,South Omo Agr,south_ethiopian
+zone,ET0806,Alle,south_ethiopian
+zone,ET0807,Derashe,south_ethiopian
+zone,ET0808,Amaro,south_ethiopian
+zone,ET0809,Konso,south_ethiopian
+zone,ET0810,Burji,south_ethiopian
+zone,ET0811,Gedeo,south_ethiopian
+zone,ET0812,South Omo Pas,south_ethiopian
+zone,ET1101,Sheka,south_west_ethiopia
+zone,ET1102,Kefa,south_west_ethiopia
+zone,ET1103,Bench Sheko,south_west_ethiopia
+zone,ET1104,Dawuro,south_west_ethiopia
+zone,ET1105,Mirab Omo,south_west_ethiopia
+zone,ET1106,Konta,south_west_ethiopia
+zone,ET1201,Nuwer,gambela
+zone,ET1202,Agnewak,gambela
+zone,ET1203,Majang,gambela
+zone,ET1204,Itang Special woreda,gambela
+zone,ET1402,Addis Ketema Subcity,addis_ababa
+zone,ET1403,Kolfe Keraniyo Subcity,addis_ababa
+zone,ET1404,Lideta Subcity,addis_ababa
+zone,ET1405,Kerkos Subcity,addis_ababa
+zone,ET1406,Arada Subcity,addis_ababa
+zone,ET1407,Yeka Subcity,addis_ababa
+zone,ET1408,Bole Subcity,addis_ababa
+zone,ET1409,Nifas Slik Lafto Subcity,addis_ababa
+zone,ET1410,Akaki Kaliti Subcity,addis_ababa
+zone,ET1411,Lemi kura,addis_ababa
+zone,ET1501,Dire Dawa urban,dire_dawa
+zone,ET1502,Dire Dawa rural,dire_dawa

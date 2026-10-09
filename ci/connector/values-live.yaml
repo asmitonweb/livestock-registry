@@ -1,0 +1,72 @@
+# Values for the `livestock-connector` release in the `live` namespace (dev cluster).
+#
+# The connector polls ODK Central and posts each submission to the livestock
+# registry's Partner API. The chart is vendored at
+# openg2p-connector-service/deploy/charts/openg2p-connector; deploy with
+# ci/connector/deploy.sh (or the Jenkins job in ci/connector/Jenkinsfile).
+#
+# Taken from the release as it ran on dev. The pipelines themselves (ODK host,
+# project, forms, login) live in the connector's database and are edited in the
+# connector UI; a redeploy keeps them.
+fullnameOverride: livestock-connector
+
+global:
+  hostname: connector-livestock-registry.live.openg2p.test
+  postgresqlHost: commons-postgresql
+  postgresqlPort: 5432
+  redisHost: livestock-registry-redis-master
+  redisPort: 6379
+  partnerApiService: livestock-registry-partner-api
+  connectorDB: livestock_connector
+  connectorDBUser: livestock_connector_user
+  connectorDBSecret: livestock-connector
+  connectorDBUserPasswordKey: livestock-connector-db-user
+
+# Pulls from ECR with this secret, refreshed by the namespace's ECR CronJob.
+imagePullSecrets:
+  - name: live-ecr
+
+commonEnv:
+  CONNECTOR_DB_DRIVER: postgresql+asyncpg
+  CONNECTOR_LOG_LEVEL: INFO
+  CONNECTOR_STORE_RUN_PAYLOADS: "true"
+  CONNECTOR_STRICT_INCREMENTAL: "true"
+  CONNECTOR_FULL_SCAN_ON_INCREMENTAL_UNSUPPORTED: "false"
+  CONNECTOR_METRICS_ENABLED: "true"
+  CONNECTOR_CORS_ORIGINS: https://connector-livestock-registry.live.openg2p.test
+
+# Creates the livestock_connector database and its user from the global.* values above.
+postgres-init:
+  enabled: true
+  postgresql:
+    host: commons-postgresql
+    port: 5432
+    existingSecret: commons-postgresql
+    existingSecretPostgresPasswordKey: postgres-password
+
+istio:
+  enabled: true
+  gateway:
+    create: false
+    name: internal
+  virtualservice:
+    enabled: true
+    gateway: internal
+
+# Tags are replaced per deploy by ci/connector/deploy.sh.
+api:
+  image:
+    repository: 379220350808.dkr.ecr.ap-south-1.amazonaws.com/openg2p/livestock-registry/connector-service
+    pullPolicy: Always
+worker:
+  image:
+    repository: 379220350808.dkr.ecr.ap-south-1.amazonaws.com/openg2p/livestock-registry/connector-service
+    pullPolicy: Always
+beat:
+  image:
+    repository: 379220350808.dkr.ecr.ap-south-1.amazonaws.com/openg2p/livestock-registry/connector-service
+    pullPolicy: Always
+ui:
+  image:
+    repository: 379220350808.dkr.ecr.ap-south-1.amazonaws.com/openg2p/livestock-registry/connector-ui
+    pullPolicy: Always

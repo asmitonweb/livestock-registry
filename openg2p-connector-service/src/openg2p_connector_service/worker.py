@@ -12,7 +12,9 @@ from sqlalchemy.ext.asyncio import async_sessionmaker
 
 from .config import get_settings
 from .database import get_engine
+from . import ingest_log
 from . import metrics as connector_metrics
+from .ingest_log import log_event
 from .models import ConnectorDefinition
 from .services import IngestionService
 from .transports import (
@@ -30,6 +32,13 @@ from .auth import strategies as _auth_strategies  # noqa: F401
 
 _settings = get_settings()
 _logger = logging.getLogger("connector.worker")
+# The worker process polls and ingests; it has no create_app() to set this up.
+ingest_log.configure(
+    _settings.ingest_log_file,
+    service="connector-worker",
+    max_bytes=_settings.ingest_log_max_bytes,
+    backups=_settings.ingest_log_backups,
+)
 
 celery_app = Celery(
     "connector_worker",
@@ -103,6 +112,7 @@ async def _poll_async(connector_id: str) -> dict:
         prev_checkpoint = Checkpoint.from_dict(poll_state.get(CHECKPOINT_STATE_KEY))
         current_checkpoint: Checkpoint | None = prev_checkpoint
 
+        log_event("poll", "poll_started", connector_id=connector_id, transport=transport_type)
         try:
             transport = get_transport(transport_type)
             async for record in transport.fetch(connector):
@@ -140,6 +150,11 @@ async def _poll_async(connector_id: str) -> dict:
         except Exception as exc:
             poll_error = f"{type(exc).__name__}: {exc}"[:2000]
             _logger.exception("Poll failed for %s", connector_id)
+            log_event(
+                "poll", "poll_failed", "ERROR",
+                connector_id=connector_id, error=poll_error,
+                fetched_before_failure=stats["fetched"],
+            )
 
         # Reload the connector — the session may have been rolled back internally
         # (expiring attributes) or we may need to mutate it in a fresh tx.
@@ -181,6 +196,14 @@ async def _poll_async(connector_id: str) -> dict:
         )
 
     _logger.info("Poll complete for %s: %s", connector_id, stats)
+    if poll_error is None:
+        log_event(
+            "poll", "poll_finished",
+            "WARNING" if stats["failed"] else "INFO",
+            connector_id=connector_id, fetched=stats["fetched"],
+            success=stats["success"], failed=stats["failed"],
+            duration_ms=int(duration_s * 1000),
+        )
     return stats
 
 

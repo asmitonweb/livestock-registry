@@ -1,0 +1,81 @@
+// Standalone job that rolls the ODK connector (the `livestock-connector` release).
+// Deliberately NOT a stage of the registry's own pipeline (../../Jenkinsfile):
+// the connector is its own helm release whose chart hooks create a database,
+// and it changes on its own cadence. The registry pipeline still builds the
+// connector-service and connector-ui images on every build; this job is what
+// puts one of those builds on a cluster. Until it runs, a connector change that
+// is merged and built is NOT live, whatever the registry deploy shows.
+//
+// Set it up once in Jenkins as a Pipeline job with "Pipeline script from SCM"
+// pointing at this file (Script Path: ci/connector/Jenkinsfile). It has no
+// triggers, so it only runs from "Build with Parameters". What it applies is
+// ci/connector/deploy.sh from the branch it is built from, which keeps the
+// release's live values (ODK credentials, pipelines edited in the UI) and
+// changes only the image tags.
+//
+// Same kubeconfig credential as the registry deploy (gen2-dev-kubeconfig).
+pipeline {
+    agent { label 'vpn-agent2' }
+
+    options {
+        // One rollout of the release at a time.
+        disableConcurrentBuilds()
+    }
+
+    parameters {
+        choice(name: 'ENVIRONMENT', choices: ['dev'],
+            description: 'Cluster to deploy to: dev (gen2-dev-kubeconfig, ci/connector/values-live.yaml, namespace live).')
+        string(name: 'TAG', defaultValue: '',
+            description: 'Image tag of the connector-service and connector-ui images: the registry build\'s tag, the first 12 characters of its commit (e.g. 53ba31ac3c11). Required.')
+        booleanParam(name: 'DRY_RUN', defaultValue: true,
+            description: 'Render the release and list its images, then stop. Untick to apply.')
+        booleanParam(name: 'CONFIRM', defaultValue: false,
+            description: 'Tick to run. Left unticked the job stops before touching the cluster.')
+    }
+
+    environment {
+        KUBECONFIG_CREDENTIAL = "gen2-dev-kubeconfig"
+        // deploy.sh picks ci/connector/values-<VALUES_ENV>.yaml, named after the namespace.
+        VALUES_ENV = "live"
+        NAMESPACE = "live"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps { checkout scm }
+        }
+
+        stage('Deploy connector') {
+            when {
+                expression { return params.CONFIRM }
+            }
+            steps {
+                script {
+                    if (!(params.TAG ==~ /[0-9a-f]{7,40}/)) {
+                        error("TAG must be an image tag from a registry build (a commit prefix such as 53ba31ac3c11), got '${params.TAG}'.")
+                    }
+                }
+                withCredentials([file(credentialsId: env.KUBECONFIG_CREDENTIAL, variable: 'KUBECONFIG')]) {
+                    sh """
+                        export ENVIRONMENT='${VALUES_ENV}'
+                        export NAMESPACE='${NAMESPACE}'
+                        if [ '${params.DRY_RUN}' = 'true' ]; then export DRY_RUN=1; fi
+                        bash ci/connector/deploy.sh '${params.TAG}'
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            script {
+                if (!params.CONFIRM) {
+                    echo "CONFIRM was not ticked: nothing was applied to ${params.ENVIRONMENT}."
+                } else if (params.DRY_RUN) {
+                    echo "DRY_RUN: rendered only, nothing was applied to ${params.ENVIRONMENT}. Untick DRY_RUN to deploy."
+                }
+            }
+        }
+    }
+}

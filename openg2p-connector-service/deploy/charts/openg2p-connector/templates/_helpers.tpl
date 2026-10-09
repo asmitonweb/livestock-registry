@@ -64,6 +64,26 @@ app.kubernetes.io/instance: {{ .Release.Name }}
   value: {{ .Values.commonEnv.CONNECTOR_METRICS_ENABLED | quote }}
 - name: CONNECTOR_CORS_ORIGINS
   value: {{ .Values.commonEnv.CONNECTOR_CORS_ORIGINS | quote }}
+{{- /*
+Anything the allowlist above does not name. The list is fixed, so settings the
+service reads straight from the environment -- CONNECTOR_ODK_CENTRAL_BASE_URL,
+CONNECTOR_ODK_PROJECT_ID, CONNECTOR_ODK_FORM_ID, CONNECTOR_ODK_CENTRAL_EMAIL --
+had no way through it: putting them under commonEnv rendered nothing at all,
+silently, so default_pipelines.py could never seed a pipeline from values and
+every environment had to be configured by hand in the UI.
+
+extraEnvFrom carries the ones that must not appear in values, the ODK password
+above all; its value is a verbatim env valueFrom block.
+*/ -}}
+{{- range $name, $value := .Values.extraEnv }}
+- name: {{ $name }}
+  value: {{ $value | quote }}
+{{- end }}
+{{- range $name, $source := .Values.extraEnvFrom }}
+- name: {{ $name }}
+  valueFrom:
+{{ toYaml $source | indent 4 }}
+{{- end }}
 {{- if .Values.global.metadataDsnSecret }}
 - name: CONNECTOR_MASTER_DATA_DB_DSN
   valueFrom:

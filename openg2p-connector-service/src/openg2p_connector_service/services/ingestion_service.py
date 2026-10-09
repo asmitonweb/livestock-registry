@@ -15,6 +15,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from .. import metrics as connector_metrics
 from ..clients import PartnerIngestClient
 from ..config import get_settings
+from ..ingest_log import log_event
 from ..mappers import JmesPathMapper, PassthroughMapper
 from ..models import (
     ConnectorDefinition,
@@ -84,6 +85,7 @@ class IngestionService:
             "platform": connector.platform,
         }
         t0 = time.perf_counter()
+        ids = {"connector_id": connector_id, "source_event_id": source_event_id}
 
         # --- idempotency: return canonical run, bump counter — no new IngestionRun row ---
         if source_event_id:
@@ -112,6 +114,11 @@ class IngestionService:
                         ik.run_id,
                         extra=log_ctx,
                     )
+                    log_event(
+                        "result", "duplicate_ignored", **ids,
+                        run_id=canonical.run_id, redelivery_count=ik.redelivery_count,
+                        original_status=canonical.status.value,
+                    )
                     connector_metrics.ingest_duration.labels(
                         connector_id=connector_id,
                     ).observe(time.perf_counter() - t0)
@@ -125,6 +132,8 @@ class IngestionService:
             attempt_count=1,
         )
         session.add(run)
+        ids["run_id"] = run.run_id
+        log_event("map", "record_received", **ids, top_level_keys=len(raw_data))
 
         # --- optional envelope extraction ---
         data = self._extract_envelope(connector, raw_data)
@@ -139,7 +148,9 @@ class IngestionService:
                 connector_id=connector_id,
                 error_category="permanent",
                 t_pipeline_start=t0,
+                stage="map",
             )
+        log_event("map", "mapped", **ids)
 
         # --- optional pre-ingest validation ---
         if get_settings().validate_mapped_payload and connector.validation_schema_json:
@@ -152,6 +163,7 @@ class IngestionService:
                     connector_id=connector_id,
                     error_category="validation",
                     t_pipeline_start=t0,
+                    stage="validate",
                 )
 
         route = self._resolve_route_targets(
@@ -174,6 +186,7 @@ class IngestionService:
                 connector_id=connector_id,
                 error_category="config",
                 t_pipeline_start=t0,
+                stage="envelope",
             )
 
         self._attach_run_payload(
@@ -194,12 +207,19 @@ class IngestionService:
                 connector_id=connector_id,
                 error_category=category,
                 t_pipeline_start=t0,
+                stage="send",
             )
 
         # --- record success ---
         run.status = RunStatus.SUCCESS
         run.registry_correlation_id = correlation_id
         _logger.info("Ingestion succeeded", extra={**log_ctx, "correlation_id": correlation_id})
+        log_event(
+            "send", "sent", **ids, correlation_id=correlation_id,
+            data_model=route["data_model_mnemonic"],
+            register=route["register_mnemonic"],
+            duration_ms=int((time.perf_counter() - t0) * 1000),
+        )
 
         if source_event_id:
             try:
@@ -367,6 +387,7 @@ class IngestionService:
         connector_id: str | None = None,
         error_category: str = "permanent",
         t_pipeline_start: float | None = None,
+        stage: str = "ingest",
     ) -> IngestionRun:
         cid = connector_id or connector.connector_id
         _logger.error(
@@ -381,6 +402,17 @@ class IngestionService:
         )
         run.status = RunStatus.FAILED
         run.last_error = str(exc)[:2000]
+        log_event(
+            stage, f"{stage}_failed", "ERROR",
+            connector_id=cid, source_event_id=source_event_id, run_id=run.run_id,
+            error_category=error_category,
+            error_type=type(exc).__name__, error=str(exc)[:1000],
+            http_status=getattr(getattr(exc, "response", None), "status_code", None),
+            attempt=run.attempt_count,
+            outcome="dead_lettered",
+            retryable=error_category == "transient",
+            next_step="replay from the connector DLQ once the cause is fixed",
+        )
         if not run.run_payload_json:
             self._attach_run_payload(run, source=raw_data, mapped=None, outbound=None)
 

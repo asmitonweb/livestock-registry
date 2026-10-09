@@ -1,0 +1,15 @@
+list_name,name,label
+region,tigray,Tigray
+region,afar,Afar
+region,amhara,Amhara
+region,oromia,Oromia
+region,somali,Somali
+region,benishangul,Benishangul-Gumuz
+region,central_ethiopia,Central Ethiopia
+region,south_ethiopian,South Ethiopian
+region,south_west_ethiopia,South West Ethiopia
+region,gambela,Gambela
+region,harari,Harari
+region,addis_ababa,Addis Ababa
+region,dire_dawa,Dire Dawa
+region,sidama,Sidama

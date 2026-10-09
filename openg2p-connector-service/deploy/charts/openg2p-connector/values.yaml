@@ -15,6 +15,21 @@ global:
 
 imagePullSecrets: []
 
+# Extra environment for every connector container, beyond the fixed set
+# commonEnv renders. Use it for settings the service reads directly, such as
+# CONNECTOR_ODK_*; extraEnvFrom takes an env valueFrom block, for secrets.
+#
+#   extraEnv:
+#     CONNECTOR_ODK_CENTRAL_BASE_URL: https://odk-central.example.org
+#     CONNECTOR_ODK_PROJECT_ID: "13"
+#   extraEnvFrom:
+#     CONNECTOR_ODK_CENTRAL_PASSWORD:
+#       secretKeyRef:
+#         name: farmer-connector-odk
+#         key: password
+extraEnv: {}
+extraEnvFrom: {}
+
 commonEnv:
   CONNECTOR_DB_DRIVER: postgresql+asyncpg
   CONNECTOR_LOG_LEVEL: INFO

@@ -53,6 +53,11 @@ class Settings(BaseSettings):
     # --- operational ---
     worker_max_attempts: int = 5
     log_level: str = "INFO"
+    # Per-submission ingestion events (JSON lines), also written to stdout.
+    # Empty turns the file off.
+    ingest_log_file: str = "logs/odk-ingest.jsonl"
+    ingest_log_max_bytes: int = 20 * 1024 * 1024
+    ingest_log_backups: int = 10
 
     # --- feature flags ---
     otel_enabled: bool = False

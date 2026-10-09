@@ -100,6 +100,20 @@ pipeline {
                             """
                         }
 
+                        // The ODK connector and its management UI, each from its own
+                        // directory. This pipeline only builds them; the
+                        // livestock-connector release is rolled by the manual job in
+                        // ci/connector/Jenkinsfile with this build's tag.
+                        [['connector-service', 'openg2p-connector-service'],
+                         ['connector-ui', 'openg2p-connector-ui']].each { c ->
+                            def image = "${env.ECR_REGISTRY}/${ECR_PATH}/${c[0]}:${env.IMAGE_TAG}"
+                            sh """
+                                echo "=== Building and pushing ${c[0]} ==="
+                                docker build -f ${c[1]}/Dockerfile -t ${image} --no-cache ${c[1]}
+                                docker push ${image}
+                            """
+                        }
+
                         // Skipped when 'Checkout dashboard-api' did not run (staging).
                         if (env.DASHBOARD_API_SHA) {
                             // The dashboard service, from its own repository (cloned
