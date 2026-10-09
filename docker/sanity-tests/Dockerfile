@@ -20,7 +20,7 @@
 # livestock images and the openg2p-registry chart dependency.
 #
 # Build context = repo root.
-ARG RP_VERSION=0.0.0-develop.296
+ARG RP_VERSION=1.2.1
 FROM openg2p/openg2p-registry-sanity-tests:${RP_VERSION}
 
 COPY test/sanity/sanity/fixtures.py                /app/sanity/fixtures.py

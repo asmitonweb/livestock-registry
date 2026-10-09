@@ -19,7 +19,7 @@
 # component or a route. See the patch step at the foot of this file.
 #
 # Build context = repo root (matching the other docker/*/Dockerfile images).
-ARG RP_VERSION=0.0.0-develop.296
+ARG RP_VERSION=1.2.1
 FROM openg2p/openg2p-registry-staff-ui:${RP_VERSION}
 
 # Browser-facing origin of the dashboard service, compiled into the client bundle
