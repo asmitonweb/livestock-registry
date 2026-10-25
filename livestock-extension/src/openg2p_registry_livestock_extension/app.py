@@ -33,12 +33,15 @@ class Initializer(BaseInitializer):
 
     def migrate_database(self, args):
         async def migrate():
-            # Native create_migrate only. Existing-table changes remain gated
-            # on an explicit migration and restored-copy preservation evidence.
+            # Native table creation followed by add-only mapped columns.
+            # Existing types/constraints/data are never altered or dropped.
             for name in MODEL_NAMES:
                 await getattr(models, name).create_migrate()
             for model in REFERENCE_MODELS:
                 await model.create_migrate()
+            from .schema_migration import add_missing_mapped_columns
+            await add_missing_mapped_columns(dbengine.get(),
+                [getattr(models,name) for name in MODEL_NAMES]+list(REFERENCE_MODELS))
         # OAN Farmer's migration-loop boundary: don't reuse connections from
         # the core migration's already-closed event loop.
         dbengine.get().sync_engine.dispose(close=False)

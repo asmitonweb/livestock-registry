@@ -143,6 +143,26 @@ def test_complete_without_fin_binds_verified_subject_and_core_stores_claims_once
     assert completion_context.get() is None
 
 
+def test_a_sign_in_for_another_fin_than_the_typed_one_is_refused(monkeypatch):
+    service, auth, adapter, tx, _store = fixture(monkeypatch, subject=OTHER)
+    tx.context["oan_form_fin"] = FIN
+    asyncio.run(
+        service.complete_authentication(state="state", authorization_code="code")
+    )
+    assert auth.status == "FAILURE" and auth.user_claims is None
+    assert f"a different FIN than {FIN} on the form" in auth.failure_reason
+    assert OTHER not in auth.failure_reason
+
+
+def test_a_sign_in_for_the_typed_fin_binds(monkeypatch):
+    service, auth, _adapter, tx, _store = fixture(monkeypatch)
+    tx.context["oan_form_fin"] = FIN
+    result = asyncio.run(
+        service.complete_authentication(state="state", authorization_code="code")
+    )
+    assert result.status == "SUCCESS" and tx.context["foundational_id"] == FIN
+
+
 def test_reverify_saved_fin_mismatch_is_refused(monkeypatch):
     service, auth, adapter, _tx, _store = fixture(
         monkeypatch, subject=OTHER, expected=FIN, bind=False
@@ -186,6 +206,7 @@ def test_start_without_fin_and_browser_fin_is_not_trusted():
         holder = iv._extra_context.get()
         assert holder["context"]["foundational_id"] == ""
         assert holder["context"]["oan_bind_verified_fin"] is True
+        assert holder["context"]["oan_form_fin"] in (None, OTHER)
         holder["transaction"] = SimpleNamespace(context={"authentication_id": "auth"})
         return "state", "https://esignet.example/authorize", "Fayda"
 

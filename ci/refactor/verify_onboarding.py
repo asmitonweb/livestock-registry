@@ -31,6 +31,7 @@ def main(domain, *, build=False):
     mount = ["-v", f"{repo.as_posix()}:/work:ro", "-v", f"{probes.as_posix()}:/probe:ro"]
     network = "coss-refactor-verify-" + domain
     database = network + "-db"
+    database_host = database
     simulation = None
     created_network = created_database = False
     test_container_names = []
@@ -75,7 +76,7 @@ def main(domain, *, build=False):
         if native_group:
             options += ["-e", "FARMER_NATIVE_GROUP=" + native_group]
         if db:
-            options += ["-e", f"FARMER_TEST_DATABASE_URL=postgresql+asyncpg://postgres@{database}/refactor_tests"]
+            options += ["-e", f"FARMER_TEST_DATABASE_URL=postgresql+asyncpg://postgres@{database_host}/refactor_tests"]
             if simulation:
                 options += ["-e", "FARMER_WORKFLOW_SIMULATION_URL=http://host.docker.internal:49182/farmer"]
         return run(label, ["docker", "run", "--rm", *options, "-w", "/work", "oan/farmer-reference-tests:rc557",
@@ -106,7 +107,15 @@ def main(domain, *, build=False):
             time.sleep(0.25)
         else:
             raise RuntimeError("Disposable database did not become ready")
+        # The address is discovered from this owned container, never hard-coded.
+        # Avoid transient Docker embedded-DNS failures during repeated async connects.
+        database_host = subprocess.run(["docker", "inspect", "--format",
+            "{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}", database],
+            capture_output=True, text=True, check=True).stdout.strip()
+        if not database_host or any(char not in "0123456789." for char in database_host):
+            raise RuntimeError("Could not resolve the owned PostgreSQL container address")
         docker_test("postgres-concurrency", "test_farmer_reference_onboarding.py", db=True)
+        docker_test("schema-migration-tests", "test_schema_migration.py", db=True)
         docker_test("pending-lookup-tests", "test_farmer_reference_pending.py", db=True)
         postman = shutil.which("postman")
         if not postman:

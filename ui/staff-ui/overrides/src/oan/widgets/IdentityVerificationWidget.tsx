@@ -1,6 +1,7 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     getValueByPath,
@@ -68,6 +69,13 @@ function popupFeatures(width: number, height: number): string {
  *   widget-data-options: {registerId, foundationalIdPath, internalRecordIdPath,
  *                         fieldPrefix (the register's data path prefix),
  *                         popupWidth, popupHeight}
+ *
+ * The status and the Verify button go in the section's footer, before
+ * Previous and Next, and any message in the footer's free space on the left,
+ * so answering "Has National ID" does not add a row
+ * to the section, and the FIN can be typed or filled in by verifying. The
+ * layout has no slot there, so they are portalled into the footer of the
+ * section this widget is in, and shown as a row when no footer is found.
  */
 export function IdentityVerificationWidget({ config }: { config: Config }) {
     const dispatch = useDispatch();
@@ -112,6 +120,29 @@ export function IdentityVerificationWidget({ config }: { config: Config }) {
     const [verifiedFin, setVerifiedFin] = useState<string | null>(null);
     const popup = useRef<Window | null>(null);
     const timer = useRef<number | null>(null);
+    const root = useRef<HTMLDivElement | null>(null);
+    const [footer, setFooter] = useState<HTMLElement | null>(null);
+    // Until the footer has been looked for, render nothing, so the inline
+    // fallback never flashes before the widget moves into the footer.
+    const [placed, setPlaced] = useState(false);
+
+    // Before paint, so the first frame already shows the footer placement.
+    useLayoutEffect(() => {
+        const controls = root.current
+            ?.closest('.intake-form-accordion-content')
+            ?.querySelector<HTMLElement>('.intake-form-edit-controls');
+        setPlaced(true);
+        if (!controls) return undefined;
+        const host = document.createElement('span');
+        host.className = 'oan-idv-footer-action';
+        host.style.display = 'contents';
+        controls.prepend(host);
+        setFooter(host);
+        return () => {
+            host.remove();
+            setFooter(null);
+        };
+    }, []);
 
     const stop = useCallback(() => {
         if (timer.current) window.clearTimeout(timer.current);
@@ -205,6 +236,8 @@ export function IdentityVerificationWidget({ config }: { config: Config }) {
             started = await dataSourceRequestHandler!('oan', 'identity-verification/start', 'POST', {
             register_id: options.registerId,
             internal_record_id: read(options.internalRecordIdPath) ?? null,
+            // A FIN typed on the form: the sign-in must be that person's.
+            foundational_id: fin || null,
             });
         } catch {
             opened.close();
@@ -242,8 +275,72 @@ export function IdentityVerificationWidget({ config }: { config: Config }) {
         ? 'var(--owt-color-success)'
         : problem ? 'var(--owt-color-danger)' : 'var(--owt-color-text-muted)';
 
+    const button = readonly ? null : (
+        <button
+            type="button"
+            className="owt-btn owt-btn-primary text-sm px-4 py-1.5 rounded-[var(--owt-btn-border-radius)] disabled:opacity-50"
+            style={{
+                background: 'var(--owt-color-primary)',
+                color: 'var(--owt-color-bg)',
+                border: '1px solid var(--owt-btn-primary-border)',
+            }}
+            onClick={verify}
+            // Enabled without a FIN too: a click then says to enter it,
+            // where a disabled button would do nothing and say nothing.
+            disabled={busy}
+        >
+            {say(verified ? 'oan_idv_verify_again' : 'oan_idv_verify')}
+        </button>
+    );
+    const messages = (
+        <>
+            {finChanged && <span className="text-xs" style={{ color: 'var(--owt-widget-error-color)' }}>{say('oan_idv_fin_changed')}</span>}
+            {problem && !busy && <span className="text-xs" style={{ color: 'var(--owt-widget-error-color)' }}>{problem}</span>}
+            {verified && filled.length > 0 && (
+                <span className="text-xs" style={{ color: 'var(--owt-color-text-muted)' }}>
+                    {say('oan_idv_filled', { fields: filled.map(fieldLabel).join(', ') })}
+                </span>
+            )}
+        </>
+    );
+    const statusLine = (
+        <span
+            role="status"
+            title={shownLabel}
+            className="inline-flex items-center gap-2 text-sm font-medium"
+            style={{ color: 'var(--owt-color-text)' }}
+        >
+            <span aria-hidden className="inline-block w-2 h-2 rounded-full" style={{ background: tone }} />
+            {status}
+        </span>
+    );
+
+    if (!placed) return <div ref={root} />;
+
+    if (footer) {
+        return (
+            <div ref={root}>
+                {createPortal(
+                    <>
+                        {/* Messages use the free space on the left of the footer, so the
+                            status and the button keep their place. */}
+                        <span
+                            className="flex flex-col gap-0.5 text-left"
+                            style={{ flex: '1 1 0', minWidth: 0, marginRight: 'auto' }}
+                        >
+                            {messages}
+                        </span>
+                        {statusLine}
+                        {button}
+                    </>,
+                    footer,
+                )}
+            </div>
+        );
+    }
+
     return (
-        <div className="mb-[10px]">
+        <div ref={root} className="mb-[10px]">
             <div className="flex flex-col sm:flex-row sm:items-start">
                 <label
                     className="flex items-baseline min-w-0 max-w-full owt-field-label text-base font-medium md:min-w-[120px] sm:pr-4 sm:pt-1 mb-1 sm:mb-0"
@@ -253,39 +350,10 @@ export function IdentityVerificationWidget({ config }: { config: Config }) {
                 </label>
                 <div className="flex-1 min-w-0 flex flex-col gap-1">
                     <div className="flex flex-wrap items-center gap-3">
-                        <span
-                            role="status"
-                            className="inline-flex items-center gap-2 text-sm font-medium"
-                            style={{ color: 'var(--owt-color-text)' }}
-                        >
-                            <span aria-hidden className="inline-block w-2 h-2 rounded-full" style={{ background: tone }} />
-                            {status}
-                        </span>
-                        {!readonly && (
-                            <button
-                                type="button"
-                                className="owt-btn owt-btn-primary text-sm px-4 py-1.5 rounded-[var(--owt-btn-border-radius)] disabled:opacity-50"
-                                style={{
-                                    background: 'var(--owt-color-primary)',
-                                    color: 'var(--owt-color-bg)',
-                                    border: '1px solid var(--owt-btn-primary-border)',
-                                }}
-                                onClick={verify}
-                                // Enabled without a FIN too: a click then says to enter it,
-                                // where a disabled button would do nothing and say nothing.
-                                disabled={busy}
-                            >
-                                {say(verified ? 'oan_idv_verify_again' : 'oan_idv_verify')}
-                            </button>
-                        )}
+                        {statusLine}
+                        {button}
                     </div>
-                    {finChanged && <span className="text-xs" style={{ color: 'var(--owt-widget-error-color)' }}>{say('oan_idv_fin_changed')}</span>}
-                    {problem && !busy && <span className="text-xs" style={{ color: 'var(--owt-widget-error-color)' }}>{problem}</span>}
-                    {verified && filled.length > 0 && (
-                        <span className="text-xs" style={{ color: 'var(--owt-color-text-muted)' }}>
-                            {say('oan_idv_filled', { fields: filled.map(fieldLabel).join(', ') })}
-                        </span>
-                    )}
+                    {messages}
                 </div>
             </div>
         </div>

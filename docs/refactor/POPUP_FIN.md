@@ -15,8 +15,11 @@ Document upload remains the evidence mechanism; this change adds no approval byp
 Farmer's combined `foundational_id` accepts FIN12 or FAN16. Crop Sown/Livestock
 retain separate FIN12 (`fayda_fin`) and existing UID/FAN16 (`fayda_fan_id`) fields;
 verification never manufactures a FAN or alters authoritative Farmer projections.
-Saved unverified manual IDs do not constrain a later verified FIN; a saved SUCCESS
-identity remains the expected subject, including a completion-time race check.
+A typed 12-digit FIN supplied to Verify must match the verified subject. It is
+carried as a request hint (`oan_form_fin`), never as a trusted expected identity;
+a FAN16 cannot constrain the FIN. A mismatch names only the typed value and never
+discloses another signed-in identity. A saved SUCCESS identity remains the expected
+subject, including a completion-time race check.
 
 Core snapshots expected FIN before token exchange. The OAN extension prevalidates
 the new subject with the native adapter, binds exactly 12 ASCII digits, then
@@ -57,3 +60,24 @@ verification remains optional and approval controls activation. Setting false
 disables the native start operation. SQL assertions keep the action enabled.
 The first fallback commit incorrectly cleared the flag; the lead restored the
 live Farmer setting, and this correction supersedes that source configuration.
+
+Provider configuration: request `claims_locales: "en am"` alongside the existing
+claims mapping. Mock identity 0.9.3 maps `am` to `amh` and can emit `name#am`.
+Receiving registries bind only the verified FIN; identity-provider demographic
+claims never replace the signed central Farmer profile or its target approval.
+Provider settings belong to the registry-owned provider/Helm configuration and
+are not overwritten by recurring registry metadata seed.
+
+The verification footer portals all messages, status and the button into the
+native action area. `useLayoutEffect` finds the area before anything is shown,
+preventing an inline flash. Messages take the left flexible space while the status
+and button stay together. The component is ported from Farmer b553762 without
+changing generated platform assets.
+
+Extension migration runs native `create_migrate` first, then adds every missing
+mapped column to an existing extension table, logging each addition at DEBUG.
+It never changes existing types, constraints, defaults, unknown columns or values.
+New columns on existing tables are nullable with no fabricated backfill; native
+creation owns new tables. The three reviewed SQL artifacts remain as audit and
+manual-review material, not an automatically repeated data correction. Real COSS
+restored-environment preservation remains a separate promotion gate.
