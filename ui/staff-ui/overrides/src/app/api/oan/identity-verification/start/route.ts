@@ -10,7 +10,6 @@ export async function POST(request: NextRequest) {
         buildPayload: (body) => ({
             request_payload: {
                 register_id: body.register_id,
-                foundational_id: body.foundational_id,
                 internal_record_id: body.internal_record_id || null,
             },
         }),

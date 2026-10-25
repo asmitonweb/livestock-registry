@@ -1,62 +1,41 @@
-# Popup-only Fayda FIN verification
+# FIN entered once, on eSignet
 
-The registered `oan-identity-verification` widget collects FIN in its popup,
-then navigates that same window to eSignet. There is no editable FIN input on
-the domain form. Cancellation, timeout, failed start and terminal results clear
-the busy state. The popup opener is removed before external navigation.
+The user types FIN only on eSignet's UIN/VID screen. The registered widget opens
+the provider directly; there is no custom FIN collection page or main-form FIN
+input. The main form's FIN is a native read-only display filled from the verified
+result. `faydaPopup.ts` was removed. Start accepts no FIN and ignores a browser
+FIN value; a saved record's expected FIN is read server-side.
 
-Core owns the native transaction, nonce/PKCE, token/subject checks, callback
-and authentication row. The extension supplies the FIN context and checks
-successful/unexpired evidence on saves. It refuses a mismatched subject,
-cross-register/record reuse and removal of existing evidence to downgrade a
-record. Missing/invalid FIN is rejected before provider lookup. The Next.js
-start/result proxy routes and staff-only API routes are included.
+Core snapshots its expected FIN before token exchange, so a new intake needs a
+small registered-extension bridge. The native adapter first validates token
+signature, nonce and claims and obtains a 12-digit FIN. The extension binds that
+subject to the native transaction, then delegates completion/persistence to
+core. A request-local store/adapter wrapper replays that same transaction/token
+response once: the authorization code is not exchanged twice, and no state is
+put back into Redis. Native validation and SUCCESS-only claims storage remain.
+Existing FINs still go through core's equality check; hand edits, invalid FINs,
+record reuse and verification downgrade are refused. Client stamps are untrusted.
 
-FIN is 12 digits. It is stored as `fayda_fin` on Livestock register/history/intake
-models and schemas, separately from UID/FAN16 (`fayda_fan_id`). This field is
-non-unique because a person can have several domain holdings or crop seasons.
-Approved central Farmer reference demographics and independent ADD/UPDATE
-approval rules remain owned by the reference integration; this verification
-does not grant approval or replace its identity pair.
+FIN12 remains separate from the receiving registries' existing UID/FAN16
+reference contract. Their non-unique `fayda_fin` domain field avoids imposing
+native `foundational_id` uniqueness on a person's multiple seasons/holdings.
+The UI result retains `foundational_id` as its response key and writes to the
+configured field. Approved reference demographics and business approvals remain
+owned by the independent Farmer reference pipeline.
 
-## Configuration
+Checks: full native suites, native completion regression cases, metadata replay
+twice with zero SQL errors, TypeScript and 25 production-widget browser checks.
+These browser checks use deterministic handler fixtures. A real interactive
+eSignet sign-in is the user's acceptance check; it is not claimed completed.
+The canonical assertion-audience fix and its six regressions remain included.
 
-Use this domain root register's active native eSignet provider and the native
-`/registrant-auth/callback` URL. Request the adapter's FIN identity claim
-(`individual_id` for the eSignet adapter); do not substitute an unrelated OIDC
-subject or the UID/FAN field. Configure native shared transactions for multiple
-API workers: `REGISTRY_CORE_REGISTRANT_AUTH_SESSION_STORE_BACKEND=redis` and
-`REGISTRY_CORE_REGISTRANT_AUTH_REDIS_URL` through standard deployment Secrets.
-Use the existing encryption/signing configuration; no keys or provider rows are
-copied by this change. With no provider, start gives an actionable setup error.
-There is no public mock-success endpoint or a replacement platform callback.
+The primary dirty Crop/Livestock experiments remain preserved. No compiled UI
+patch, public mock-success endpoint or OpenG2P source change was introduced.
+Receiving existing-database migrations still require restored-copy acceptance;
+the source port does not automatically deploy these registries.
 
-
-For a local HTTP gateway in front of an HTTPS canonical eSignet issuer, set
-`provider_config.jwt_assertion_aud` to the exact canonical token endpoint from
-discovery. The OAN registered service maps this native IAM audience setting
-separately from the provider's transport `token_endpoint`. Do not change keys,
-disable signature verification, or alter ID-token audiences to fix this mismatch.
-Six regressions cover the override, native default and invalid configuration.
-
-## Verification and rollout
-
-- Native suite: **63 passed, 65 database-dependent tests skipped**.
-- Native initialization/route/evidence-model registration probe: PASS.
-- Complete native metadata replay twice: zero SQL errors; identical result;
-  all existing section/form IDs retained. See new-dev/seed-rehearsal.json.
-- Pinned-source UI assembly: TypeScript PASS. The production widget/helper
-  passed 26 browser checks with deterministic request-handler fixtures.
-- Complete Linux production UI image build: PASS (`oan/livestock-staff-ui:popup-only`).
-- FIN value, invalid/blank inputs, native context, mismatch, expiration,
-  reference UID preservation and evidence downgrade prevention are tested.
-
-Evidence: workspace `Temp/fayda-popup-alignment/`. Those frontend/native checks
-do not certify a live eSignet token exchange or resolve a client assertion
-configuration error. No running application stack, provider credentials,
-record, grant, approval or connector checkpoint was changed. Existing primary
-checkout experimental edits remain preserved, separate from this native port.
-
-Before updating an existing database, rehearse the additive evidence-column
-migration beside this document on a restored copy. Promotion gates remain
-active; the fresh metadata rehearsal is not existing-data preservation proof.
+Native suite: **72 passed / 65 database-dependent tests skipped**.
+Metadata seed replay twice: PASS, identical final metadata, no SQL errors.
+TypeScript: PASS. Farmer is deployed locally first; receiving runtime is not
+recreated by this port. Native provider and shared transaction-store configuration
+remain environment-owned.

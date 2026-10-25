@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { collectFaydaFin } from './faydaPopup';
 import {
     getValueByPath,
     setValueByPath,
@@ -35,7 +34,6 @@ const LABELS: Record<string, string> = {
     oan_idv_verified: 'Verified on {date}',
     oan_idv_failed: 'Not verified',
     oan_idv_filled: 'Filled in from Fayda: {fields}. These cannot be changed.',
-    oan_idv_enter_fin: "Enter the farmer's Fayda ID (FIN) in this window to continue.",
     oan_idv_popup_blocked: 'The browser blocked the Fayda window. Allow pop-ups for this site and verify again.',
     oan_idv_closed: 'The Fayda window was closed before the sign-in finished. Verify again.',
     oan_idv_fin_changed: 'The FIN was changed after verification. Verify again with the new FIN.',
@@ -200,31 +198,12 @@ export function IdentityVerificationWidget({ config }: { config: Config }) {
         }
         popup.current = opened;
 
-        setBusy(true);
-        let verificationFin: string | null;
-        try {
-            verificationFin = await collectFaydaFin(opened, fin, say('oan_idv_enter_fin'));
-        } catch {
-            opened.close();
-            popup.current = null;
-            stop();
-            setProblem(say('oan_idv_closed'));
-            return;
-        }
-        if (!verificationFin) {
-            opened.close();
-            popup.current = null;
-            stop();
-            setProblem(say('oan_idv_closed'));
-            return;
-        }
         opened.opener = null;
         setBusy(true);
         let started;
         try {
             started = await dataSourceRequestHandler!('oan', 'identity-verification/start', 'POST', {
             register_id: options.registerId,
-            foundational_id: verificationFin,
             internal_record_id: read(options.internalRecordIdPath) ?? null,
             });
         } catch {

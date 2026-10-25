@@ -1,6 +1,6 @@
 """Staff API for verifying a farmer with Fayda (eSignet) during intake.
 
-Start opens core's registrant authentication for the FIN on the form; Fayda
+Start opens core's registrant authentication without a browser-supplied FIN; Fayda
 returns to core's /registrant-auth/callback, which completes it; result gives
 the outcome and the verified values to put on the form. The staff member is the
 one signed in (the token), never a value the browser sends.
@@ -35,7 +35,7 @@ PERMISSION = "register:authenticate"
 
 class StartPayload(BaseModel):
     register_id: str
-    foundational_id: str
+    foundational_id: str | None = None
     internal_record_id: str | None = None
 
 

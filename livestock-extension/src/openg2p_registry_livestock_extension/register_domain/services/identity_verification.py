@@ -4,8 +4,9 @@ authentication.
 Core verifies a registrant who is already in the register: it reads the FIN
 from the live record and, after the eSignet sign-in, checks that the person who
 signed in has that FIN. A farmer being registered has no live record yet, so
-OAN starts core's flow with the FIN entered only in the popup (put into core's
-transaction context, which is what core checks the sign-in against). Core's
+OAN starts core's flow before FIN is known. The native adapter validates the
+returned identity; its FIN is bound before delegating final completion to core
+using request-local token replay. Saved FINs remain the expected identity. Core's
 callback, its checks, its g2p_registrant_authentications row and its provider
 configuration are used unchanged.
 
@@ -25,8 +26,10 @@ from datetime import UTC, datetime, timedelta
 from typing import TypedDict
 
 from cryptography.fernet import Fernet, InvalidToken
+from iam_core.schemas import TokenEndpointAuthMethod
 from iam_core.schemas.auth_transaction import AuthTransaction
 from openg2p_fastapi_common.context import component_registry, dbengine
+from openg2p_fastapi_common.crypto import CryptoFactory
 from openg2p_registry_core.config import Settings
 from openg2p_registry_core.errors import G2PRegistryErrorCodes, G2PRegistryException
 from openg2p_registry_core.models import (
@@ -42,6 +45,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import async_sessionmaker
 
 from ..identity_claims import explain_failure, same_value
+from .identity_completion import ReplayAdapters, completion_context
 
 _config = Settings.get_config()
 _logger = logging.getLogger(_config.logging_default_logger_name)
@@ -67,7 +71,7 @@ STAMPS = (
 
 
 class _StartContext(TypedDict, total=False):
-    context: dict[str, str]
+    context: dict[str, object]
     transaction: AuthTransaction
 
 
@@ -86,11 +90,24 @@ class _ContextStore:
     def create(self, **kwargs):
         extra = _extra_context.get()
         if extra is not None:
-            kwargs["context"] = {**(kwargs.get("context") or {}), **extra["context"]}
+            native_context = kwargs.get("context") or {}
+            extension_context = dict(extra["context"])
+            # A live record can appear between the preliminary lookup and
+            # core's lookup. Never erase its server-owned expected identity.
+            if native_context.get("foundational_id") and not extension_context.get("foundational_id"):
+                extension_context["foundational_id"] = native_context["foundational_id"]
+                extension_context["oan_bind_verified_fin"] = False
+            kwargs["context"] = {**native_context, **extension_context}
         transaction = self._inner.create(**kwargs)
         if extra is not None:
             extra["transaction"] = transaction
         return transaction
+
+    def get_and_pop(self, state):
+        replay = completion_context.get()
+        if replay and replay["state"] == state and "transaction" in replay:
+            return replay.pop("transaction")
+        return self._inner.get_and_pop(state)
 
     def __getattr__(self, name):
         return getattr(self._inner, name)
@@ -120,6 +137,7 @@ class OANRegistrantAuthenticationService(G2PRegistrantAuthenticationService):
     def __init__(self):
         super().__init__()
         self._auth_tx_store = _ContextStore(self._auth_tx_store)
+        self._adapters = ReplayAdapters(self._adapters)
         key = _config.registrant_auth_claims_encryption_key
         try:
             self._fernet = (
@@ -150,7 +168,7 @@ class OANRegistrantAuthenticationService(G2PRegistrantAuthenticationService):
         self,
         *,
         register_id: str,
-        foundational_id: str,
+        foundational_id: str | None = None,
         internal_record_id: str | None,
         staff_id: str,
     ) -> dict:
@@ -158,22 +176,22 @@ class OANRegistrantAuthenticationService(G2PRegistrantAuthenticationService):
             raise _invalid(
                 "Fayda verification: choose this registry’s domain register and verify again"
             )
-        foundational_id = (foundational_id or "").strip()
-        if not foundational_id:
-            raise _invalid(
-                "FIN (Fayda ID): enter the farmer's FIN in the Fayda verification window"
-            )
-        if not re.fullmatch(r"[0-9]{12}", foundational_id):
-            raise _invalid(
-                "FIN (Fayda ID): enter all 12 digits in the Fayda verification window"
-            )
+        expected_fin = None
+        if internal_record_id:
+            async with self._session() as session:
+                stored = await self._stored(session, ("G2PRegisterLivestock", "G2PIntakeFormLivestock"), internal_record_id)
+                expected_fin = (stored or {}).get("fayda_fin")
+        if isinstance(expected_fin, str):
+            expected_fin = expected_fin.strip() or None
+        if expected_fin is not None and (not isinstance(expected_fin, str) or not re.fullmatch(r"[0-9]{12}", expected_fin)):
+            raise _invalid("FIN (Fayda ID): the saved FIN is invalid. Ask the administrator to correct the record")
         providers = await self.get_available_providers(register_id=register_id)
         if not providers:
             raise _invalid(
                 "Fayda verification is not set up for this register. Ask the administrator to add an "
                 "active eSignet provider for it (g2p_registrant_authentication_providers)"
             )
-        extra: _StartContext = {"context": {"foundational_id": foundational_id}}
+        extra: _StartContext = {"context": {"foundational_id": expected_fin or "", "oan_bind_verified_fin": not bool(expected_fin)}}
         token = _extra_context.set(extra)
         try:
             _, authorization_url, provider_name = await self.start_authentication(
@@ -189,6 +207,57 @@ class OANRegistrantAuthenticationService(G2PRegistrantAuthenticationService):
             "authorization_url": authorization_url,
             "provider_name": provider_name,
         }
+
+    async def complete_authentication(self, *, state: str, authorization_code: str):
+        """Bind a new FIN only after native cryptographic/claim validation.
+
+        Core snapshots the expected FIN before exchanging the authorization
+        code. For a new intake there is no expected FIN yet. Prevalidate through
+        its adapter, bind the verified 12-digit subject, then replay the response
+        request-locally to core so it performs its normal checks and SUCCESS
+        persistence without exchanging a single-use code twice. Existing FINs
+        use core's original comparison and cannot be redirected by form input.
+        """
+        transaction = self._auth_tx_store.get_and_pop(state)
+        if transaction is None:
+            return await super().complete_authentication(state=state, authorization_code=authorization_code)
+        replay = {"state": state, "transaction": transaction, "code": authorization_code,
+                  "provider_id": str((transaction.context or {}).get("provider_id"))}
+        token = completion_context.set(replay)
+        try:
+            context = transaction.context or {}
+            if context.get("oan_bind_verified_fin"):
+                async with self._session() as session:
+                    auth = await session.get(G2PRegistrantAuthentication, context.get("authentication_id"))
+                    provider = await session.get(G2PRegistrantAuthenticationProvider, auth.provider_id) if auth else None
+                    if auth and provider:
+                        try:
+                            login = self._provider_to_login_provider(provider)
+                            adapter = self._adapters.resolve_for_provider(login)
+                            crypto = CryptoFactory.get() if login.token_endpoint_auth_method == TokenEndpointAuthMethod.private_key_jwt_keymanager else None
+                            response = await adapter.exchange_code_for_token(
+                                login_provider=login, code=authorization_code,
+                                code_verifier=transaction.code_verifier, keymanager_helper=crypto,
+                                km_app_id=provider.keymanager_sign_app_id)
+                            await adapter.validate_callback_id_token(login_provider=login, token_response=response, nonce=transaction.nonce)
+                            if not response.get("id_token"):
+                                return await self._mark_failure(session, auth, "Fayda verification: the response has no identity token. Verify again")
+                            claims = await adapter.oidc_client.decode_jwt(login_provider=login,
+                                token=response["id_token"], nonce=transaction.nonce, access_token=response.get("access_token"))
+                            claims = await adapter.enrich_claims_from_userinfo(claims, login_provider=login, access_token=response.get("access_token"))
+                            claims = adapter.normalize_claims(claims, login_provider=login)
+                            adapter.validate_claims(claims, login_provider=login)
+                            subject = adapter.registrant_subject(claims, login_provider=login)
+                            if not isinstance(subject, str) or not re.fullmatch(r"[0-9]{12}", subject):
+                                return await self._mark_failure(session, auth, "FIN (Fayda ID): Fayda did not return a 12-digit FIN. Verify again or contact support")
+                            transaction.context = {**context, "foundational_id": subject}
+                            replay["token_response"] = response
+                        except Exception:
+                            _logger.exception("Fayda verified-subject binding failed")
+                            return await self._mark_failure(session, auth, "Fayda verification: identity validation failed. Verify again or ask the administrator to check the provider")
+            return await super().complete_authentication(state=state, authorization_code=authorization_code)
+        finally:
+            completion_context.reset(token)
 
     async def _verification(self, session, verification_id: str):
         auth = (

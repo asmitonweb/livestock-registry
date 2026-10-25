@@ -172,7 +172,7 @@ def test_an_expired_verification_is_not_accepted():
     )
 
 
-def test_the_transaction_context_gets_the_fin_from_the_form():
+def test_the_transaction_context_preserves_the_server_expected_fin():
     created = {}
 
     class Store:

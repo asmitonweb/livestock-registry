@@ -1,21 +1,24 @@
 {
   "registry": "livestock",
-  "native_tests_passed": 63,
+  "native_tests_passed": 72,
   "database_dependent_tests_skipped": 65,
   "metadata_passes": 2,
   "metadata_sql_errors": 0,
   "native_registration": "PASS",
   "typescript": "PASS",
   "linux_production_ui_image": "oan/livestock-staff-ui:popup-only",
-  "linux_production_ui_build": "PASS",
-  "browser_widget_checks": 26,
+  "linux_production_ui_build": "Previous popup build PASS; FIN-once TypeScript PASS; Farmer FIN-once image PASS",
+  "browser_widget_checks": 25,
   "browser_scope": "production widget with request-handler fixtures; not live eSignet",
   "runtime_deployed": false,
   "source_sha256": {
-    "livestock-extension/src/openg2p_registry_livestock_extension/register_domain/services/identity_verification.py": "5de2be6d31690bbf5f6021d54bea7e2e853658147ea7eb26c532fefcb6ccc309",
+    "livestock-extension/src/openg2p_registry_livestock_extension/register_domain/services/identity_verification.py": "2cc691bd563dc4015332bb5450154352785699761d0d0527de0109956af566e6",
     "livestock-extension/src/openg2p_registry_livestock_extension/meta_data/register-metadata/zz_popup_identity.sql": "6a20291d5d61558148195a06ffc3907e8cb0fae1e47da4e09809dc4adfe29dc0",
-    "ui/staff-ui/overrides/src/oan/widgets/IdentityVerificationWidget.tsx": "4a69de40e3fc857156dfd2555b1e78acec796cf8d3eb27b140966b1d82f1672b",
-    "ui/staff-ui/overrides/src/oan/widgets/faydaPopup.ts": "9e6762292f0d7a66db6d8a9bb12845b48507c65a3a6f879b93c17e6233f4a8fa"
+    "ui/staff-ui/overrides/src/oan/widgets/IdentityVerificationWidget.tsx": "74f223671ff6769c0307efc87b1434b624dde53f011eff204af1829b7eedd5ad",
+    "livestock-extension/src/openg2p_registry_livestock_extension/register_domain/services/identity_completion.py": "4abf7dcf5f23d62c46fdd8293d64897c46939808ebe77fbc3e52a3a04e0f3bae"
   },
-  "native_assertion_audience_tests": 6
+  "native_assertion_audience_tests": 6,
+  "fin_entry": "eSignet UIN/VID only",
+  "fin_once_cases": 15,
+  "live_sign_in": "User acceptance pending"
 }
