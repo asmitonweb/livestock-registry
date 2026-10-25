@@ -21,6 +21,15 @@ class Initializer(BaseInitializer):
         for name in SERVICE_NAMES:
             getattr(services, name)()
         install()
+        from .register_domain.services.identity_verification import install_identity_verification
+        install_identity_verification()
+
+    async def fastapi_app_startup(self, app):
+        await super().fastapi_app_startup(app)
+        from importlib.util import find_spec
+        if find_spec("openg2p_registry_staff_api"):
+            from .controllers import OANIdentityVerificationController
+            OANIdentityVerificationController().post_init()
 
     def migrate_database(self, args):
         async def migrate():

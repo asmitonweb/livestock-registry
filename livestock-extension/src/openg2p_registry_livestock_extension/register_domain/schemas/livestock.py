@@ -13,6 +13,12 @@ from ..models.enums import LivestockStateEnum, SourceSystemEnum, SyncStatusEnum
 
 
 class G2PSchemaLivestock(G2PSchemaAdminArea):
+    fayda_fin: Optional[str] = None
+    identity_verification_id: Optional[str] = None
+    last_authentication_status: Optional[str] = None
+    last_authenticated_on: Optional[str] = None
+    authentication_expiry_date: Optional[str] = None
+
 
     farmer_uuid: Optional[str] = None
     farmer_id: Optional[str] = None

@@ -88,6 +88,12 @@ def _extension_models():
 class G2PRegisterDomainServiceLivestock(AuditSnapshotMixin, G2PRegisterDomainService):
 
     async def validate_domain_attributes(self, records: list[dict]):
+        from .identity_verification import OANRegistrantAuthenticationService
+        verifier = OANRegistrantAuthenticationService.get_component()
+        if verifier:
+            problems = await verifier.verify_records(records, {}, "Livestock")
+            if problems:
+                validation_error("; ".join(problems))
         for record in records:
             # NOT required here, unlike the Farmer register's own copy of
             # these two fields: the "Farmer Details" section's farmer_id/
