@@ -1,0 +1,652 @@
+{
+ "value": [
+  {
+   "start": "2026-10-07T14:21:14.283+05:30",
+   "end": "2026-10-07T14:24:39.114+05:30",
+   "farmer": {
+    "farmer_id": "FR-8181818118",
+    "fayda_fan_id": "7181862818186281",
+    "first_name": "Dominic ",
+    "middle_name": "Rozz",
+    "last_name": "Toretto ",
+    "gender": "male",
+    "date_of_birth": "1994-10-21",
+    "mobile_number": "0912345678",
+    "registration_date": "2026-10-07"
+   },
+   "survey_personnel": {
+    "surveyor_name": "Joo",
+    "surveyor_mobile_number": "0912345678",
+    "supervisor_name": "Joo",
+    "supervisor_mobile_number": "0912345678"
+   },
+   "location": {
+    "region_id": "oromia",
+    "zone_id": "ET0404",
+    "woreda_id": "ET040404",
+    "kebele_id": "40404888003"
+   },
+   "meta": {
+    "instanceID": "uuid:1089b216-756f-44d7-9aa1-acc3bf5fecfd"
+   },
+   "__id": "uuid:1089b216-756f-44d7-9aa1-acc3bf5fecfd",
+   "livestock@odata.navigationLink": "Submissions('uuid%3A1089b216-756f-44d7-9aa1-acc3bf5fecfd')/livestock",
+   "livestock": [
+    {
+     "species_id": "camel",
+     "breed": "local",
+     "ear_tag_id": "ET7818186271",
+     "secondary_identifier": null,
+     "quantity": null,
+     "weight": 60,
+     "date_of_birth": "2012-10-07",
+     "gender": "female",
+     "health_status": "healthy",
+     "vaccination_status": "up_to_date",
+     "registration_date": "2026-10-07",
+     "__id": "e25858da31e7111d76743421bcc066d511910fa4",
+     "health_events@odata.navigationLink": "Submissions('uuid%3A1089b216-756f-44d7-9aa1-acc3bf5fecfd')/livestock('e25858da31e7111d76743421bcc066d511910fa4')/health_events",
+     "health_events": [
+      {
+       "event_type": "treatment",
+       "disease_type": null,
+       "date_onset": "2026-09-10",
+       "date_resolution": null,
+       "is_notifiable": null,
+       "treatment": "Jsnsnzj",
+       "veterinarian_id": "Jnsnm",
+       "location": "market",
+       "location_details": ".ydjsmsk",
+       "health_event_notes": "Testing ",
+       "__id": "30c16996369fad3cdabbab494d3d73b403564f82"
+      }
+     ],
+     "vaccinations@odata.navigationLink": "Submissions('uuid%3A1089b216-756f-44d7-9aa1-acc3bf5fecfd')/livestock('e25858da31e7111d76743421bcc066d511910fa4')/vaccinations",
+     "vaccinations": [
+      {
+       "vaccine": "camel_pox",
+       "vaccination_date": "2026-10-01",
+       "next_due_date": "2026-12-25",
+       "batch_number": "72819",
+       "administered_by": "Jsjsnzn",
+       "vaccination_notes": "Yeah ",
+       "__id": "3439571eb91e506c1193822f897cb8b72de73d04"
+      }
+     ],
+     "vital_events@odata.navigationLink": "Submissions('uuid%3A1089b216-756f-44d7-9aa1-acc3bf5fecfd')/livestock('e25858da31e7111d76743421bcc066d511910fa4')/vital_events",
+     "vital_events": [
+      {
+       "vital_event_type": "disease",
+       "date": "2026-10-07",
+       "location": "quarantine_center",
+       "location_details": "Testing ",
+       "reporting_officer_id": "Administrator",
+       "vital_event_details": "Testing ",
+       "birth_details": {
+        "offspring_count": null,
+        "sex_of_offspring": null
+       },
+       "disease_details": {
+        "disease_type": "contagious_bovine_pleuropneumonia",
+        "vital_date_onset": "2026-09-18",
+        "vital_date_resolution": "2026-09-25",
+        "vital_is_notifiable": "yes",
+        "treatment": "Djnemd",
+        "veterinarian_id": "Jsns ",
+        "is_notifiable": "yes"
+       },
+       "cause": null,
+       "__id": "de6595fb0d3f6409665506e40dc826ce37183f1b"
+      }
+     ],
+     "breeding_events@odata.navigationLink": "Submissions('uuid%3A1089b216-756f-44d7-9aa1-acc3bf5fecfd')/livestock('e25858da31e7111d76743421bcc066d511910fa4')/breeding_events",
+     "breeding_events": [
+      {
+       "breeding_event_type": "artificial_insemination",
+       "breeding_date": "2026-09-25",
+       "location": "field",
+       "location_details": "Tbska",
+       "sire_or_semen_id": "61819",
+       "gestation_days": "390",
+       "expected_calving_date_calc": "21111",
+       "expected_calving_date": "2026-10-01",
+       "pregnancy_confirmed": "yes",
+       "pregnancy_confirmation_date": "2026-10-06",
+       "outcome": "successful",
+       "breeding_notes": "Jsnsm",
+       "artificial_insemination_tab": {
+        "ai_technician_id": "Ajjak",
+        "ai_technique": "Jskam",
+        "semen_batch_number": "618818"
+       },
+       "__id": "e2efb8a2c46a896480c7f1f1888aa93f2c8d80e5"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "start": "2026-10-01T02:58:59.568+05:30",
+   "end": "2026-10-01T03:01:50.516+05:30",
+   "farmer": {
+    "farmer_id": "FR-7282882828",
+    "fayda_fan_id": "7181728281818818",
+    "first_name": "Nsbnsbs",
+    "middle_name": "Hshbs",
+    "last_name": "Jsbbs",
+    "gender": "male",
+    "date_of_birth": "1990-10-01",
+    "mobile_number": "0912345678",
+    "registration_date": "2026-10-01"
+   },
+   "survey_personnel": {
+    "surveyor_name": "Hbsbs",
+    "surveyor_mobile_number": "0912345678",
+    "supervisor_name": "Gsjns",
+    "supervisor_mobile_number": "0912345678"
+   },
+   "location": {
+    "region_id": "somali",
+    "zone_id": "ET0504",
+    "woreda_id": "ET050407",
+    "kebele_id": "50407888006"
+   },
+   "meta": {
+    "instanceID": "uuid:72296f07-5727-4ee8-8f3b-a10b94a367de"
+   },
+   "__id": "uuid:72296f07-5727-4ee8-8f3b-a10b94a367de",
+   "livestock@odata.navigationLink": "Submissions('uuid%3A72296f07-5727-4ee8-8f3b-a10b94a367de')/livestock",
+   "livestock": [
+    {
+     "species_id": "donkey",
+     "breed": "local",
+     "ear_tag_id": "ET7288281816",
+     "secondary_identifier": null,
+     "quantity": null,
+     "weight": 50,
+     "date_of_birth": "2018-10-01",
+     "gender": "female",
+     "health_status": "quarantined",
+     "vaccination_status": "overdue",
+     "registration_date": "2026-10-01",
+     "__id": "a3a758c01a58acf71e170e7ac69fc97cecec43cf",
+     "health_events@odata.navigationLink": "Submissions('uuid%3A72296f07-5727-4ee8-8f3b-a10b94a367de')/livestock('a3a758c01a58acf71e170e7ac69fc97cecec43cf')/health_events",
+     "health_events": [
+      {
+       "event_type": "recovery",
+       "disease_type": null,
+       "date_onset": null,
+       "date_resolution": "2026-09-02",
+       "is_notifiable": null,
+       "treatment": null,
+       "veterinarian_id": "Gbjj",
+       "location": "quarantine_center",
+       "location_details": "Bbjk",
+       "health_event_notes": "Bhk",
+       "__id": "de8b97efde1939c48ab47d2bcaf06a8b351355d6"
+      }
+     ],
+     "vaccinations@odata.navigationLink": "Submissions('uuid%3A72296f07-5727-4ee8-8f3b-a10b94a367de')/livestock('a3a758c01a58acf71e170e7ac69fc97cecec43cf')/vaccinations",
+     "vaccinations": [
+      {
+       "vaccine": "rabies",
+       "vaccination_date": "2026-10-01",
+       "next_due_date": "2026-12-11",
+       "batch_number": "8889",
+       "administered_by": "H",
+       "vaccination_notes": "J",
+       "__id": "93e203316abf828a396685163a8809d6fd9a0128"
+      }
+     ],
+     "vital_events@odata.navigationLink": "Submissions('uuid%3A72296f07-5727-4ee8-8f3b-a10b94a367de')/livestock('a3a758c01a58acf71e170e7ac69fc97cecec43cf')/vital_events",
+     "vital_events": [
+      {
+       "vital_event_type": "mortality",
+       "date": "2026-09-30",
+       "location": "field",
+       "location_details": "6vtvtv",
+       "reporting_officer_id": "Administrator",
+       "vital_event_details": "Vtvtvtv",
+       "birth_details": {
+        "offspring_count": null,
+        "sex_of_offspring": null
+       },
+       "disease_details": {
+        "disease_type": null,
+        "vital_date_onset": null,
+        "vital_date_resolution": null,
+        "vital_is_notifiable": null,
+        "treatment": null,
+        "veterinarian_id": null,
+        "is_notifiable": null
+       },
+       "cause": "predation",
+       "__id": "0da92d9121b264c395178673aba44d318b856479"
+      }
+     ],
+     "breeding_events@odata.navigationLink": "Submissions('uuid%3A72296f07-5727-4ee8-8f3b-a10b94a367de')/livestock('a3a758c01a58acf71e170e7ac69fc97cecec43cf')/breeding_events",
+     "breeding_events": [
+      {
+       "breeding_event_type": "natural_breeding",
+       "breeding_date": "2026-09-02",
+       "location": "quarantine_center",
+       "location_details": "Yvtvt",
+       "sire_or_semen_id": "6678",
+       "gestation_days": "340",
+       "expected_calving_date_calc": "21038",
+       "expected_calving_date": "2026-09-10",
+       "pregnancy_confirmed": "yes",
+       "pregnancy_confirmation_date": "2026-09-29",
+       "outcome": "successful",
+       "breeding_notes": "Hvyvyv",
+       "artificial_insemination_tab": {
+        "ai_technician_id": null,
+        "ai_technique": null,
+        "semen_batch_number": null
+       },
+       "__id": "d6fcfa9c6cd6154d3ea69335e568aa0c7b3bfb9f"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "start": "2026-10-01T02:46:42.423+05:30",
+   "end": "2026-10-01T02:51:16.849+05:30",
+   "farmer": {
+    "farmer_id": "FR-7777655555",
+    "fayda_fan_id": "6778866686557787",
+    "first_name": "Tony ",
+    "middle_name": "Stark",
+    "last_name": "Avengers ",
+    "gender": "male",
+    "date_of_birth": "1997-10-01",
+    "mobile_number": "0912345679",
+    "registration_date": "2026-10-01"
+   },
+   "survey_personnel": {
+    "surveyor_name": "Gdu",
+    "surveyor_mobile_number": "0912345678",
+    "supervisor_name": "Cdihf",
+    "supervisor_mobile_number": "0912345678"
+   },
+   "location": {
+    "region_id": "oromia",
+    "zone_id": "ET0407",
+    "woreda_id": "ET040706",
+    "kebele_id": "40706888019"
+   },
+   "meta": {
+    "instanceID": "uuid:48916010-ac14-4520-9e0c-339b67af91f0"
+   },
+   "__id": "uuid:48916010-ac14-4520-9e0c-339b67af91f0",
+   "livestock@odata.navigationLink": "Submissions('uuid%3A48916010-ac14-4520-9e0c-339b67af91f0')/livestock",
+   "livestock": [
+    {
+     "species_id": "camel",
+     "breed": "local",
+     "ear_tag_id": "ET6777889566",
+     "secondary_identifier": null,
+     "quantity": null,
+     "weight": 50,
+     "date_of_birth": "2017-10-01",
+     "gender": "female",
+     "health_status": "deceased",
+     "vaccination_status": "overdue",
+     "registration_date": "2026-10-01",
+     "__id": "da125ff18bc0b6f919940eb2368dc6cc9d5d5bff",
+     "health_events@odata.navigationLink": "Submissions('uuid%3A48916010-ac14-4520-9e0c-339b67af91f0')/livestock('da125ff18bc0b6f919940eb2368dc6cc9d5d5bff')/health_events",
+     "health_events": [
+      {
+       "event_type": "treatment",
+       "disease_type": null,
+       "date_onset": "2026-09-03",
+       "date_resolution": null,
+       "is_notifiable": null,
+       "treatment": "Yhfhn",
+       "veterinarian_id": "Hv hn",
+       "location": "market",
+       "location_details": "Bdju",
+       "health_event_notes": "Hbbn",
+       "__id": "03a974c790c568ab2dfc47ca88447a904797820a"
+      }
+     ],
+     "vaccinations@odata.navigationLink": "Submissions('uuid%3A48916010-ac14-4520-9e0c-339b67af91f0')/livestock('da125ff18bc0b6f919940eb2368dc6cc9d5d5bff')/vaccinations",
+     "vaccinations": [
+      {
+       "vaccine": "camel_pox",
+       "vaccination_date": "2026-10-01",
+       "next_due_date": "2026-12-18",
+       "batch_number": "678977",
+       "administered_by": "Gvjh",
+       "vaccination_notes": "Gvnj",
+       "__id": "f6f600aa266650000d685c227f47afd87e32446e"
+      }
+     ],
+     "vital_events@odata.navigationLink": "Submissions('uuid%3A48916010-ac14-4520-9e0c-339b67af91f0')/livestock('da125ff18bc0b6f919940eb2368dc6cc9d5d5bff')/vital_events",
+     "vital_events": [
+      {
+       "vital_event_type": "mortality",
+       "date": "2026-10-01",
+       "location": "field",
+       "location_details": "Bhdbg",
+       "reporting_officer_id": "Administratorgb",
+       "vital_event_details": "Hggj",
+       "birth_details": {
+        "offspring_count": null,
+        "sex_of_offspring": null
+       },
+       "disease_details": {
+        "disease_type": null,
+        "vital_date_onset": null,
+        "vital_date_resolution": null,
+        "vital_is_notifiable": null,
+        "treatment": null,
+        "veterinarian_id": null,
+        "is_notifiable": null
+       },
+       "cause": "predation",
+       "__id": "d61d199098120f4d15aef8cb6a92a013bec3ff9b"
+      }
+     ],
+     "breeding_events@odata.navigationLink": "Submissions('uuid%3A48916010-ac14-4520-9e0c-339b67af91f0')/livestock('da125ff18bc0b6f919940eb2368dc6cc9d5d5bff')/breeding_events",
+     "breeding_events": [
+      {
+       "breeding_event_type": "natural_breeding",
+       "breeding_date": "2026-09-03",
+       "location": "market",
+       "location_details": "Ghuvg",
+       "sire_or_semen_id": "5688",
+       "gestation_days": "390",
+       "expected_calving_date_calc": "21089",
+       "expected_calving_date": "2026-09-17",
+       "pregnancy_confirmed": "yes",
+       "pregnancy_confirmation_date": "2026-09-22",
+       "outcome": "successful",
+       "breeding_notes": "Bjk",
+       "artificial_insemination_tab": {
+        "ai_technician_id": null,
+        "ai_technique": null,
+        "semen_batch_number": null
+       },
+       "__id": "161994d1b98144665be017d1403ae2604c514bf4"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "start": "2026-09-30T16:19:13.910+05:30",
+   "end": "2026-09-30T16:41:45.044+05:30",
+   "farmer": {
+    "farmer_id": "FR-1234567864",
+    "fayda_fan_id": "5555544444333336",
+    "first_name": "Sample 1",
+    "middle_name": null,
+    "last_name": "Ind",
+    "gender": "male",
+    "date_of_birth": "1993-09-01",
+    "mobile_number": "0955228844",
+    "registration_date": "2026-09-30"
+   },
+   "survey_personnel": {
+    "surveyor_name": "DA",
+    "surveyor_mobile_number": "0922556688",
+    "supervisor_name": "Ind",
+    "supervisor_mobile_number": "0944557788"
+   },
+   "location": {
+    "region_id": "somali",
+    "zone_id": "ET0503",
+    "woreda_id": "ET050306",
+    "kebele_id": "50308888003"
+   },
+   "meta": {
+    "instanceID": "uuid:035acf18-c913-4bba-aa41-46a0e0248c1f"
+   },
+   "__id": "uuid:035acf18-c913-4bba-aa41-46a0e0248c1f",
+   "livestock@odata.navigationLink": "Submissions('uuid%3A035acf18-c913-4bba-aa41-46a0e0248c1f')/livestock",
+   "livestock": [
+    {
+     "species_id": "horse",
+     "breed": "oromo",
+     "ear_tag_id": "ET5566778899",
+     "secondary_identifier": null,
+     "quantity": null,
+     "weight": 52,
+     "date_of_birth": "2025-03-01",
+     "gender": "female",
+     "health_status": "healthy",
+     "vaccination_status": "up_to_date",
+     "registration_date": "2026-09-30",
+     "__id": "39f2c577a6644eee60fa339426e03064b0260d46",
+     "health_events@odata.navigationLink": "Submissions('uuid%3A035acf18-c913-4bba-aa41-46a0e0248c1f')/livestock('39f2c577a6644eee60fa339426e03064b0260d46')/health_events",
+     "health_events": [
+      {
+       "event_type": "disease",
+       "disease_type": "foot_and_mouth_disease",
+       "date_onset": "2026-05-03",
+       "date_resolution": "2026-07-09",
+       "is_notifiable": "no",
+       "treatment": "Gfdfh",
+       "veterinarian_id": "Tfcgg",
+       "location": "home",
+       "location_details": "66 gggjj",
+       "health_event_notes": "Vyffh",
+       "__id": "319f671814af004ce388aa6f529e02bdbf3a3e0c"
+      }
+     ],
+     "vaccinations@odata.navigationLink": "Submissions('uuid%3A035acf18-c913-4bba-aa41-46a0e0248c1f')/livestock('39f2c577a6644eee60fa339426e03064b0260d46')/vaccinations",
+     "vaccinations": [
+      {
+       "vaccine": "african_horse_sickness",
+       "vaccination_date": "2026-09-30",
+       "next_due_date": "2027-01-31",
+       "batch_number": "765433",
+       "administered_by": "Hgff",
+       "vaccination_notes": "Hyffg",
+       "__id": "cb523969adf2649ae2495321c527456804109497"
+      }
+     ],
+     "vital_events@odata.navigationLink": "Submissions('uuid%3A035acf18-c913-4bba-aa41-46a0e0248c1f')/livestock('39f2c577a6644eee60fa339426e03064b0260d46')/vital_events",
+     "vital_events": [
+      {
+       "vital_event_type": "birth",
+       "date": "2026-07-01",
+       "location": "veterinary",
+       "location_details": "Gggyy",
+       "reporting_officer_id": "Administrator",
+       "vital_event_details": "Gyggg",
+       "birth_details": {
+        "offspring_count": 2,
+        "sex_of_offspring": "female"
+       },
+       "disease_details": {
+        "disease_type": null,
+        "vital_date_onset": null,
+        "vital_date_resolution": null,
+        "vital_is_notifiable": null,
+        "treatment": null,
+        "veterinarian_id": null,
+        "is_notifiable": null
+       },
+       "cause": null,
+       "__id": "637dd534aaff2b1ae6e21a123923cc1c2bbd3913"
+      },
+      {
+       "vital_event_type": "birth",
+       "date": "2026-09-30",
+       "location": "home",
+       "location_details": null,
+       "reporting_officer_id": "Administrator",
+       "vital_event_details": null,
+       "birth_details": {
+        "offspring_count": 3,
+        "sex_of_offspring": "female"
+       },
+       "disease_details": {
+        "disease_type": null,
+        "vital_date_onset": null,
+        "vital_date_resolution": null,
+        "vital_is_notifiable": null,
+        "treatment": null,
+        "veterinarian_id": null,
+        "is_notifiable": null
+       },
+       "cause": null,
+       "__id": "8f49d5a6a5c1c27b9f49ef821661f23995b1766a"
+      }
+     ],
+     "breeding_events@odata.navigationLink": "Submissions('uuid%3A035acf18-c913-4bba-aa41-46a0e0248c1f')/livestock('39f2c577a6644eee60fa339426e03064b0260d46')/breeding_events",
+     "breeding_events": [
+      {
+       "breeding_event_type": "natural_breeding",
+       "breeding_date": "2026-06-01",
+       "location": "home",
+       "location_details": "Hfff",
+       "sire_or_semen_id": "876655",
+       "gestation_days": "340",
+       "expected_calving_date_calc": "20945",
+       "expected_calving_date": "2026-11-30",
+       "pregnancy_confirmed": "yes",
+       "pregnancy_confirmation_date": "2026-02-03",
+       "outcome": "successful",
+       "breeding_notes": "Fffyy",
+       "artificial_insemination_tab": {
+        "ai_technician_id": null,
+        "ai_technique": null,
+        "semen_batch_number": null
+       },
+       "__id": "bc8469728a365945860daf8df2e594c56176f230"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "start": "2026-09-30T14:54:57.380+05:30",
+   "end": "2026-09-30T14:58:07.876+05:30",
+   "farmer": {
+    "farmer_id": "FR-7287371992",
+    "fayda_fan_id": "6838628637468292",
+    "first_name": "Ben",
+    "middle_name": "Tennisan",
+    "last_name": "Ben10",
+    "gender": "male",
+    "date_of_birth": "2000-09-30",
+    "mobile_number": "0912345648",
+    "registration_date": "2026-09-30"
+   },
+   "survey_personnel": {
+    "surveyor_name": "Ben",
+    "surveyor_mobile_number": "0912345678",
+    "supervisor_name": "Ben",
+    "supervisor_mobile_number": "0912345678"
+   },
+   "location": {
+    "region_id": "oromia",
+    "zone_id": "ET0407",
+    "woreda_id": "ET040706",
+    "kebele_id": "40706888019"
+   },
+   "meta": {
+    "instanceID": "uuid:7b618784-e74c-450e-8ec9-9cb4694cad39"
+   },
+   "__id": "uuid:7b618784-e74c-450e-8ec9-9cb4694cad39",
+   "livestock@odata.navigationLink": "Submissions('uuid%3A7b618784-e74c-450e-8ec9-9cb4694cad39')/livestock",
+   "livestock": [
+    {
+     "species_id": "goat",
+     "breed": "begait",
+     "ear_tag_id": "ET8376371727",
+     "secondary_identifier": null,
+     "quantity": null,
+     "weight": 60,
+     "date_of_birth": "2019-09-30",
+     "gender": "female",
+     "health_status": "quarantined",
+     "vaccination_status": "overdue",
+     "registration_date": "2026-09-30",
+     "__id": "3542253d2a2e81c9c7683b42c4290eebef5ab6bf",
+     "health_events@odata.navigationLink": "Submissions('uuid%3A7b618784-e74c-450e-8ec9-9cb4694cad39')/livestock('3542253d2a2e81c9c7683b42c4290eebef5ab6bf')/health_events",
+     "health_events": [
+      {
+       "event_type": "treatment",
+       "disease_type": null,
+       "date_onset": "2026-08-07",
+       "date_resolution": null,
+       "is_notifiable": null,
+       "treatment": "Admin ",
+       "veterinarian_id": "Admin ",
+       "location": "field",
+       "location_details": "Field ",
+       "health_event_notes": "Testing ",
+       "__id": "e6cdc5113e24202d147addd5afe00f24367f749a"
+      }
+     ],
+     "vaccinations@odata.navigationLink": "Submissions('uuid%3A7b618784-e74c-450e-8ec9-9cb4694cad39')/livestock('3542253d2a2e81c9c7683b42c4290eebef5ab6bf')/vaccinations",
+     "vaccinations": [
+      {
+       "vaccine": "caprine_pasteurellosis",
+       "vaccination_date": "2026-09-17",
+       "next_due_date": "2026-12-18",
+       "batch_number": "6383681",
+       "administered_by": "Admin ",
+       "vaccination_notes": "Testing ",
+       "__id": "7d78825eddfb0c493b05c982e4105d2f90633439"
+      }
+     ],
+     "vital_events@odata.navigationLink": "Submissions('uuid%3A7b618784-e74c-450e-8ec9-9cb4694cad39')/livestock('3542253d2a2e81c9c7683b42c4290eebef5ab6bf')/vital_events",
+     "vital_events": [
+      {
+       "vital_event_type": "birth",
+       "date": "2026-09-30",
+       "location": "field",
+       "location_details": "Field ",
+       "reporting_officer_id": "Administrator",
+       "vital_event_details": "Testing ",
+       "birth_details": {
+        "offspring_count": 1,
+        "sex_of_offspring": "male"
+       },
+       "disease_details": {
+        "disease_type": null,
+        "vital_date_onset": null,
+        "vital_date_resolution": null,
+        "vital_is_notifiable": null,
+        "treatment": null,
+        "veterinarian_id": null,
+        "is_notifiable": null
+       },
+       "cause": null,
+       "__id": "90471faace9206c848d171c0808f537250cff80f"
+      }
+     ],
+     "breeding_events@odata.navigationLink": "Submissions('uuid%3A7b618784-e74c-450e-8ec9-9cb4694cad39')/livestock('3542253d2a2e81c9c7683b42c4290eebef5ab6bf')/breeding_events",
+     "breeding_events": [
+      {
+       "breeding_event_type": "natural_breeding",
+       "breeding_date": "2026-09-04",
+       "location": "market",
+       "location_details": "Market ",
+       "sire_or_semen_id": "62819",
+       "gestation_days": "150",
+       "expected_calving_date_calc": "20850",
+       "expected_calving_date": "2026-09-11",
+       "pregnancy_confirmed": "yes",
+       "pregnancy_confirmation_date": "2026-09-15",
+       "outcome": "successful",
+       "breeding_notes": "Testing ",
+       "artificial_insemination_tab": {
+        "ai_technician_id": null,
+        "ai_technique": null,
+        "semen_batch_number": null
+       },
+       "__id": "e022d66e9fbf0ca681426d4d09161fc7238c388a"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}
