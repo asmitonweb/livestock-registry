@@ -34,8 +34,8 @@ warning and falls back to native behavior. CI checks that assumption explicitly.
 Timeouts explain the duration, retry action and `token_timeout_seconds` setting.
 The canonical assertion-audience fix is preserved independently of transport.
 
-2026-10-25 verification: Farmer 116 native tests PASS; Crop Sown and Livestock
-96 PASS and 65 database-dependent skips each. Complete metadata replay twice on
+2026-10-25 verification: Farmer 118 native tests PASS; Crop Sown and Livestock
+98 PASS and 65 database-dependent skips each. Complete metadata replay twice on
 disposable/owned scratch databases PASS for all three, zero SQL errors, identical
 metadata. Earlier unchanged widget checks: 25 browser checks and all three tsc PASS.
 Real HTTP Postman simulation reproduced native ReadTimeout at 5.13 s, completed
@@ -45,8 +45,15 @@ client runs. This proves transport timeout handling, not a live identity sign-in
 
 Only the local Farmer API was recreated for this follow-up. Its stable Identity
 section was updated in place to editable FIN/FAN plus conditional SUCCESS lock;
-only the selected register's authentication-required flag was cleared. No live
+the selected register's Verify-enable flag is true. No live
 schema migration, seed replay, domain record, identity-grant or checkpoint edit.
 Live assertion signature/audience still match discovery. Fresh user sign-in is
 pending. Receiving images are local build artifacts; neither registry is deployed.
 Existing-database receiving migrations still require restored-copy acceptance.
+
+Deployment: set `requires_registrant_authentication=true` on the root register
+to enable native Verify. Despite its name, this flag is not read by finalize;
+verification remains optional and approval controls activation. Setting false
+disables the native start operation. SQL assertions keep the action enabled.
+The first fallback commit incorrectly cleared the flag; the lead restored the
+live Farmer setting, and this correction supersedes that source configuration.

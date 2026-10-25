@@ -266,16 +266,89 @@ def test_saved_draft_with_blank_fin_can_start(saved_fin):
 
 
 def test_native_expected_identity_is_not_erased_by_a_concurrent_new_record():
-    created={}
+    created = {}
+
     class Store:
         def create(self, **kwargs):
             created.update(kwargs)
             return SimpleNamespace(context=kwargs["context"])
-    holder={"context":{"foundational_id":"", "oan_bind_verified_fin":True}}
-    token=iv._extra_context.set(holder)
+
+    holder = {"context": {"foundational_id": "", "oan_bind_verified_fin": True}}
+    token = iv._extra_context.set(holder)
     try:
-        iv._ContextStore(Store()).create(context={"foundational_id":FIN})
+        iv._ContextStore(Store()).create(context={"foundational_id": FIN})
     finally:
         iv._extra_context.reset(token)
-    assert created["context"]["foundational_id"]==FIN
+    assert created["context"]["foundational_id"] == FIN
     assert not created["context"]["oan_bind_verified_fin"]
+
+
+@pytest.mark.parametrize("enabled", [True, False])
+def test_actual_native_start_requires_the_verify_enable_flag(monkeypatch, enabled):
+    """Use native start, rather than mocking away its register configuration check."""
+    service = object.__new__(iv.OANRegistrantAuthenticationService)
+
+    class NativeSession:
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, *args):
+            return False
+
+        async def get(self, cls, key):
+            if cls.__name__ == "G2PRegisterDefinition":
+                return SimpleNamespace(
+                    requires_registrant_authentication=enabled,
+                    register_mnemonic="NoLiveRowFixture",
+                )
+            return SimpleNamespace(is_active=True, provider_name="Fayda")
+
+        def add(self, auth):
+            auth.authentication_id = "native-auth"
+
+        async def commit(self):
+            pass
+
+        async def refresh(self, auth):
+            pass
+
+    class Store:
+        def create(self, **kwargs):
+            return SimpleNamespace(
+                context=kwargs["context"],
+                state="native-state",
+                nonce="native-nonce",
+                code_verifier="pkce",
+            )
+
+    class Adapter:
+        async def build_authorize_redirect(self, **kwargs):
+            assert kwargs["nonce"] == "native-nonce"
+            return "https://esignet.example/authorize", "native-state"
+
+    async def providers(**kwargs):
+        return [SimpleNamespace(provider_id="esignet")]
+
+    monkeypatch.setattr(
+        iv._core, "get_async_session_maker", lambda: lambda: NativeSession()
+    )
+    service.get_available_providers = providers
+    service._provider_to_login_provider = lambda provider: SimpleNamespace(id="esignet")
+    service._auth_tx_store = iv._ContextStore(Store())
+    service._adapters = SimpleNamespace(resolve_for_provider=lambda login: Adapter())
+
+    async def start():
+        return await service.start_identity_verification(
+            register_id=getattr(service, "REGISTER_ID", "register"),
+            internal_record_id=None,
+            staff_id="staff",
+        )
+
+    if enabled:
+        assert (
+            asyncio.run(start())["authorization_url"]
+            == "https://esignet.example/authorize"
+        )
+    else:
+        with pytest.raises(iv.G2PRegistryException, match="not enabled"):
+            asyncio.run(start())

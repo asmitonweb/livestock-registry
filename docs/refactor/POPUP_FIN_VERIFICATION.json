@@ -1,6 +1,6 @@
 {
   "registry": "livestock",
-  "native_tests_passed": 96,
+  "native_tests_passed": 98,
   "database_dependent_tests_skipped": 65,
   "metadata_passes": 2,
   "metadata_sql_errors": 0,
@@ -13,7 +13,7 @@
   "runtime_deployed": false,
   "source_sha256": {
     "livestock-extension/src/openg2p_registry_livestock_extension/register_domain/services/identity_verification.py": "f4098122d3705db6d3de4dd9d1c8c3bff69444ebf079b1cc3e60f53297c7649b",
-    "livestock-extension/src/openg2p_registry_livestock_extension/meta_data/register-metadata/zz_popup_identity.sql": "4551dc76a8a983347aa79045aa130d3100d2c93445297b80da7e44a4104b4fcf",
+    "livestock-extension/src/openg2p_registry_livestock_extension/meta_data/register-metadata/zz_popup_identity.sql": "a563c57664e8a43f98c4b84e243a8cec58d5789097a1c0926bba6e4574a3e533",
     "ui/staff-ui/overrides/src/oan/widgets/IdentityVerificationWidget.tsx": "74f223671ff6769c0307efc87b1434b624dde53f011eff204af1829b7eedd5ad",
     "livestock-extension/src/openg2p_registry_livestock_extension/register_domain/services/identity_completion.py": "b173d04edaf0fb8c5d80ade37b746700b3d39b2feb3475cd4e627968b6fe3871",
     "livestock-extension/src/openg2p_registry_livestock_extension/register_domain/services/identity_token_timeout.py": "26849418534513de25b99f2e69608fae278f79254a13e94c9058e7e4b8991fa8"
@@ -27,7 +27,9 @@
   "token_timeout_tests": "PASS, native HTTP transport simulation PASS",
   "linux_production_api_build": "PASS",
   "image_ids": {
-    "api": "sha256:dfcb134283503935b02f42d2aa30b58be4793c5a57b7c7da6d0729188c04861a",
+    "api": "sha256:6fa9c9a1c0f0a4c3c741ad6a6ee0294820dfc6a344391f22490b3c829a588788",
     "ui": "sha256:46e39ed864becf006f1af81929fedacbbad3054e81370d00bd962f084f1eebff"
-  }
+  },
+  "verify_enable_flag": true,
+  "native_start_flag_cases": 2
 }
