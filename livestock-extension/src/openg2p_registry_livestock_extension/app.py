@@ -21,6 +21,8 @@ class Initializer(BaseInitializer):
         for name in SERVICE_NAMES:
             getattr(services, name)()
         install()
+        from .geo_approval.service import install as install_geo_approval
+        install_geo_approval()
         from .register_domain.services.identity_verification import install_identity_verification
         install_identity_verification()
 

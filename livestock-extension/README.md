@@ -80,10 +80,29 @@ the uniqueness rule the module enforces as `ear_tag_species_owner_uniq`.
 
 ### Approval
 
-Kebele → Woreda → Zone → Region, each level gated on the previous one, as
-`_APPROVAL_LEVELS` / `_APPROVAL_REQUIRED_STATE` define it. The ladder appears in
-two places: as the `state` enum on the livestock holding, and as the four ordered
-stages of the seeded AWE policies in `awe_meta_data/`.
+Nothing reaches a register without approval. Every Livestock and Farmer change
+request and every Livestock intake goes through AWE to the **Woreda Approvers of
+the record's own woreda**, in one stage (Oct 2026 decision; it replaced gen1's
+Kebele -> Woreda -> Zone -> Region ladder, so a record goes from DRAFT to
+VERIFIED on that approval).
+
+- **Who is a Woreda Approver for a woreda:** a staff member with the client role
+  `Woreda Approver` and a registry data policy (`DP_<mnemonic>`) on the register
+  that allows that `woreda_id` (EQ or IN). The same policy limits what they see.
+  `Zone Approver` / `Region Approver` work the same on `zone_id` / `region_id`
+  for a binding that asks for them.
+- **How it is routed:** the policy binding (`zzz_geo_approval_awe.sql`) lists
+  `geo_woreda_approver_ids` in `context_field_names`; `geo_approval/` computes it
+  on the server and the stage's expression rule reads it (`awe_meta_data/`). A
+  submitted payload cannot supply it. A change request routes by the record's
+  approved woreda, so proposing a new location cannot pick its own approver; an
+  intake routes by its submitted woreda.
+- **When it cannot be routed** the submission is refused with the reason: no
+  woreda on the record ("select the woreda"), or no Woreda Approver for it ("ask
+  the administrator to give a staff member the role and a data policy"). There
+  is no fallback to another level or place.
+- The Farmer identity section keeps its own Farmer reference policy
+  (`zzz_farmer_reference_awe.sql`).
 
 ### Catalogues and lookups
 
