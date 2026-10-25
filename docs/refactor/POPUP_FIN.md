@@ -31,9 +31,17 @@ Use the existing encryption/signing configuration; no keys or provider rows are
 copied by this change. With no provider, start gives an actionable setup error.
 There is no public mock-success endpoint or a replacement platform callback.
 
+
+For a local HTTP gateway in front of an HTTPS canonical eSignet issuer, set
+`provider_config.jwt_assertion_aud` to the exact canonical token endpoint from
+discovery. The OAN registered service maps this native IAM audience setting
+separately from the provider's transport `token_endpoint`. Do not change keys,
+disable signature verification, or alter ID-token audiences to fix this mismatch.
+Six regressions cover the override, native default and invalid configuration.
+
 ## Verification and rollout
 
-- Native suite: **57 passed, 65 database-dependent tests skipped**.
+- Native suite: **63 passed, 65 database-dependent tests skipped**.
 - Native initialization/route/evidence-model registration probe: PASS.
 - Complete native metadata replay twice: zero SQL errors; identical result;
   all existing section/form IDs retained. See new-dev/seed-rehearsal.json.

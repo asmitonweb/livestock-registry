@@ -129,6 +129,18 @@ class OANRegistrantAuthenticationService(G2PRegistrantAuthenticationService):
             self._fernet = None  # core stores the claims unencrypted then, too
 
     @staticmethod
+    def _provider_to_login_provider(provider):
+        # IAM supports a canonical assertion audience separately from the
+        # transport endpoint (for example, an HTTP-only local gateway).
+        login = G2PRegistrantAuthenticationService._provider_to_login_provider(provider)
+        audience = (provider.provider_config or {}).get("jwt_assertion_aud")
+        if audience is not None:
+            if not isinstance(audience, str) or not audience.strip():
+                raise _invalid("Fayda provider: jwt_assertion_aud must be a nonblank canonical token URL. Ask the administrator to correct it")
+            login.jwt_assertion_aud = audience.strip()
+        return login
+
+    @staticmethod
     def _session():
         return async_sessionmaker(dbengine.get(), expire_on_commit=False)()
 
