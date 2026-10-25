@@ -5839,7 +5839,7 @@
     },
     {
       "path": "livestock-extension/src/openg2p_registry_livestock_extension/meta_data/register-metadata/zz_popup_identity.sql",
-      "sha256": "6a20291d5d61558148195a06ffc3907e8cb0fae1e47da4e09809dc4adfe29dc0"
+      "sha256": "4551dc76a8a983347aa79045aa130d3100d2c93445297b80da7e44a4104b4fcf"
     },
     {
       "path": "livestock-extension/src/openg2p_registry_livestock_extension/meta_data/register-metadata/zzz_farmer_reference_awe.sql",
@@ -6827,6 +6827,28 @@
                       }
                     },
                     {
+                      "widget": "text",
+                      "widget-id": "fayda_fin",
+                      "widget-type": "input",
+                      "widget-label": "Fayda FIN (12 digits, optional)",
+                      "widget-readonly": false,
+                      "widget-required": false,
+                      "widget-data-path": "997676d3-7008-59f9-b23e-613ad79bbb08.fayda_fin",
+                      "widget-data-options": {
+                        "action": "disable",
+                        "condition": {
+                          "field": "997676d3-7008-59f9-b23e-613ad79bbb08.last_authentication_status",
+                          "value": "SUCCESS",
+                          "operator": "equals"
+                        }
+                      },
+                      "widget-data-validation": {
+                        "pattern": "^[0-9]{12}$",
+                        "patternMessage": "Fayda FIN: enter exactly 12 digits, or use the separate 16-digit FAN field. Upload ID evidence for approval."
+                      },
+                      "widget-data-placeholder": "Enter FIN only for manual fallback; Verify with Fayda fills it automatically"
+                    },
+                    {
                       "widget": "oan-identity-verification",
                       "widget-id": "identity_verification",
                       "widget-type": "input",
@@ -6879,6 +6901,28 @@
                       "widget-readonly": false,
                       "widget-required": false,
                       "widget-data-path": "997676d3-7008-59f9-b23e-613ad79bbb08.farmer_name"
+                    },
+                    {
+                      "widget": "text",
+                      "widget-id": "fayda_fin",
+                      "widget-type": "input",
+                      "widget-label": "Fayda FIN (12 digits, optional)",
+                      "widget-readonly": false,
+                      "widget-required": false,
+                      "widget-data-path": "997676d3-7008-59f9-b23e-613ad79bbb08.fayda_fin",
+                      "widget-data-options": {
+                        "action": "disable",
+                        "condition": {
+                          "field": "997676d3-7008-59f9-b23e-613ad79bbb08.last_authentication_status",
+                          "value": "SUCCESS",
+                          "operator": "equals"
+                        }
+                      },
+                      "widget-data-validation": {
+                        "pattern": "^[0-9]{12}$",
+                        "patternMessage": "Fayda FIN: enter exactly 12 digits, or use the separate 16-digit FAN field. Upload ID evidence for approval."
+                      },
+                      "widget-data-placeholder": "Enter FIN only for manual fallback; Verify with Fayda fills it automatically"
                     },
                     {
                       "widget": "oan-identity-verification",

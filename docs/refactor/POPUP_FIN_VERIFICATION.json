@@ -1,24 +1,33 @@
 {
   "registry": "livestock",
-  "native_tests_passed": 72,
+  "native_tests_passed": 96,
   "database_dependent_tests_skipped": 65,
   "metadata_passes": 2,
   "metadata_sql_errors": 0,
   "native_registration": "PASS",
   "typescript": "PASS",
-  "linux_production_ui_image": "oan/livestock-staff-ui:popup-only",
-  "linux_production_ui_build": "Previous popup build PASS; FIN-once TypeScript PASS; Farmer FIN-once image PASS",
+  "linux_production_ui_image": "oan/livestock-staff-ui:fin-once",
+  "linux_production_ui_build": "PASS",
   "browser_widget_checks": 25,
   "browser_scope": "production widget with request-handler fixtures; not live eSignet",
   "runtime_deployed": false,
   "source_sha256": {
-    "livestock-extension/src/openg2p_registry_livestock_extension/register_domain/services/identity_verification.py": "2cc691bd563dc4015332bb5450154352785699761d0d0527de0109956af566e6",
-    "livestock-extension/src/openg2p_registry_livestock_extension/meta_data/register-metadata/zz_popup_identity.sql": "6a20291d5d61558148195a06ffc3907e8cb0fae1e47da4e09809dc4adfe29dc0",
+    "livestock-extension/src/openg2p_registry_livestock_extension/register_domain/services/identity_verification.py": "f4098122d3705db6d3de4dd9d1c8c3bff69444ebf079b1cc3e60f53297c7649b",
+    "livestock-extension/src/openg2p_registry_livestock_extension/meta_data/register-metadata/zz_popup_identity.sql": "4551dc76a8a983347aa79045aa130d3100d2c93445297b80da7e44a4104b4fcf",
     "ui/staff-ui/overrides/src/oan/widgets/IdentityVerificationWidget.tsx": "74f223671ff6769c0307efc87b1434b624dde53f011eff204af1829b7eedd5ad",
-    "livestock-extension/src/openg2p_registry_livestock_extension/register_domain/services/identity_completion.py": "4abf7dcf5f23d62c46fdd8293d64897c46939808ebe77fbc3e52a3a04e0f3bae"
+    "livestock-extension/src/openg2p_registry_livestock_extension/register_domain/services/identity_completion.py": "b173d04edaf0fb8c5d80ade37b746700b3d39b2feb3475cd4e627968b6fe3871",
+    "livestock-extension/src/openg2p_registry_livestock_extension/register_domain/services/identity_token_timeout.py": "26849418534513de25b99f2e69608fae278f79254a13e94c9058e7e4b8991fa8"
   },
   "native_assertion_audience_tests": 6,
-  "fin_entry": "eSignet UIN/VID only",
+  "fin_entry": "Verified path: eSignet UIN/VID only; manual fallback optional until SUCCESS",
   "fin_once_cases": 15,
-  "live_sign_in": "User acceptance pending"
+  "live_sign_in": "User acceptance pending",
+  "manual_fallback": "Unverified FIN12; separate UID/FAN16 retained",
+  "token_timeout_seconds_default": 30,
+  "token_timeout_tests": "PASS, native HTTP transport simulation PASS",
+  "linux_production_api_build": "PASS",
+  "image_ids": {
+    "api": "sha256:dfcb134283503935b02f42d2aa30b58be4793c5a57b7c7da6d0729188c04861a",
+    "ui": "sha256:46e39ed864becf006f1af81929fedacbbad3054e81370d00bd962f084f1eebff"
+  }
 }

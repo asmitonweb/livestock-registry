@@ -8,6 +8,10 @@ put back into Redis and replay state is discarded at the end of this request.
 
 from contextvars import ContextVar
 
+from iam_core.user_auth.oidc_client import OidcClient
+
+from .identity_token_timeout import exchange_with_timeout
+
 completion_context: ContextVar[dict | None] = ContextVar(
     "oan_fin_completion", default=None
 )
@@ -28,6 +32,9 @@ class ReplayAdapter:
                     "Fayda verification: the completion context changed. Verify again"
                 )
             return context["token_response"]
+        timeout = getattr(kwargs["login_provider"], "oan_token_timeout_seconds", None)
+        if timeout is not None and isinstance(getattr(self.inner, "oidc_client", None), OidcClient):
+            return await exchange_with_timeout(self.inner.oidc_client, timeout, **kwargs)
         return await self.inner.exchange_code_for_token(**kwargs)
 
     def __getattr__(self, name):

@@ -306,7 +306,7 @@
     {
       "pass": 1,
       "path": "livestock-extension/src/openg2p_registry_livestock_extension/meta_data/register-metadata/zz_popup_identity.sql",
-      "sha256": "6a20291d5d61558148195a06ffc3907e8cb0fae1e47da4e09809dc4adfe29dc0",
+      "sha256": "4551dc76a8a983347aa79045aa130d3100d2c93445297b80da7e44a4104b4fcf",
       "sqlstate_errors": [],
       "psql_exit_code": 0
     },
@@ -712,7 +712,7 @@
     {
       "pass": 2,
       "path": "livestock-extension/src/openg2p_registry_livestock_extension/meta_data/register-metadata/zz_popup_identity.sql",
-      "sha256": "6a20291d5d61558148195a06ffc3907e8cb0fae1e47da4e09809dc4adfe29dc0",
+      "sha256": "4551dc76a8a983347aa79045aa130d3100d2c93445297b80da7e44a4104b4fcf",
       "sqlstate_errors": [],
       "psql_exit_code": 0
     },

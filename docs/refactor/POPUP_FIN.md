@@ -1,41 +1,52 @@
-# FIN entered once, on eSignet
+# Optional Fayda verification and manual fallback
 
-The user types FIN only on eSignet's UIN/VID screen. The registered widget opens
-the provider directly; there is no custom FIN collection page or main-form FIN
-input. The main form's FIN is a native read-only display filled from the verified
-result. `faydaPopup.ts` was removed. Start accepts no FIN and ignores a browser
-FIN value; a saved record's expected FIN is read server-side.
+"Verify with Fayda" opens eSignet directly. The verified path asks for FIN only
+on eSignet's UIN/VID screen; no custom FIN page exists. On SUCCESS the verified
+12-digit FIN fills the configured form attribute and native metadata disables
+its input. Server checks refuse changes, clearing, forged stamps and proof reuse.
 
-Core snapshots its expected FIN before token exchange, so a new intake needs a
-small registered-extension bridge. The native adapter first validates token
-signature, nonce and claims and obtains a 12-digit FIN. The extension binds that
-subject to the native transaction, then delegates completion/persistence to
-core. A request-local store/adapter wrapper replays that same transaction/token
-response once: the authorization code is not exchanged twice, and no state is
-put back into Redis. Native validation and SUCCESS-only claims storage remain.
-Existing FINs still go through core's equality check; hand edits, invalid FINs,
-record reuse and verification downgrade are refused. Client stamps are untrusted.
+When verification is unavailable, the manual ID remains editable and is stored
+unverified with empty authentication stamps. Verification is optional at finalize;
+normal intake/change-request approval remains the activation control. A failed or
+unfinished-expired attempt may be discarded for a valid manual ID on a never-verified
+record. A previously successful verification cannot be removed to bypass its lock.
+Document upload remains the evidence mechanism; this change adds no approval bypass.
 
-FIN12 remains separate from the receiving registries' existing UID/FAN16
-reference contract. Their non-unique `fayda_fin` domain field avoids imposing
-native `foundational_id` uniqueness on a person's multiple seasons/holdings.
-The UI result retains `foundational_id` as its response key and writes to the
-configured field. Approved reference demographics and business approvals remain
-owned by the independent Farmer reference pipeline.
+Farmer's combined `foundational_id` accepts FIN12 or FAN16. Crop Sown/Livestock
+retain separate FIN12 (`fayda_fin`) and existing UID/FAN16 (`fayda_fan_id`) fields;
+verification never manufactures a FAN or alters authoritative Farmer projections.
+Saved unverified manual IDs do not constrain a later verified FIN; a saved SUCCESS
+identity remains the expected subject, including a completion-time race check.
 
-Checks: full native suites, native completion regression cases, metadata replay
-twice with zero SQL errors, TypeScript and 25 production-widget browser checks.
-These browser checks use deterministic handler fixtures. A real interactive
-eSignet sign-in is the user's acceptance check; it is not claimed completed.
-The canonical assertion-audience fix and its six regressions remain included.
+Core snapshots expected FIN before token exchange. The OAN extension prevalidates
+the new subject with the native adapter, binds exactly 12 ASCII digits, then
+delegates completion/storage to core using request-local transaction/token replay.
+The single-use code is exchanged once; state is never reinserted into Redis.
+Native signature/nonce/claim checks and SUCCESS-only claim storage remain.
 
-The primary dirty Crop/Livestock experiments remain preserved. No compiled UI
-patch, public mock-success endpoint or OpenG2P source change was introduced.
-Receiving existing-database migrations still require restored-copy acceptance;
-the source port does not automatically deploy these registries.
+`provider_config.token_timeout_seconds` defaults to 30 positive finite seconds.
+iam_core 1.4.2 constructs its OAuth client without a timeout (httpx defaults to 5 s).
+The OAN call-scoped bridge runs the unchanged native exchange with an isolated
+globals dictionary and a timeout-aware, call-owned client factory. No shared IAM
+module/class/method is replaced, and the client is closed. Startup checks the
+native factory assumption: a future incompatible IAM upgrade logs one versioned
+warning and falls back to native behavior. CI checks that assumption explicitly.
+Timeouts explain the duration, retry action and `token_timeout_seconds` setting.
+The canonical assertion-audience fix is preserved independently of transport.
 
-Native suite: **72 passed / 65 database-dependent tests skipped**.
-Metadata seed replay twice: PASS, identical final metadata, no SQL errors.
-TypeScript: PASS. Farmer is deployed locally first; receiving runtime is not
-recreated by this port. Native provider and shared transaction-store configuration
-remain environment-owned.
+2026-10-25 verification: Farmer 116 native tests PASS; Crop Sown and Livestock
+96 PASS and 65 database-dependent skips each. Complete metadata replay twice on
+disposable/owned scratch databases PASS for all three, zero SQL errors, identical
+metadata. Earlier unchanged widget checks: 25 browser checks and all three tsc PASS.
+Real HTTP Postman simulation reproduced native ReadTimeout at 5.13 s, completed
+OAN's 30 s case at 7.55 s and explained a configured 1 s timeout at 1.02 s. Its
+stand-in delays the documented OAuth token response 7.5 s; the actual OAN/native
+client runs. This proves transport timeout handling, not a live identity sign-in.
+
+Only the local Farmer API was recreated for this follow-up. Its stable Identity
+section was updated in place to editable FIN/FAN plus conditional SUCCESS lock;
+only the selected register's authentication-required flag was cleared. No live
+schema migration, seed replay, domain record, identity-grant or checkpoint edit.
+Live assertion signature/audience still match discovery. Fresh user sign-in is
+pending. Receiving images are local build artifacts; neither registry is deployed.
+Existing-database receiving migrations still require restored-copy acceptance.
