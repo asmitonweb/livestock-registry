@@ -211,3 +211,12 @@ def test_a_dry_run_reads_but_never_writes():
 def test_configuration_errors_name_the_setting(env, message):
     with pytest.raises(sync.ConfigError, match=message):
         sync.Settings.from_env({**ENV, **env})
+
+
+def test_entity_uuids_are_stable_version_4_uuids():
+    import uuid
+
+    first = sync.entity_uuid("kebele", "ET010101101001")
+    assert first == sync.entity_uuid("kebele", "ET010101101001")
+    assert uuid.UUID(first).version == 4
+    assert first != sync.entity_uuid("woreda", "ET010101101001")

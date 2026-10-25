@@ -10,7 +10,7 @@ List changes with the form's update; no form is republished.
 
 Each entity is one geo value:
 
-    uuid    UUIDv5 of "<level>:<Master Data id>", so every run upserts the same entity
+    uuid    a hash of "<level>:<Master Data id>" (a v4 uuid, as Central requires), so every run upserts the same entity
     label   the value's name (level_value_mnemonic)
     code    the Master Data id (level_value_id), what the form submits
     parent  the parent's entity uuid, for the cascade (choice_filter parent=${region_id})
@@ -69,7 +69,9 @@ class CentralError(SyncError):
 
 
 def entity_uuid(level: str, value_id: str) -> str:
-    return str(uuid.uuid5(NAMESPACE, f"{level}:{value_id}"))
+    # Central accepts version-4 uuids only: the name-based hash, stamped as v4,
+    # stays the same for the same place on every run.
+    return str(uuid.UUID(bytes=uuid.uuid5(NAMESPACE, f"{level}:{value_id}").bytes, version=4))
 
 
 @dataclass
@@ -371,6 +373,7 @@ def run(settings: Settings, http: httpx.Client | None = None) -> list[LevelPlan]
 
 def main() -> int:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
+    logging.getLogger("httpx").setLevel(logging.WARNING)
     try:
         settings = Settings.from_env()
         plans = run(settings)

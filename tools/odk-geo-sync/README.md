@@ -9,7 +9,7 @@ is republished.
 | --- | --- | --- | --- | --- |
 | `region`, `zone`, `woreda`, `kebele` | geo value of that level | its name | its Master Data id (what the form submits) | the parent's entity uuid (the cascade filter) |
 
-- **Stable uuids.** The entity uuid is UUIDv5 of `<level>:<Master Data id>`, so a rerun updates the same entities and submissions keep pointing at them.
+- **Stable uuids.** The entity uuid is a hash of `<level>:<Master Data id>`, stamped as a version-4 uuid (Central accepts no other), so a rerun updates the same entities and submissions keep pointing at them.
 - **Mirrors exactly.** The lists follow Master Data: new values are created, renames and moves are updated, and removed values are deleted.
 - **Name-linked parents.** Some Master Data link a value to its parent by the parent's name (Livestock's does). Such a parent is resolved to the parent level's id. A value whose parent is in neither form is skipped and reported.
 - **Fails safe.** A run that cannot read Master Data, or reads an empty one, changes nothing, so Collect keeps the last good lists.
