@@ -4,6 +4,8 @@ from datetime import date
 
 from openg2p_registry_core.models import G2PRegisterChangeRequest
 from openg2p_registry_core.services import G2PRegisterDomainService
+
+from ...farmer_reference.profile import FarmerReferenceError, normalize_uid
 from sqlalchemy import select
 
 from .admin_area_sync import sync_admin_area
@@ -48,10 +50,6 @@ def _stage_order_to_state():
 
 # Farmer Registry IDs use FR- followed by exactly 12 digits.
 _FARMER_ID_PATTERN = re.compile(r"^FR-\d{12}$")
-# Exactly 16 digits (the Fayda FAN carries no letter prefix), as enforced by
-# _check_fayda_fan_id_format in
-# g2p_livestock_registry/models/livestock_registry.py.
-_FAYDA_FAN_ID_PATTERN = re.compile(r"^\d{16}$")
 # Ethiopian mobile numbers only, matching _check_mobile_numbers in gen1's
 # g2p_crop_registry/model/crop_registry.py: +251 or a leading 0, followed by
 # 7 or 9 (the only leading digits Ethiopian mobile numbers use) and 8 more
@@ -123,10 +121,10 @@ class G2PRegisterDomainServiceLivestock(AuditSnapshotMixin, G2PRegisterDomainSer
         value = record.get("fayda_fan_id")
         if value is None or str(value).strip() == "":
             return
-        if not _FAYDA_FAN_ID_PATTERN.match(str(value).strip()):
-            validation_error(
-                "fayda_fan_id must be exactly 16 digits, e.g. 1234567890123456"
-            )
+        try:
+            record["fayda_fan_id"] = normalize_uid(value)
+        except FarmerReferenceError:
+            validation_error("Fayda ID (FAN): enter exactly 16 digits, optionally spaced in four groups. Use the FIN field for a 12-digit FIN")
 
     def _validate_mobile_number(self, record: dict, field: str) -> None:
         value = record.get(field)
