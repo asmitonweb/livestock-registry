@@ -20,6 +20,10 @@ if mode in {"staff", "partner"}:
     celery_app = None
 else:
     app_module = "openg2p_registry_celery_worker" if mode == "worker" else "openg2p_registry_celery_beat"
+    # A non-default queue proves the extension follows native configuration,
+    # rather than accidentally executing a worker task in the beat producer.
+    os.environ["REGISTRY_CELERY_WORKERS_WORKER_QUEUE"] = "owned-reference-probe-queue"
+    os.environ["REGISTRY_CELERY_BEAT_WORKER_QUEUE"] = "owned-reference-probe-queue"
     celery_app = importlib.import_module(app_module + ".main").celery_app
     before = dict(celery_app.conf.beat_schedule or {})
     # Exactly the CELERY_IMPORTS path used by unmodified run_celery.py.
@@ -28,6 +32,8 @@ else:
     celery_app.loader.import_default_modules()
     assert set(before) <= set(celery_app.conf.beat_schedule)
     assert "coss.farmer_reference.deliver_workflows" in celery_app.tasks
+    assert celery_app.conf.beat_schedule["coss-farmer-reference-workflows"]["options"]["queue"] == "owned-reference-probe-queue"
+    assert celery_app.tasks["coss.farmer_reference.deliver_workflows"].queue == "owned-reference-probe-queue"
     tasks = importlib.import_module("openg2p_registry_extensions.tasks")
     for name, frequency in tasks.DOMAIN_SCHEDULE.items():
         assert name in celery_app.tasks

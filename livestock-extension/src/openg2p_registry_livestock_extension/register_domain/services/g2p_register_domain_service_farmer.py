@@ -179,27 +179,8 @@ class G2PRegisterDomainServiceFarmer(AuditSnapshotMixin, G2PRegisterDomainServic
     async def post_approve(self, change_request, session) -> None:
         from ...farmer_reference.native import record_native_decision
         await record_native_decision(session, change_request.change_request_id, True)
-        """A Location edit on an approved Farmer writes the dropdowns' geo ids;
-        refresh the names from them (see admin_area_sync)."""
-        if change_request.section_register_id != FARMER_REGISTER_ID:
-            return
-        from sqlalchemy import select
-        from openg2p_registry_extensions.register_domain.models import G2PRegisterFarmer
-
-        farmer = (
-            await session.execute(
-                select(G2PRegisterFarmer).where(
-                    G2PRegisterFarmer.internal_record_id == change_request.internal_record_id
-                )
-            )
-        ).scalar_one_or_none()
-        if farmer is not None:
-            await self._refresh_linked_domains(session, farmer.internal_record_id)
+        # Stored Livestock mirrors require their own domain approval. Farmer approval
+        # changes only this Farmer and releases already approved waiting intakes.
 
     async def post_ingest(self, register_id, register_row, session):
         raise FarmerReferenceError("FARMER_REFERENCE_CHANGE_REQUEST_REQUIRED")
-
-    async def _refresh_linked_domains(self, session, reference_id) -> None:
-        from ...farmer_reference.projection import refresh_linked_domains
-        from openg2p_registry_extensions.register_domain.models import G2PRegisterFarmer, G2PRegisterLivestock
-        await refresh_linked_domains(session, G2PRegisterFarmer, G2PRegisterLivestock, reference_id)

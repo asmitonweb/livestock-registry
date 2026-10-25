@@ -69,6 +69,11 @@ async def deliver_workflow(session, entry, *, directory=None, bearer_provider=No
     service = integration or G2PAweIntegrationService.get_component()
     if not service._awe_enabled():
         raise FarmerReferenceError("FARMER_REFERENCE_AWE_REQUIRED")
+    callback_url, callback_secret_id = service._callback_params()
+    if not callback_url or not callback_secret_id:
+        # AWE accepts callback-less requests. Such a decision can never reach
+        # this registry, so retain a recoverable blocked outbox instead.
+        raise FarmerReferenceError("FARMER_REFERENCE_AWE_CALLBACK_REQUIRED")
     token = await (bearer_provider or service_bearer)()
     # Only this server-produced context reaches native _build_context. Client
     # payloads cannot inject assignees, a scope, or internal source versions.

@@ -1,0 +1,12 @@
+{
+  "response_header": {
+    "request_id": {{ expanded.response_header.request_id | tojson }},
+    "response_status": {{ expanded.response_header.response_status | tojson }},
+    "response_error_code": {{ expanded.response_header.response_error_code | tojson }},
+    "response_error_message": {{ expanded.response_header.response_error_message | tojson }},
+    "response_timestamp": {{ (expanded.response_header.response_timestamp | string) | tojson }}
+  },
+  "response_body": {
+    "response_payload": {{ expanded.response_body.response_payload | tojson }}
+  }
+}

@@ -26,5 +26,11 @@ def notification_change_identity(payload):
 
 
 def notification_fields(data):
+    # The receiving connector adds a routing hint inside its signed envelope.
+    # Accept only this registry target; it never becomes an identity/profile.
+    if isinstance(data, dict) and "register_mnemonic" in data:
+        if data["register_mnemonic"] != "Farmer":
+            raise FarmerReferenceError("FARMER_REFERENCE_INVALID_NOTIFICATION")
+        data = {key: value for key, value in data.items() if key != "register_mnemonic"}
     notification_identity(data)
     return intake_identity(data, require_farmer=True)

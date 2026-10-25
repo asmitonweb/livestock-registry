@@ -56,19 +56,6 @@ def _mirror(domain_row, farmer):
     return int(changed)
 
 
-async def refresh_linked_domains(session, farmer_model, domain_model, reference_id):
-    """Project after local approval; UPDATE never creates/replays an intake."""
-    farmer = await _approved_farmer(session, farmer_model, reference_id)
-    rows = (await session.execute(
-        select(domain_model).where(domain_model.farmer_uuid == reference_id,
-                                   domain_model.record_status == "ACTIVE")
-        .order_by(domain_model.internal_record_id).with_for_update()
-    )).scalars().all()
-    count = sum(_mirror(row, farmer) for row in rows)
-    await session.flush()
-    return count
-
-
 async def refresh_domain_on_ingest(session, farmer_model, domain_row):
     """Block activation without the already approved stable local dependency.
 

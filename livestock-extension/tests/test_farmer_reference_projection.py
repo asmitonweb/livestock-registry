@@ -75,11 +75,11 @@ class ProjectionTests(unittest.IsolatedAsyncioTestCase):
     async def asyncTearDown(self):
         await self.engine.dispose()
 
-    async def test_approved_update_projects_only_stable_links_and_preserves_business(self):
+    async def test_own_domain_approval_projects_only_its_row_and_preserves_business(self):
         async with self.sessions.begin() as session:
             farmer = await session.get(Farmer, "local-1")
             farmer.first_name = "Approved"
-            self.assertEqual(await projection.refresh_linked_domains(session, Farmer, Domain, "local-1"), 1)
+            self.assertEqual(await projection.refresh_domain_on_ingest(session, Farmer, await session.get(Domain, "domain-1")), 1)
             row = await session.get(Domain, "domain-1")
             self.assertEqual(row.farmer_name, "Approved Middle Farmer")
             self.assertEqual(row.business_data, "season-2026;plots-2;animals-20")
@@ -90,13 +90,13 @@ class ProjectionTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual((await session.get(Domain, "unlinked")).farmer_name, "Unlinked")
             self.assertEqual((await session.get(Domain, "inactive")).farmer_name, "Inactive")
             self.assertEqual((await session.get(Domain, "other-reference")).farmer_name, "Other")
-            self.assertEqual(await projection.refresh_linked_domains(session, Farmer, Domain, "local-1"), 0)
+            self.assertEqual(await projection.refresh_domain_on_ingest(session, Farmer, await session.get(Domain, "domain-1")), 0)
 
     async def test_projection_rollback_preserves_approved_values(self):
         with self.assertRaisesRegex(RuntimeError, "downstream failure"):
             async with self.sessions.begin() as session:
                 (await session.get(Farmer, "local-1")).first_name = "Pending"
-                await projection.refresh_linked_domains(session, Farmer, Domain, "local-1")
+                await projection.refresh_domain_on_ingest(session, Farmer, await session.get(Domain, "domain-1"))
                 raise RuntimeError("downstream failure")
         async with self.sessions() as session:
             self.assertEqual((await session.get(Farmer, "local-1")).first_name, "Old")
@@ -107,7 +107,7 @@ class ProjectionTests(unittest.IsolatedAsyncioTestCase):
             with self.subTest(field=field), self.assertRaisesRegex(Error, "DEPENDENCY_REQUIRED"):
                 async with self.sessions.begin() as session:
                     setattr(await session.get(Farmer, "local-1"), field, value)
-                    await projection.refresh_linked_domains(session, Farmer, Domain, "local-1")
+                    await projection.refresh_domain_on_ingest(session, Farmer, await session.get(Domain, "domain-1"))
 
     async def test_unlinked_ingest_rolls_back_without_guessing_owner(self):
         with self.assertRaisesRegex(Error, "DEPENDENCY_REQUIRED"):
@@ -132,7 +132,7 @@ class ProjectionTests(unittest.IsolatedAsyncioTestCase):
     async def test_uid_rotation_keeps_local_link_and_does_not_recreate_domain(self):
         async with self.sessions.begin() as session:
             (await session.get(Farmer, "local-1")).fayda_fan_id = "0000000000000002"
-            await projection.refresh_linked_domains(session, Farmer, Domain, "local-1")
+            await projection.refresh_domain_on_ingest(session, Farmer, await session.get(Domain, "domain-1"))
             row = await session.get(Domain, "domain-1")
             self.assertEqual(row.farmer_uuid, "local-1")
             self.assertEqual(row.fayda_fan_id, "0000000000000002")
@@ -143,14 +143,14 @@ class ProjectionTests(unittest.IsolatedAsyncioTestCase):
         with self.assertRaisesRegex(Error, "LINK_IDENTITY_MISMATCH"):
             async with self.sessions.begin() as session:
                 (await session.get(Domain, "domain-1")).farmer_id = "FR-000000000002"
-                await projection.refresh_linked_domains(session, Farmer, Domain, "local-1")
+                await projection.refresh_domain_on_ingest(session, Farmer, await session.get(Domain, "domain-1"))
         async with self.sessions() as session:
             self.assertEqual((await session.get(Domain, "domain-1")).farmer_id, "FR-000000000001")
 
     async def test_explicit_optional_name_clear_is_projected(self):
         async with self.sessions.begin() as session:
             (await session.get(Farmer, "local-1")).middle_name = None
-            await projection.refresh_linked_domains(session, Farmer, Domain, "local-1")
+            await projection.refresh_domain_on_ingest(session, Farmer, await session.get(Domain, "domain-1"))
             self.assertEqual((await session.get(Domain, "domain-1")).farmer_name, "Old Farmer")
 
 
