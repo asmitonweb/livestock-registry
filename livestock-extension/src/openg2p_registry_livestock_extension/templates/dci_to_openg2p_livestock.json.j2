@@ -2,7 +2,6 @@
 {% set holding = d.get("livestock_details", {}) %}
 {% set farmer = holding.get("farmer_info", {}) %}
 {% set farmer_demo = farmer.get("demographic_info", {}) %}
-{% set farmer_name = farmer_demo.get("name", {}) %}
 {% set farmer_identifier = (farmer.get("member_identifier", []) | first) or farmer_demo.get("identifier", {}) %}
 {% set survey = holding.get("survey_info", {}) %}
 {% set place = holding.get("place", {}) %}
@@ -23,38 +22,16 @@
   {% set source_system = "MANUAL" %}
 {% endif %}
 
-{% set full_name = (farmer_name.get('given_name', '') ~ ' ' ~ farmer_name.get('surname', '')).strip() %}
 {% set farmer_code = farmer.get('farmer_id', '') %}
+{% set fayda_id = farmer.get('fayda_id') or farmer.get('fayda_fin') or farmer.get('fayda_fan_id') or farmer_identifier.get('identifier_value', '') %}
 
 {
-  "ls_farmer_identity": [
+  "ls_intake_identity": [
     {
-      "record_name": "{{ full_name }}",
+      "record_name": {{ farmer_code | tojson }},
       "farmer_id": "{{ farmer_code }}",
-      "fayda_fan_id": "{{ farmer_identifier.get('identifier_value', '') }}",
-      "farmer_name": "{{ full_name }}",
-      "first_name": "{{ farmer_name.get('given_name', '') }}",
-      "last_name": "{{ farmer_name.get('surname', '') }}",
-      "gender": "{{ (farmer_demo.get('sex', '') or '') | upper }}",
-      "date_of_birth": "{{ (farmer_demo.get('birth_date', '') or '').split('T')[0] }}",
-      "mobile_number": "{{ farmer.get('phone_number', '') }}",
-      "status": "{{ (holding.get('status', '') or '') | upper | replace(' ', '_') }}"
-    }
-  ],
-  "ls_farmer_location": [
-    {
-      "locality": "{{ place.get('name', '') }}",
-      "latitude": "{{ geo.get('latitude', '') }}",
-      "longitude": "{{ geo.get('longitude', '') }}"
-    }
-  ],
-  "ls_livestock_record": [
-    {
-      "record_name": "{{ full_name }} {{ holding.get('oan_id', '') }}",
-      "farmer_uuid": "{{ farmer.get('farmer_uuid', '') }}",
-      "farmer_id": "{{ farmer_code }}",
-      "fayda_fan_id": "{{ farmer_identifier.get('identifier_value', '') }}",
-      "farmer_name": "{{ full_name }}",
+      "fayda_fin": {{ (fayda_id if fayda_id | length == 12 else none) | tojson }},
+      "fayda_fan_id": {{ (fayda_id if fayda_id and fayda_id | length != 12 else none) | tojson }},
       "oan_id": "{{ holding.get('oan_id', '') }}",
       "secondary_identifier": "{{ holding.get('secondary_identifier', '') }}",
       "registration_date": "{{ (holding.get('registration_date', '') or '').split('T')[0] }}",

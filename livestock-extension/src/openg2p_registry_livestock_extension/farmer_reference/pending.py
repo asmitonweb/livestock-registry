@@ -17,23 +17,16 @@ from .profile import FarmerReferenceError, intake_identity, matches_declared_ide
 
 
 def pending_message(identity, code):
-    field = "fayda_fin" if identity.get("fayda_fin") else "fayda_fan_id"
-    label = "FIN" if field == "fayda_fin" else "FAN"
-    if code in {
-        "FARMER_REFERENCE_NOT_FOUND",
-        "FARMER_REFERENCE_SOURCE_CONTRACT_INCOMPLETE",
-    }:
-        return (
-            f"Farmer reference pending: no Farmer record found for {label} {identity[field]} yet; "
-            "it will be linked after approval"
-        )
-    return (
-        "Farmer reference pending: the approved Farmer could not be looked up. "
-        "This intake can be approved; linking will retry when the Farmer Registry is available"
-    )
+    from .messages import explain
+    return explain(code, identity, held=True)
 
 
-async def resolve_or_wait(session, submission, row, *, lookup=None):
+async def resolve_or_wait(session, submission, row, *, lookup=None, interactive=False):
+    """Link the declared Farmer, or hold the intake for a later retry.
+
+    interactive: a person is submitting and can correct the IDs, so any
+    failure is refused (nothing is created) instead of held.
+    """
     from .native import onboarding_service
 
     declared = intake_identity(
@@ -81,13 +74,22 @@ async def resolve_or_wait(session, submission, row, *, lookup=None):
             )
     except FarmerReferenceError as error:
         code = str(error)
+        if interactive:
+            raise
         if code in {
             "FARMER_REFERENCE_IDENTITY_MISMATCH",
             "FARMER_REFERENCE_SOURCE_ID_MISMATCH",
             "FARMER_REFERENCE_EXISTING_IDENTITY_AMBIGUOUS",
             "FARMER_REFERENCE_SUBMISSION_IDENTITY_CHANGED",
         }:
-            raise
+            # A worker cannot repair a declared identity. Preserve the FINAL
+            # intake with its explained diagnostic, without creating a CR or
+            # retrying the wrong pair indefinitely.
+            pending.state, pending.last_error_code, pending.retry_after = "BLOCKED", code, None
+            row.farmer_reference_status = pending_message(declared, code)
+            row.farmer_uuid = None
+            await session.flush()
+            return None
         pending.state, pending.last_error_code = "PENDING", code
         delay = min(3600, 60 * (2 ** min(pending.attempts - 1, 6)))
         pending.retry_after = datetime.now(UTC).replace(tzinfo=None) + timedelta(
@@ -162,7 +164,7 @@ async def retry_approved_pending(session, limit=10):
             pending.state, pending.last_error_code = "BLOCKED", str(error)
             roots[
                 0
-            ].farmer_reference_status = "Farmer reference blocked: the declared identifiers do not match the approved Farmer. Ask the administrator to review this intake"
+            ].farmer_reference_status = pending_message(pending.identity_json, str(error))
 
     await session.flush()
     return len(rows)

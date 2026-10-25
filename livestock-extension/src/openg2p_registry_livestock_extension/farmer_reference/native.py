@@ -11,6 +11,7 @@ from sqlalchemy import select
 from openg2p_fastapi_common.context import get_async_session_maker
 from openg2p_registry_core.models import (G2PRegisterDefinition, G2PRegisterSection, G2PRegisterUITabSection,
                                          G2PRegisterChangeRequest, G2PIntakeFormSubmission)
+from openg2p_registry_core.errors import G2PRegistryErrorCodes, G2PRegistryException
 from openg2p_registry_core.schemas import ChangeRequestRequestPayload, ChangePayload
 from openg2p_registry_core.services.intake_form_data_service import G2PIntakeFormDataService
 from openg2p_registry_core.services.g2p_register_change_request_service import G2PRegisterChangeRequestService
@@ -150,6 +151,20 @@ class ReferenceIntakeService(G2PIntakeFormDataService):
 
     async def finalize_submission_with_session(self, submission_id, session, finalized_by=None,
                                                 bearer_token=None, requester_sub=None):
+        from .messages import explain
+        # The service is a shared component: the declared IDs belong to this call.
+        declared_ids = {}
+        try:
+            return await self._finalize_with_farmer(submission_id, session, finalized_by,
+                                                    bearer_token, requester_sub, declared_ids)
+        except FarmerReferenceError as error:
+            raise G2PRegistryException(code=G2PRegistryErrorCodes.INVALID_REQUEST.value[1],
+                                       message=explain(str(error), declared_ids)) from None
+
+    async def _finalize_with_farmer(self, submission_id, session, finalized_by, bearer_token, requester_sub,
+                                    declared_ids):
+        # A person submitting (bearer present) is told at once; workers hold and retry.
+        interactive = bool(bearer_token)
         submission = await self._get_submission_or_error(submission_id, session)
         await session.refresh(submission, with_for_update=True)
         definition = await self._get_register_definition(submission.register_id, session)
@@ -162,7 +177,11 @@ class ReferenceIntakeService(G2PIntakeFormDataService):
             if len(rows) != 1:
                 raise FarmerReferenceError("FARMER_REFERENCE_SINGLE_DOMAIN_ROOT_REQUIRED")
             row = rows[0]
+            declared_ids.update({key: value for key, value in model_identity(row).items()
+                                 if key in {"farmer_id", "fayda_fin", "fayda_fan_id"} and value})
             declared = intake_identity(model_identity(row))
+            if not declared.get("farmer_id"):
+                raise FarmerReferenceError("FARMER_REFERENCE_FARMER_ID_REQUIRED")
             for field, value in declared.items():
                 setattr(row, field, value)
             sections = await self._get_form_sections(submission.form_id, session)
@@ -203,7 +222,7 @@ class ReferenceIntakeService(G2PIntakeFormDataService):
                     row.farmer_reference_status = "Farmer reference linked"
                 else:
                     from .pending import resolve_or_wait
-                    reference = await resolve_or_wait(session, submission, row)
+                    reference = await resolve_or_wait(session, submission, row, interactive=interactive)
                 if reference is None:
                     submission.register_ingest_process_last_error_code = "FARMER_REFERENCE_DEPENDENCY_PENDING"
             await session.flush()

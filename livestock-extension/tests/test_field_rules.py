@@ -217,3 +217,19 @@ def test_table_field_errors_identify_the_row_without_repeating_personal_values()
         )
     assert "Farmer Name (row 2):" in caught.value.message
     assert "Bad123" not in caught.value.message
+
+
+def test_identity_section_needs_the_farmer_id_and_one_fayda_id():
+    empty = {"farmer_id": " ", "fayda_fin": None, "fayda_fan_id": ""}
+    keys = sorted(problem.key for problem in rules.clean_records([empty]))
+    assert keys == ["coss_field_farmer_id_required", "coss_field_fayda_one_of"]
+    for problem in rules.clean_records([dict(empty)]):
+        assert rules.explain(problem).startswith(("Farmer ID:", "Fayda ID:"))
+    for fayda in ({"fayda_fin": "001234567890"}, {"fayda_fan_id": "0000000000000001"}):
+        record = {**empty, "farmer_id": "FR-000000000001", **fayda}
+        assert rules.identity_issues(record) == []
+
+
+def test_identity_rule_skips_records_without_the_identity_fields():
+    assert rules.identity_issues({"animal_type": "Cattle"}) == []
+    assert rules.identity_issues({"farmer_id": ""}) == []

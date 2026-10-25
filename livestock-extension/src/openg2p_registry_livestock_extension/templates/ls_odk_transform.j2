@@ -45,6 +45,19 @@
 {% set loc_woreda_val = loc.get('woreda_name_id') or loc.get('woreda_id') or loc.get('woreda') or d.get('holding_woreda_id') or d.get('holding_woreda') or d.get('woreda_name_id') or d.get('woreda_id') or d.get('woreda') or fl.get('woreda_id') or fl.get('woreda') or fl.get('woreda_name_id') or d.get('farmer_woreda_id') or d.get('farmer_woreda') or '' %}
 {% set loc_kebele_val = loc.get('kebele_name_id') or loc.get('kebele_id') or loc.get('kebele') or d.get('holding_kebele_id') or d.get('holding_kebele') or d.get('kebele_name_id') or d.get('kebele_id') or d.get('kebele') or fl.get('kebele_id') or fl.get('kebele') or fl.get('kebele_name_id') or d.get('farmer_kebele_id') or d.get('farmer_kebele') or '' %}
 
+{# Form v5 and later pick the locations from the Master Data Entity Lists
+   (tools/odk-geo-sync) and submit each place's Master Data id as <level>_code.
+   The ids go to region_id ... kebele_id and the names are left to the
+   registry, which fills them from the ids on save (admin_area_sync). Older
+   forms keep the CSV values above. #}
+{% set mds_loc = (loc.get('location_source') == 'mds') %}
+{% set mds_ids = {'region': loc.get('region_code') or none, 'zone': loc.get('zone_code') or none,
+                  'woreda': loc.get('woreda_code') or none, 'kebele': loc.get('kebele_code') or none} %}
+{% if mds_loc %}
+{% set fl_region_val = none %}{% set fl_zone_val = none %}{% set fl_woreda_val = none %}{% set fl_kebele_val = none %}
+{% set loc_region_val = none %}{% set loc_zone_val = none %}{% set loc_woreda_val = none %}{% set loc_kebele_val = none %}
+{% endif %}
+
 
 {% set species_map = {
   'cattle': 'LIVESTOCK_SPECIES_CATTLE',
@@ -108,17 +121,7 @@
   'other': 'LIVESTOCK_DISEASE_OTHER_DISEASE'
 } %}
 
-{% set fayda_val = d.get('fayda_id') or f.get('fayda_fan_id') or f.get('fayda_id') or d.get('fayda_fan_id') or '' %}
-{# Farmer fields: the ODK form's `farmer` group, or the flat columns of a
-   File Import row (first_name, last_name, ... on the row itself). A blank or
-   missing part is left out of the full name, never rendered as "None". #}
-{% set fn_val = f.get('first_name') or d.get('first_name') or '' %}
-{% set mn_val = f.get('middle_name') or d.get('middle_name') or '' %}
-{% set ln_val = f.get('last_name') or d.get('last_name') or '' %}
-{% set f_gender_val = f.get('gender') or d.get('gender') or '' %}
-{% set f_dob_val = f.get('date_of_birth') or d.get('farmer_date_of_birth') or none %}
-{% set f_mobile_val = f.get('mobile_number') or d.get('mobile_number') or none %}
-{% set farmer_name_val = d.get('owner_id') or f.get('farmer_name') or d.get('farmer_name') or ([fn_val, mn_val, ln_val] | map('string') | map('trim') | select | join(' ')) %}
+{% set fayda_val = f.get('fayda_id') or d.get('fayda_id') or f.get('fayda_fin') or f.get('fayda_fan_id') or d.get('fayda_fin') or d.get('fayda_fan_id') or '' %}
 {% set farmer_id_val = f.get('farmer_id') or d.get('farmer_id') or '' %}
 {% set submission_date = f.get('registration_date') or sys.get('submissionDate') or (d.get('start', '').split('T')[0]) or '' %}
 
@@ -130,33 +133,6 @@
 {% set livestock_list = d.get('livestock', []) %}
 
 {
-  "ls_farmer_identity": [
-    {
-      "farmer_id": {{ farmer_id_val | tojson }},
-      "fayda_fan_id": {{ fayda_val | tojson }},
-      "farmer_name": {{ farmer_name_val | tojson }},
-      "first_name": {{ (fn_val or none) | tojson }},
-      "middle_name": {{ (mn_val or none) | tojson }},
-      "last_name": {{ (ln_val or none) | tojson }},
-      "gender": {{ ((f.get('gender') | upper) if f.get('gender') else none) | tojson }},
-      "date_of_birth": {{ f_dob_val | tojson }},
-      "mobile_number": {{ f_mobile_val | tojson }},
-      "registration_date": {{ submission_date | tojson }},
-      "status": "ACTIVE",
-      "region": {{ fl_region_val | tojson }},
-      "zone": {{ fl_zone_val | tojson }},
-      "woreda": {{ fl_woreda_val | tojson }},
-      "kebele": {{ fl_kebele_val | tojson }}
-    }
-  ],
-  "ls_farmer_location": [
-    {
-      "region": {{ fl_region_val | tojson }},
-      "zone": {{ fl_zone_val | tojson }},
-      "woreda": {{ fl_woreda_val | tojson }},
-      "kebele": {{ fl_kebele_val | tojson }}
-    }
-  ],
   "ls_survey_personnel": [
     {
       "surveyor_name": {{ surveyor_name_val | tojson }},
@@ -165,12 +141,12 @@
       "supervisor_mobile_number": {{ supervisor_mobile_val | tojson }}
     }
   ],
-  "ls_livestock_record": [
+  "ls_intake_identity": [
     {
-      "record_name": {{ farmer_name_val | tojson }},
+      "record_name": {{ farmer_id_val | tojson }},
       "farmer_id": {{ farmer_id_val | tojson }},
-      "farmer_name": {{ farmer_name_val | tojson }},
-      "fayda_fan_id": {{ fayda_val | tojson }},
+      "fayda_fin": {{ (fayda_val if fayda_val | length == 12 else none) | tojson }},
+      "fayda_fan_id": {{ (fayda_val if fayda_val and fayda_val | length != 12 else none) | tojson }},
       "total_animals": {{ livestock_list | length }},
       "registration_date": {{ submission_date | tojson }},
       "status": "ACTIVE",
@@ -179,15 +155,19 @@
   ],
   "ls_livestock_location": [
     {
-      "record_name": {{ farmer_name_val | tojson }},
+      "record_name": {{ farmer_id_val | tojson }},
       "farmer_id": {{ farmer_id_val | tojson }},
-      "farmer_name": {{ farmer_name_val | tojson }},
-      "fayda_fan_id": {{ fayda_val | tojson }},
+      "fayda_fin": {{ (fayda_val if fayda_val | length == 12 else none) | tojson }},
+      "fayda_fan_id": {{ (fayda_val if fayda_val and fayda_val | length != 12 else none) | tojson }},
       "total_animals": {{ livestock_list | length }},
       "region": {{ loc_region_val | tojson }},
       "zone": {{ loc_zone_val | tojson }},
       "woreda": {{ loc_woreda_val | tojson }},
-      "kebele": {{ loc_kebele_val | tojson }}
+      "kebele": {{ loc_kebele_val | tojson }}{% if mds_loc %},
+      "region_id": {{ mds_ids.region | tojson }},
+      "zone_id": {{ mds_ids.zone | tojson }},
+      "woreda_id": {{ mds_ids.woreda | tojson }},
+      "kebele_id": {{ mds_ids.kebele | tojson }}{% endif %}
     }
   ],
 {# A missing species stays empty (the registry then refuses the record) and an

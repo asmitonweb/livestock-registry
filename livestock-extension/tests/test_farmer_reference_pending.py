@@ -104,7 +104,7 @@ class PendingLookupTests(unittest.IsolatedAsyncioTestCase):
                 )
         self.assertIsNone(self.row.farmer_uuid)
         self.assertIn(
-            "no Farmer record found for FIN", self.row.farmer_reference_status
+            "No farmer with FIN", self.row.farmer_reference_status
         )
 
     async def test_recovery_creates_one_real_pending_add_and_still_requires_reference_approval(

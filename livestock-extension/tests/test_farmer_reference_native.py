@@ -9,7 +9,7 @@ from sqlalchemy import select, text
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 
 INTAKE_ID = "9b72d0b5-043e-4f5d-9f9f-75e40688faae"
-PACKAGE = os.environ.get("REGISTRY_EXTENSION_MODULE", "openg2p_registry_cropsown_extension")
+PACKAGE = os.environ.get("REGISTRY_EXTENSION_MODULE", "openg2p_registry_livestock_extension")
 if os.environ.get("FARMER_TEST_DATABASE_URL"):
     if os.environ.get("FARMER_WORKFLOW_SIMULATION_URL"):
         # Native helpers capture configuration at initialization; configure
@@ -442,6 +442,7 @@ class NativeReferenceTests(unittest.IsolatedAsyncioTestCase):
         from unittest.mock import AsyncMock, patch
         from openg2p_registry_core.models import G2PIntakeFormSubmission, G2PIntakeFormDefinition, G2PIntakeFormUITab, G2PIntakeFormUITabSection
         from openg2p_registry_core.services.g2p_awe_integration_service import G2PAweIntegrationService
+        from openg2p_registry_core.errors import G2PRegistryException
         pending = importlib.import_module("openg2p_registry_extensions.farmer_reference.pending")
         submission_id = str(uuid4())
         mnemonic = "CropSown" if "cropsown" in PACKAGE else "Livestock"
@@ -451,7 +452,7 @@ class NativeReferenceTests(unittest.IsolatedAsyncioTestCase):
         async with self.sessions.begin() as session:
             session.add(G2PRegisterDefinition(register_id=domain_id,register_mnemonic=mnemonic,register_subject="Synthetic",register_purpose="REGISTER",register_rank=1,functional_id_generation_required=False))
             submission=G2PIntakeFormSubmission(submission_id=submission_id,form_id="synthetic-form",register_id=domain_id,draft_status="DRAFT",approval_status="PENDING",created_by="synthetic-creator",first_created_at=datetime.now(),last_updated_at=datetime.now(),submission_source="STAFF_PORTAL",register_ingest_process_status="NOT_APPLICABLE",number_of_verifications_required=0,number_of_verifications_done=0)
-            root=getattr(native.domain_models(),"G2PIntakeForm"+mnemonic)(internal_record_id=str(uuid4()),submission_id=submission_id,fayda_fin="001234567890",created_by="synthetic-creator",created_at=datetime.now(),last_approved_at=datetime.now(),last_approved_by="synthetic-creator")
+            root=getattr(native.domain_models(),"G2PIntakeForm"+mnemonic)(internal_record_id=str(uuid4()),submission_id=submission_id,fayda_fin="001234567890",farmer_id="FR-000000000001",created_by="synthetic-creator",created_at=datetime.now(),last_approved_at=datetime.now(),last_approved_by="synthetic-creator")
             section_id="synthetic-domain-root"
             session.add_all([submission,root,
                 G2PIntakeFormDefinition(form_id="synthetic-form",register_id=domain_id,form_mnemonic="synthetic",number_of_verifications=0,used_only_in_ingestion_pipeline=False),
@@ -461,11 +462,21 @@ class NativeReferenceTests(unittest.IsolatedAsyncioTestCase):
             await session.flush()
             unavailable=SimpleNamespace(lookup=AsyncMock(side_effect=Error("FARMER_REFERENCE_NOT_FOUND")))
             submit_business_workflow=AsyncMock()
+            service=native.G2PIntakeFormDataService.get_component()
             with patch.object(pending,"configured_lookup",return_value=unavailable), patch.object(G2PAweIntegrationService.get_component(),"start_intake_submission_workflow",submit_business_workflow):
-                result=await native.G2PIntakeFormDataService.get_component().finalize_submission_with_session(submission_id,session,bearer_token="synthetic-staff-token")
+                # A staff submit is refused with the reason and the fix; nothing is created.
+                with self.assertRaises(G2PRegistryException) as refused:
+                    await service.finalize_submission_with_session(submission_id,session,bearer_token="synthetic-staff-token")
+                self.assertIn("No farmer with Farmer ID FR-000000000001 and FIN 001234567890 is in the Farmer Registry",refused.exception.message)
+                self.assertIn("register them in the Farmer Registry first",refused.exception.message)
+                submit_business_workflow.assert_not_awaited()
+                self.assertEqual((await session.execute(select(ledger.FarmerReferenceRequest))).scalars().all(),[])
+                # The ingestion worker (ODK, no staff token) holds the intake instead.
+                with patch("openg2p_registry_extensions.farmer_reference.workflow.service_bearer",AsyncMock(return_value="synthetic-service-token")):
+                    result=await service.finalize_submission_with_session(submission_id,session)
             self.assertEqual(result.draft_status,"FINAL")
             submit_business_workflow.assert_awaited_once()
-            self.assertIn("no Farmer record found for FIN",root.farmer_reference_status)
+            self.assertIn("No farmer with Farmer ID",root.farmer_reference_status)
             self.assertIsNone(root.farmer_uuid)
             await native.G2PIntakeFormDataService.get_component().approve_submission_with_session(submission_id,session,approved_by="business-reviewer")
             self.assertEqual(submission.approval_status,"APPROVED")

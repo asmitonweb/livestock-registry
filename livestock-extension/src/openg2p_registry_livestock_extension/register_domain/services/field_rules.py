@@ -73,6 +73,8 @@ MESSAGES = {
     "coss_field_date_format": "{label}: enter a real date. API/import dates use Gregorian YYYY-MM-DD; correct the date before saving.",
     "coss_field_date_min": "{label}: the date is before 1900. Enter a date on or after 1900-01-01.",
     "coss_field_date_future": "{label}: the date is in the future. Enter today or an earlier date.",
+    "coss_field_farmer_id_required": "{label}: enter the farmer's Farmer Registry ID (FR- followed by 12 digits).",
+    "coss_field_fayda_one_of": "Fayda ID: enter the 12-digit FIN or the 16-digit FAN, or use Verify with Fayda.",
 }
 
 
@@ -162,7 +164,31 @@ def clean_records(records):
                     problems.append(Issue(field, "coss_field_date_future"))
                 else:
                     record[key] = parsed.isoformat()
+        problems.extend(identity_issues(record))
     return problems
+
+
+def identity_issues(record):
+    """A farmer is identified by its Farmer ID and one Fayda ID (FIN or FAN).
+
+    Checked only on records that carry the identity fields (the intake's
+    Farmer Identity section), so other sections and child rows are untouched.
+    """
+    def value(field):
+        for key, item in record.items():
+            if isinstance(key, str) and key.rsplit(".", 1)[-1] == field:
+                return item.strip() if isinstance(item, str) else item
+        return None
+
+    fields = {key.rsplit(".", 1)[-1] for key in record if isinstance(key, str)}
+    if not {"farmer_id", "fayda_fin", "fayda_fan_id"} <= fields:
+        return []
+    issues = []
+    if not value("farmer_id"):
+        issues.append(Issue("farmer_id", "coss_field_farmer_id_required"))
+    if not value("fayda_fin") and not value("fayda_fan_id"):
+        issues.append(Issue("fayda_fin", "coss_field_fayda_one_of"))
+    return issues
 
 
 async def _translations():

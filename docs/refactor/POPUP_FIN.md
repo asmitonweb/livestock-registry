@@ -68,6 +68,19 @@ claims never replace the signed central Farmer profile or its target approval.
 Provider settings belong to the registry-owned provider/Helm configuration and
 are not overwritten by recurring registry metadata seed.
 
+Each registry database also needs its own active
+`g2p_registrant_authentication_providers` row. Livestock's row must target
+register `997676d3-7008-59f9-b23e-613ad79bbb08`. Its local callback is
+`http://staff-livestock-registry.openg2p.localtest.me/registrant-auth/callback`,
+and that exact callback must also be authorized in the local eSignet client
+`oan-registry-intake`. A working Farmer or Crop provider does not configure
+Livestock. Provision this through secure deployment administration when the
+Livestock runtime is next started; it is deployment data, not recurring seed.
+Preserve other callback entries and keep all private settings out of Git/logs.
+See `OAN/oan-helm/docs/registry-esignet-onboarding.md` for the per-registry
+deployment/read-back checklist. No Livestock provider row has been provisioned
+by this source-only change.
+
 The verification footer portals all messages, status and the button into the
 native action area. `useLayoutEffect` finds the area before anything is shown,
 preventing an inline flash. Messages take the left flexible space while the status
