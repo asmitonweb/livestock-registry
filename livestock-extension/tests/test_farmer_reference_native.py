@@ -412,6 +412,87 @@ class NativeReferenceTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(stats["identity_writes"], 0)
 
 
+    async def test_fin_only_native_add_stores_exact_fin_and_history_without_inventing_fan(self):
+        from dataclasses import replace
+        self.snapshot = replace(self.snapshot, profile={key: value for key, value in self.snapshot.profile.items() if key != "fayda_fan_id"})
+        self.snapshot = replace(self.snapshot, profile={**self.snapshot.profile, "fayda_fin": "001234567890"})
+        local_id = await self._approved_reference()
+        async with self.sessions() as session:
+            farmer = await session.get(native.domain_models().G2PRegisterFarmer, local_id)
+            self.assertEqual(farmer.fayda_fin, "001234567890")
+            self.assertIsNone(farmer.fayda_fan_id)
+            history = (await session.execute(select(native.domain_models().G2PRegisterHistoryFarmer))).scalars().all()
+            self.assertEqual(len(history), 1)
+            self.assertEqual(history[0].fayda_fin, "001234567890")
+
+    async def test_unresolved_fin_business_approval_holds_then_releases_after_real_reference_approval(self):
+        from dataclasses import replace
+        from datetime import datetime
+        from types import SimpleNamespace
+        from unittest.mock import AsyncMock, patch
+        from openg2p_registry_core.models import G2PIntakeFormSubmission, G2PIntakeFormDefinition, G2PIntakeFormUITab, G2PIntakeFormUITabSection
+        from openg2p_registry_core.services.g2p_awe_integration_service import G2PAweIntegrationService
+        pending = importlib.import_module("openg2p_registry_extensions.farmer_reference.pending")
+        submission_id = str(uuid4())
+        mnemonic = "CropSown" if "cropsown" in PACKAGE else "Livestock"
+        domain_id = "6b06a95a-9a6c-5a33-a33d-c1625716c59c" if mnemonic == "CropSown" else "997676d3-7008-59f9-b23e-613ad79bbb08"
+        snapshot = replace(self.snapshot, profile={key: value for key, value in self.snapshot.profile.items() if key != "fayda_fan_id"})
+        snapshot = replace(snapshot, profile={**snapshot.profile, "fayda_fin": "001234567890"})
+        async with self.sessions.begin() as session:
+            session.add(G2PRegisterDefinition(register_id=domain_id,register_mnemonic=mnemonic,register_subject="Synthetic",register_purpose="REGISTER",register_rank=1,functional_id_generation_required=False))
+            submission=G2PIntakeFormSubmission(submission_id=submission_id,form_id="synthetic-form",register_id=domain_id,draft_status="DRAFT",approval_status="PENDING",created_by="synthetic-creator",first_created_at=datetime.now(),last_updated_at=datetime.now(),submission_source="STAFF_PORTAL",register_ingest_process_status="NOT_APPLICABLE",number_of_verifications_required=0,number_of_verifications_done=0)
+            root=getattr(native.domain_models(),"G2PIntakeForm"+mnemonic)(internal_record_id=str(uuid4()),submission_id=submission_id,fayda_fin="001234567890",created_by="synthetic-creator",created_at=datetime.now(),last_approved_at=datetime.now(),last_approved_by="synthetic-creator")
+            section_id="synthetic-domain-root"
+            session.add_all([submission,root,
+                G2PIntakeFormDefinition(form_id="synthetic-form",register_id=domain_id,form_mnemonic="synthetic",number_of_verifications=0,used_only_in_ingestion_pipeline=False),
+                G2PRegisterSection(register_id=domain_id,section_id=section_id,section_register_id=domain_id,section_mnemonic="synthetic-root",section_ui_schema={"panels":[]},no_of_verifications_required=0,is_list=False),
+                G2PIntakeFormUITab(tab_id="synthetic-intake-tab",form_id="synthetic-form",tab_label="Synthetic",tab_order=1),
+                G2PIntakeFormUITabSection(tab_section_id="synthetic-intake-binding",tab_id="synthetic-intake-tab",section_id=section_id,section_order=1)])
+            await session.flush()
+            unavailable=SimpleNamespace(lookup=AsyncMock(side_effect=Error("FARMER_REFERENCE_NOT_FOUND")))
+            submit_business_workflow=AsyncMock()
+            with patch.object(pending,"configured_lookup",return_value=unavailable), patch.object(G2PAweIntegrationService.get_component(),"start_intake_submission_workflow",submit_business_workflow):
+                result=await native.G2PIntakeFormDataService.get_component().finalize_submission_with_session(submission_id,session,bearer_token="synthetic-staff-token")
+            self.assertEqual(result.draft_status,"FINAL")
+            submit_business_workflow.assert_awaited_once()
+            self.assertIn("no Farmer record found for FIN",root.farmer_reference_status)
+            self.assertIsNone(root.farmer_uuid)
+            await native.G2PIntakeFormDataService.get_component().approve_submission_with_session(submission_id,session,approved_by="business-reviewer")
+            self.assertEqual(submission.approval_status,"APPROVED")
+            self.assertEqual(submission.register_ingest_process_status,"NOT_APPLICABLE")
+            self.assertEqual(len((await session.execute(select(native.domain_models().G2PRegisterFarmer))).scalars().all()),0)
+            available=SimpleNamespace(lookup=AsyncMock(return_value=snapshot))
+            reference=await pending.resolve_or_wait(session,submission,root,lookup=available)
+            self.assertEqual(reference.state,"PENDING")
+            self.assertEqual(submission.register_ingest_process_status,"NOT_APPLICABLE")
+            request=(await session.execute(select(ledger.FarmerReferenceRequest))).scalar_one()
+            cr=await session.get(G2PRegisterChangeRequest,request.native_cr_id)
+            cr.awe_request_id="synthetic-fin-reference-approval"
+            await session.flush()
+            await native.G2PRegisterChangeRequestService.get_component().approve_change_request_from_awe_webhook(cr.change_request_id,session,approved_by="reference-reviewer")
+            self.assertEqual(submission.register_ingest_process_status,"PENDING")
+            self.assertEqual(submission.approved_by,"business-reviewer")
+            self.assertEqual(submission.register_ingest_process_attempts,0)
+            self.assertEqual(root.farmer_uuid,reference.local_farmer_id)
+
+
+    async def test_fin_alias_reuses_approved_fan_reference_without_rewriting_profile(self):
+        from dataclasses import replace
+        local_id=await self._approved_reference()
+        source=replace(self.snapshot,profile={key:value for key,value in self.snapshot.profile.items() if key!="fayda_fan_id"})
+        source=replace(source,profile={**source.profile,"fayda_fin":"001234567890"})
+        other=str(uuid4())
+        async with self.sessions.begin() as session:
+            reference=await self.service.ensure_dependency(session,other,source)
+            self.assertEqual(reference.local_farmer_id,local_id)
+            self.assertEqual(reference.uid,self.snapshot.profile["fayda_fan_id"])
+            farmer=await session.get(native.domain_models().G2PRegisterFarmer,local_id)
+            self.assertIsNone(farmer.fayda_fin)
+            binding=await session.get(ledger.FarmerSubmissionDependency,other)
+            self.assertEqual(binding.identity_binding["identity"]["fayda_fin"],"001234567890")
+            self.assertEqual(len((await session.execute(select(ledger.FarmerReferenceRequest))).scalars().all()),1)
+
+
 def load_tests(loader, tests, pattern):
     group=os.environ.get("FARMER_NATIVE_GROUP")
     names=loader.getTestCaseNames(NativeReferenceTests)

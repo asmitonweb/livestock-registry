@@ -306,7 +306,7 @@
     {
       "pass": 1,
       "path": "livestock-extension/src/openg2p_registry_livestock_extension/meta_data/register-metadata/zz_popup_identity.sql",
-      "sha256": "a563c57664e8a43f98c4b84e243a8cec58d5789097a1c0926bba6e4574a3e533",
+      "sha256": "ea2ed7beaf50ea70a8047e99d14ad152d63886190865f93bd0ad1a12321ec7c8",
       "sqlstate_errors": [],
       "psql_exit_code": 0
     },
@@ -321,6 +321,13 @@
       "pass": 1,
       "path": "livestock-extension/src/openg2p_registry_livestock_extension/meta_data/register-metadata/zzzz_location_widgets.sql",
       "sha256": "b62534ef2bb067e2d5270848191d33b48ff323dac6aeb8d14ca0ecd42ce85b29",
+      "sqlstate_errors": [],
+      "psql_exit_code": 0
+    },
+    {
+      "pass": 1,
+      "path": "livestock-extension/src/openg2p_registry_livestock_extension/meta_data/register-metadata/zzzzz_identity_alternatives.sql",
+      "sha256": "ce5ca434216e05c957da90e2742b54b8d6df0a3dcb41e446807c514f105c87bc",
       "sqlstate_errors": [],
       "psql_exit_code": 0
     },
@@ -712,7 +719,7 @@
     {
       "pass": 2,
       "path": "livestock-extension/src/openg2p_registry_livestock_extension/meta_data/register-metadata/zz_popup_identity.sql",
-      "sha256": "a563c57664e8a43f98c4b84e243a8cec58d5789097a1c0926bba6e4574a3e533",
+      "sha256": "ea2ed7beaf50ea70a8047e99d14ad152d63886190865f93bd0ad1a12321ec7c8",
       "sqlstate_errors": [],
       "psql_exit_code": 0
     },
@@ -727,6 +734,13 @@
       "pass": 2,
       "path": "livestock-extension/src/openg2p_registry_livestock_extension/meta_data/register-metadata/zzzz_location_widgets.sql",
       "sha256": "b62534ef2bb067e2d5270848191d33b48ff323dac6aeb8d14ca0ecd42ce85b29",
+      "sqlstate_errors": [],
+      "psql_exit_code": 0
+    },
+    {
+      "pass": 2,
+      "path": "livestock-extension/src/openg2p_registry_livestock_extension/meta_data/register-metadata/zzzzz_identity_alternatives.sql",
+      "sha256": "ce5ca434216e05c957da90e2742b54b8d6df0a3dcb41e446807c514f105c87bc",
       "sqlstate_errors": [],
       "psql_exit_code": 0
     },

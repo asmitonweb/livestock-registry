@@ -1,8 +1,8 @@
 """Signed, consent-enforced DCI lookup. Notifications are never profile inputs.
 
 The record mapping is server configuration, not an API request parameter. A
-source template that omits provenance or either identity fails closed. In
-particular, a 12 digit FIN is not converted to a 16 digit UID.
+source template that omits provenance or the declared identity fails closed.
+FIN12 and FAN16 are separate alternatives and are never converted.
 """
 from __future__ import annotations
 
@@ -18,7 +18,8 @@ import httpx
 import jwt
 from jwt.utils import base64url_encode
 
-from .profile import FarmerReferenceError, identity_pair, local_profile
+from .profile import (FarmerReferenceError, intake_identity, local_profile,
+                      matches_declared_identity, normalize_farmer_id, normalize_fin, normalize_uid)
 
 
 def canonical(value: object) -> bytes:
@@ -42,6 +43,9 @@ class RecordContract:
     source_query_field: str = "internal_record_id"
     # Only fields in the receiving profile allowlist can be selected.
     profile_paths: Mapping[str, str] = field(default_factory=dict)
+    fin: str = "foundational_id"
+    uid_query_field: str = "foundational_id"
+    fin_query_field: str = "foundational_id"
 
 
 @dataclass(frozen=True)
@@ -115,9 +119,11 @@ class FarmerLookup:
     def __init__(self, config: LookupConfig, contract: RecordContract):
         self.config, self.contract = config, contract
 
-    def build_request(self, farmer_id: str, uid: str, *, now: datetime | None = None,
+    def build_request(self, farmer_id: str | None, uid: str | None = None, *, fin: str | None = None, now: datetime | None = None,
                       source_record_id: str | None = None) -> dict:
-        farmer_id, uid = identity_pair(farmer_id, uid)
+        declared = intake_identity({"farmer_id": farmer_id, "fayda_fan_id": uid, "fayda_fin": fin})
+        identifier_field = "fayda_fan_id" if declared.get("fayda_fan_id") else "fayda_fin"
+        identifier = declared[identifier_field]
         cfg = self.config
         now = now or datetime.now(timezone.utc)
         timestamp = now.isoformat()
@@ -127,7 +133,7 @@ class FarmerLookup:
             "data_controller": cfg.consent_controller, "data_scopes": list(cfg.consent_scopes),
             "fetch_type": "oneshot", "issued_at": timestamp,
             "purpose": {"code": cfg.consent_purpose, "text": "Farmer reference approval"},
-            "subject_id": {"type": "fayda_fan_id", "value": uid},
+            "subject_id": {"type": identifier_field, "value": identifier},
             "validity": {"valid_from": timestamp, "valid_until": (now + timedelta(minutes=5)).isoformat()},
         }
         consent_jws = jwt.api_jws.PyJWS().encode(canonical(consent), cfg.signing_key,
@@ -142,29 +148,35 @@ class FarmerLookup:
                     "expression": {"query": {"functional_record_id": {"$eq": farmer_id},
                     "foundational_id": {"$eq": uid}, "record_status": {"$eq": "ACTIVE"}}}}},
                 "authorize": {"consent_jws": consent_jws}}}]}
+        query = message["search_request"][0]["search_criteria"]["query"]["value"]["expression"]["query"]
+        query.pop("foundational_id")
+        if not declared.get("farmer_id"):
+            query.pop("functional_record_id")
+        else:
+            query["functional_record_id"] = {"$eq": declared["farmer_id"]}
         if source_record_id:
-            # UPDATE resolves the same source person even after an approved UID
-            # rotation. The consent subject remains the local approved identity;
-            # source consent enforcement may reject it and then we block.
-            query = message["search_request"][0]["search_criteria"]["query"]["value"]["expression"]["query"]
-            del query["foundational_id"]
+            # Same immutable source person; approval may have rotated its ID.
             query[self.contract.source_query_field] = {"$eq": source_record_id}
+        else:
+            field = self.contract.uid_query_field if identifier_field == "fayda_fan_id" else self.contract.fin_query_field
+            query[field] = {"$eq": identifier}
         return {"signature": detached_sign(canonical({"header": header, "message": message}),
                     cfg.signing_key, cfg.algorithm, cfg.signing_kid), "header": header, "message": message}
 
-    async def lookup(self, farmer_id: str, uid: str) -> VerifiedFarmer:
-        farmer_id, uid = identity_pair(farmer_id, uid)
-        request = self.build_request(farmer_id, uid)
-        return await self._send(request, farmer_id, uid)
+    async def lookup(self, farmer_id: str | None, uid: str | None = None, *, fin: str | None = None) -> VerifiedFarmer:
+        declared = intake_identity({"farmer_id": farmer_id, "fayda_fan_id": uid, "fayda_fin": fin})
+        request = self.build_request(declared.get("farmer_id"), declared.get("fayda_fan_id"), fin=declared.get("fayda_fin"))
+        return await self._send(request, declared.get("farmer_id"), declared.get("fayda_fan_id"), fin=declared.get("fayda_fin"))
 
     async def lookup_current(self, farmer_id: str, approved_uid: str, source_record_id: str) -> VerifiedFarmer:
-        farmer_id, approved_uid = identity_pair(farmer_id, approved_uid)
         if not source_record_id:
             raise FarmerReferenceError("FARMER_REFERENCE_SOURCE_ID_REQUIRED")
-        request = self.build_request(farmer_id, approved_uid, source_record_id=source_record_id)
-        return await self._send(request, farmer_id, approved_uid, source_record_id=source_record_id)
+        use_fin = isinstance(approved_uid, str) and len(approved_uid) == 12
+        uid, fin = (None, approved_uid) if use_fin else (approved_uid, None)
+        request = self.build_request(farmer_id, uid, fin=fin, source_record_id=source_record_id)
+        return await self._send(request, farmer_id, uid, fin=fin, source_record_id=source_record_id)
 
-    async def _send(self, request, farmer_id, uid, *, source_record_id=None):
+    async def _send(self, request, farmer_id, uid, *, fin=None, source_record_id=None):
         try:
             # Redirects may leak signed identity/consent to another endpoint.
             async with httpx.AsyncClient(timeout=self.config.timeout_seconds, follow_redirects=False) as client:
@@ -178,10 +190,10 @@ class FarmerLookup:
             body = json.loads(raw)
         except (httpx.HTTPError, ValueError):
             raise FarmerReferenceError("FARMER_REFERENCE_LOOKUP_UNAVAILABLE") from None
-        return self.verify_response(body, request, farmer_id, uid, expected_source_record_id=source_record_id)
+        return self.verify_response(body, request, farmer_id, uid, fin=fin, expected_source_record_id=source_record_id)
 
     def verify_response(self, body: object, request: dict, farmer_id: str, uid: str,
-                        *, now: datetime | None = None, expected_source_record_id: str | None = None) -> VerifiedFarmer:
+                        *, fin: str | None = None, now: datetime | None = None, expected_source_record_id: str | None = None) -> VerifiedFarmer:
         now = now or datetime.now(timezone.utc)
         cfg, contract = self.config, self.contract
         try:
@@ -228,15 +240,29 @@ class FarmerLookup:
                     request["message"]["search_request"][0]["reference_id"]):
                 raise ValueError
             records = item["data"]["reg_records"]
+            if isinstance(records, list) and not records:
+                raise FarmerReferenceError("FARMER_REFERENCE_NOT_FOUND")
             if not isinstance(records, list) or len(records) != 1 or not isinstance(records[0], dict):
                 raise ValueError
             record = records[0]
+        except FarmerReferenceError:
+            raise
         except (TypeError, KeyError, ValueError):
             raise FarmerReferenceError("FARMER_REFERENCE_RESPONSE_REJECTED") from None
-        actual_pair = identity_pair(_at(record, contract.farmer_id), _at(record, contract.uid))
-        expected_pair = identity_pair(farmer_id, uid)
-        if (actual_pair[0] != expected_pair[0] or
-                (not expected_source_record_id and actual_pair[1] != expected_pair[1])):
+        declared = intake_identity({"farmer_id": farmer_id, "fayda_fan_id": uid, "fayda_fin": fin})
+        actual = {"farmer_id": normalize_farmer_id(_at(record, contract.farmer_id))}
+        # Collect both source identifiers when supplied, so the profile does not
+        # change merely because the caller chose FIN rather than FAN as its query.
+        for local_field, path, normalizer in (("fayda_fan_id", contract.uid, normalize_uid),
+                                               ("fayda_fin", contract.fin, normalize_fin)):
+            try:
+                value = _at(record, path)
+                actual[local_field] = normalizer(value)
+            except FarmerReferenceError:
+                if declared.get(local_field):
+                    raise
+        if (declared.get("farmer_id") and actual["farmer_id"] != declared["farmer_id"]) or (
+                not expected_source_record_id and not matches_declared_identity(declared, actual)):
             raise FarmerReferenceError("FARMER_REFERENCE_IDENTITY_MISMATCH")
         source_id = _at(record, contract.source_id)
         if expected_source_record_id and source_id != expected_source_record_id:
@@ -248,7 +274,11 @@ class FarmerLookup:
         source_profile = {name: _at(record, path) for name, path in contract.profile_paths.items()
                           if _has_path(record, path)}
         # Identity fields cannot be redirected through optional profile mappings.
-        source_profile.update(farmer_id=actual_pair[0], approved_uid=actual_pair[1])
+        source_profile["farmer_id"] = actual["farmer_id"]
+        if "fayda_fan_id" in actual:
+            source_profile["approved_uid"] = actual["fayda_fan_id"]
+        if "fayda_fin" in actual:
+            source_profile["approved_fin"] = actual["fayda_fin"]
         profile = local_profile(source_profile)
         return VerifiedFarmer(cfg.source_id, source_id, int(approved_at.timestamp() * 1_000_000),
                               profile, now, sha256(signed).hexdigest())

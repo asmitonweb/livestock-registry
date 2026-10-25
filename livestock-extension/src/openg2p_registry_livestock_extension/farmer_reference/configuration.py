@@ -20,7 +20,7 @@ def configured_lookup():
                 set(contract_data.get("profile_paths", {})) - set(SOURCE_TO_LOCAL_FIELDS)):
             raise ValueError
         contract = RecordContract(**contract_data)
-        paths = [contract.source_id, contract.farmer_id, contract.uid, contract.approved_at, contract.status, contract.source_query_field,
+        paths = [contract.source_id, contract.farmer_id, contract.uid, contract.fin, contract.uid_query_field, contract.fin_query_field, contract.approved_at, contract.status, contract.source_query_field,
                  *contract.profile_paths.values()]
         if not all(isinstance(path, str) and path and all(path.split(".")) for path in paths):
             raise ValueError

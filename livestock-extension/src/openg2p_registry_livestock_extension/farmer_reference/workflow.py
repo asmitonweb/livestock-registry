@@ -81,6 +81,8 @@ async def deliver_workflow(session, entry, *, directory=None, bearer_provider=No
 
 async def dispatch_pending(session, limit=25):
     from .native import release_waiting_domains
+    from .pending import retry_approved_pending
+    await retry_approved_pending(session)
     await release_waiting_domains(session)
     entries = (await session.execute(select(FarmerWorkflowOutbox).where(
         FarmerWorkflowOutbox.state == "PENDING").order_by(FarmerWorkflowOutbox.native_cr_id)

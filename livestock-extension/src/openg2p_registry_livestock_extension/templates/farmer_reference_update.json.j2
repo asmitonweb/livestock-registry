@@ -1,4 +1,5 @@
 {"ls_farmer_identity": [{
-  "farmer_id": {{ expanded.farmer_id | tojson }},
-  "fayda_fan_id": {{ expanded.fayda_fan_id | tojson }}
+  "farmer_id": {{ expanded.farmer_id | tojson }}
+  {% if expanded.fayda_fan_id is defined %}, "fayda_fan_id": {{ expanded.fayda_fan_id | tojson }}{% endif %}
+  {% if expanded.fayda_fin is defined %}, "fayda_fin": {{ expanded.fayda_fin | tojson }}{% endif %}
 }]}

@@ -16,7 +16,8 @@ class NativeNotificationTests(NativeReferenceTests):
     def _notification_payload(self, local_id, **changes):
         from openg2p_registry_core.schemas import ChangePayload, ChangeRequestRequestPayload
         row = {"edit_action":"UPDATE", "internal_record_id":local_id,
-               "farmer_id":self.snapshot.profile["farmer_id"], "fayda_fan_id":self.snapshot.profile["fayda_fan_id"],
+               "farmer_id":self.snapshot.profile["farmer_id"],
+               **{key:self.snapshot.profile[key] for key in ("fayda_fan_id","fayda_fin") if key in self.snapshot.profile},
                "first_name":"Untrusted notification name", **changes}
         return ChangeRequestRequestPayload(register_id=self.farmer_id, section_register_id=self.farmer_id,
             section_id=self.section_id, tab_id="test_farmer_tab", internal_record_id=local_id,
@@ -179,6 +180,30 @@ class NativeNotificationTests(NativeReferenceTests):
                 self.assertEqual(farmer.fayda_fan_id,"0000000000000002")
                 self.assertEqual(farmer.functional_record_id,"FR-000000000001")
                 self.assertEqual(farmer.internal_record_id,local_id)
+
+
+    async def test_notification_fin_reference_creates_pending_update_then_native_approval(self):
+        from dataclasses import replace
+        from types import SimpleNamespace
+        from unittest.mock import AsyncMock, patch
+        self.snapshot=replace(self.snapshot,profile={key:value for key,value in self.snapshot.profile.items() if key!="fayda_fan_id"})
+        self.snapshot=replace(self.snapshot,profile={**self.snapshot.profile,"fayda_fin":"001234567890"})
+        local_id=await self._approved_reference()
+        current=replace(self.snapshot,source_version=200,profile={**self.snapshot.profile,"first_name":"Current signed FIN source"})
+        client=SimpleNamespace(config=SimpleNamespace(source_id=self.snapshot.source_system),lookup_current=AsyncMock(return_value=current))
+        with patch.dict(os.environ,{"COSS_FARMER_SOURCE_PARTNER_ID":"synthetic-source-partner"}),patch.object(native,"configured_lookup",return_value=client):
+            async with self.sessions.begin() as session:
+                cr=await native.G2PChangeRequestWorkerService.get_component().create_change_request(self._notification_payload(local_id),session,source_partner_id="synthetic-source-partner",change_request_source="INGESTION_PIPELINE")
+                farmer=await session.get(native.domain_models().G2PRegisterFarmer,local_id)
+                self.assertEqual(farmer.first_name,"Verified")
+                self.assertEqual(farmer.fayda_fin,"001234567890")
+                self.assertIsNone(farmer.fayda_fan_id)
+                cr.awe_request_id="synthetic-fin-update-approval"
+                await session.flush()
+                await native.G2PRegisterChangeRequestService.get_component().approve_change_request_from_awe_webhook(cr.change_request_id,session,approved_by="target-reviewer")
+                self.assertEqual(farmer.first_name,"Current signed FIN source")
+                self.assertIsNone(farmer.fayda_fan_id)
+
 
 
 def load_tests(loader, tests, pattern):

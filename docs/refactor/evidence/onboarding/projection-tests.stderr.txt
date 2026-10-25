@@ -1,5 +1,4 @@
-test_approved_update_projects_only_stable_links_and_preserves_business (test_farmer_reference_projection.ProjectionTests.test_approved_update_projects_only_stable_links_and_preserves_business) ... Executing <Task pending name='Task-1' coro=<ProjectionTests.asyncSetUp() running at /work/livestock-extension/tests/test_farmer_reference_projection.py:56> wait_for=<Future pending cb=[Task.task_wakeup()] created at /usr/local/lib/python3.12/asyncio/base_events.py:448> cb=[_run_until_complete_cb() at /usr/local/lib/python3.12/asyncio/base_events.py:181] created at /usr/local/lib/python3.12/asyncio/runners.py:100> took 0.135 seconds
-ok
+test_approved_update_projects_only_stable_links_and_preserves_business (test_farmer_reference_projection.ProjectionTests.test_approved_update_projects_only_stable_links_and_preserves_business) ... ok
 test_conflicting_farmer_id_rolls_back_instead_of_relinking (test_farmer_reference_projection.ProjectionTests.test_conflicting_farmer_id_rolls_back_instead_of_relinking) ... ok
 test_explicit_optional_name_clear_is_projected (test_farmer_reference_projection.ProjectionTests.test_explicit_optional_name_clear_is_projected) ... ok
 test_late_intake_reads_latest_approved_reference (test_farmer_reference_projection.ProjectionTests.test_late_intake_reads_latest_approved_reference) ... ok
@@ -9,6 +8,6 @@ test_unapproved_or_inactive_reference_blocks_projection (test_farmer_reference_p
 test_unlinked_ingest_rolls_back_without_guessing_owner (test_farmer_reference_projection.ProjectionTests.test_unlinked_ingest_rolls_back_without_guessing_owner) ... ok
 
 ----------------------------------------------------------------------
-Ran 8 tests in 2.034s
+Ran 8 tests in 1.982s
 
 OK

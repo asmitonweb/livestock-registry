@@ -107,6 +107,7 @@ def main(domain, *, build=False):
         else:
             raise RuntimeError("Disposable database did not become ready")
         docker_test("postgres-concurrency", "test_farmer_reference_onboarding.py", db=True)
+        docker_test("pending-lookup-tests", "test_farmer_reference_pending.py", db=True)
         postman = shutil.which("postman")
         if not postman:
             raise RuntimeError("Postman CLI 1.73 or later is required")

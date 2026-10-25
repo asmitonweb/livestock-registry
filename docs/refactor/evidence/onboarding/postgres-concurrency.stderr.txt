@@ -1,7 +1,8 @@
-test_ambiguous_or_mismatched_existing_identity_fails_closed (test_farmer_reference_onboarding.OnboardingTests.test_ambiguous_or_mismatched_existing_identity_fails_closed) ... Executing <Task pending name='Task-1' coro=<OnboardingTests.asyncSetUp() running at /work/livestock-extension/tests/test_farmer_reference_onboarding.py:57> wait_for=<Future pending cb=[_chain_future.<locals>._call_check_cancel() at /usr/local/lib/python3.12/asyncio/futures.py:389, Task.task_wakeup()] created at /usr/local/lib/python3.12/asyncio/base_events.py:448> cb=[_run_until_complete_cb() at /usr/local/lib/python3.12/asyncio/base_events.py:181] created at /usr/local/lib/python3.12/asyncio/runners.py:100> took 0.231 seconds
+test_ambiguous_or_mismatched_existing_identity_fails_closed (test_farmer_reference_onboarding.OnboardingTests.test_ambiguous_or_mismatched_existing_identity_fails_closed) ... Executing <Task pending name='Task-1' coro=<OnboardingTests.asyncSetUp() running at /work/livestock-extension/tests/test_farmer_reference_onboarding.py:58> wait_for=<Future pending cb=[_chain_future.<locals>._call_check_cancel() at /usr/local/lib/python3.12/asyncio/futures.py:389, Task.task_wakeup()] created at /usr/local/lib/python3.12/asyncio/base_events.py:448> cb=[_run_until_complete_cb() at /usr/local/lib/python3.12/asyncio/base_events.py:181] created at /usr/local/lib/python3.12/asyncio/runners.py:100> took 0.122 seconds
 ok
 test_approval_releases_existing_dependency_without_recreating_intake (test_farmer_reference_onboarding.OnboardingTests.test_approval_releases_existing_dependency_without_recreating_intake) ... ok
 test_concurrent_duplicate_submission_and_restart_are_idempotent (test_farmer_reference_onboarding.OnboardingTests.test_concurrent_duplicate_submission_and_restart_are_idempotent) ... ok
+test_concurrent_fin_fan_aliases_reuse_one_pending_reference_without_identity_conversion (test_farmer_reference_onboarding.OnboardingTests.test_concurrent_fin_fan_aliases_reuse_one_pending_reference_without_identity_conversion) ... ok
 test_duplicate_update_and_rejection_preserve_approved_local (test_farmer_reference_onboarding.OnboardingTests.test_duplicate_update_and_rejection_preserve_approved_local) ... ok
 test_existing_approved_exact_reference_is_adopted_without_overwrite (test_farmer_reference_onboarding.OnboardingTests.test_existing_approved_exact_reference_is_adopted_without_overwrite) ... ok
 test_expired_lookup_and_unverified_objects_rejected (test_farmer_reference_onboarding.OnboardingTests.test_expired_lookup_and_unverified_objects_rejected) ... ok
@@ -15,6 +16,6 @@ test_uid_rotation_requires_update_approval_before_new_domain_reuse (test_farmer_
 test_unreferenced_kafka_update_does_not_onboard (test_farmer_reference_onboarding.OnboardingTests.test_unreferenced_kafka_update_does_not_onboard) ... ok
 
 ----------------------------------------------------------------------
-Ran 14 tests in 12.369s
+Ran 15 tests in 17.445s
 
 OK

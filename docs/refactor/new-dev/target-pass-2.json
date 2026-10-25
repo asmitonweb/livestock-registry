@@ -131,6 +131,11 @@
           "nullable": true,
           "primary_key": false
         },
+        "fayda_fin": {
+          "type": "VARCHAR",
+          "nullable": true,
+          "primary_key": false
+        },
         "farmer_name": {
           "type": "VARCHAR",
           "nullable": true,
@@ -436,6 +441,11 @@
           "nullable": true,
           "primary_key": false
         },
+        "fayda_fin": {
+          "type": "VARCHAR",
+          "nullable": true,
+          "primary_key": false
+        },
         "farmer_name": {
           "type": "VARCHAR",
           "nullable": true,
@@ -716,6 +726,11 @@
           "nullable": true,
           "primary_key": false
         },
+        "fayda_fin": {
+          "type": "VARCHAR",
+          "nullable": true,
+          "primary_key": false
+        },
         "farmer_name": {
           "type": "VARCHAR",
           "nullable": true,
@@ -977,6 +992,11 @@
           "primary_key": false
         },
         "fayda_fin": {
+          "type": "VARCHAR",
+          "nullable": true,
+          "primary_key": false
+        },
+        "farmer_reference_status": {
           "type": "VARCHAR",
           "nullable": true,
           "primary_key": false
@@ -1291,6 +1311,11 @@
           "nullable": true,
           "primary_key": false
         },
+        "farmer_reference_status": {
+          "type": "VARCHAR",
+          "nullable": true,
+          "primary_key": false
+        },
         "identity_verification_id": {
           "type": "VARCHAR",
           "nullable": true,
@@ -1572,6 +1597,11 @@
           "primary_key": false
         },
         "fayda_fin": {
+          "type": "VARCHAR",
+          "nullable": true,
+          "primary_key": false
+        },
+        "farmer_reference_status": {
           "type": "VARCHAR",
           "nullable": true,
           "primary_key": false
@@ -5839,7 +5869,7 @@
     },
     {
       "path": "livestock-extension/src/openg2p_registry_livestock_extension/meta_data/register-metadata/zz_popup_identity.sql",
-      "sha256": "a563c57664e8a43f98c4b84e243a8cec58d5789097a1c0926bba6e4574a3e533"
+      "sha256": "ea2ed7beaf50ea70a8047e99d14ad152d63886190865f93bd0ad1a12321ec7c8"
     },
     {
       "path": "livestock-extension/src/openg2p_registry_livestock_extension/meta_data/register-metadata/zzz_farmer_reference_awe.sql",
@@ -5848,6 +5878,10 @@
     {
       "path": "livestock-extension/src/openg2p_registry_livestock_extension/meta_data/register-metadata/zzzz_location_widgets.sql",
       "sha256": "b62534ef2bb067e2d5270848191d33b48ff323dac6aeb8d14ca0ecd42ce85b29"
+    },
+    {
+      "path": "livestock-extension/src/openg2p_registry_livestock_extension/meta_data/register-metadata/zzzzz_identity_alternatives.sql",
+      "sha256": "ce5ca434216e05c957da90e2742b54b8d6df0a3dcb41e446807c514f105c87bc"
     },
     {
       "path": "livestock-extension/src/openg2p_registry_livestock_extension/meta_data/registry-configurations/g2p_input_mechanisms.sql",
@@ -6835,12 +6869,23 @@
                       "widget-required": false,
                       "widget-data-path": "997676d3-7008-59f9-b23e-613ad79bbb08.fayda_fin",
                       "widget-data-options": {
-                        "action": "disable",
-                        "condition": {
-                          "field": "997676d3-7008-59f9-b23e-613ad79bbb08.last_authentication_status",
-                          "value": "SUCCESS",
-                          "operator": "equals"
-                        }
+                        "actions": [
+                          {
+                            "action": "disable",
+                            "condition": {
+                              "field": "997676d3-7008-59f9-b23e-613ad79bbb08.last_authentication_status",
+                              "value": "SUCCESS",
+                              "operator": "equals"
+                            }
+                          },
+                          {
+                            "action": "require",
+                            "condition": {
+                              "field": "997676d3-7008-59f9-b23e-613ad79bbb08.fayda_fan_id",
+                              "operator": "isEmpty"
+                            }
+                          }
+                        ]
                       },
                       "widget-data-validation": {
                         "pattern": "^[0-9]{12}$",
@@ -6868,6 +6913,15 @@
                         "foundationalIdPath": "997676d3-7008-59f9-b23e-613ad79bbb08.fayda_fin",
                         "internalRecordIdPath": "997676d3-7008-59f9-b23e-613ad79bbb08.internal_record_id"
                       }
+                    },
+                    {
+                      "widget": "display",
+                      "widget-id": "farmer_reference_status",
+                      "widget-type": "display",
+                      "widget-label": "Farmer reference",
+                      "widget-readonly": true,
+                      "widget-required": false,
+                      "widget-data-path": "997676d3-7008-59f9-b23e-613ad79bbb08.farmer_reference_status"
                     }
                   ],
                   "panel-id": "vertical_panel_ls_livestock_record_profile",
@@ -6881,7 +6935,7 @@
                       "widget-type": "input",
                       "widget-label": "Farmer ID",
                       "widget-readonly": false,
-                      "widget-required": true,
+                      "widget-required": false,
                       "widget-data-path": "997676d3-7008-59f9-b23e-613ad79bbb08.farmer_id"
                     },
                     {
@@ -6890,8 +6944,19 @@
                       "widget-type": "input",
                       "widget-label": "Fayda FAN ID",
                       "widget-readonly": false,
-                      "widget-required": true,
-                      "widget-data-path": "997676d3-7008-59f9-b23e-613ad79bbb08.fayda_fan_id"
+                      "widget-required": false,
+                      "widget-data-path": "997676d3-7008-59f9-b23e-613ad79bbb08.fayda_fan_id",
+                      "widget-data-options": {
+                        "actions": [
+                          {
+                            "action": "require",
+                            "condition": {
+                              "field": "997676d3-7008-59f9-b23e-613ad79bbb08.fayda_fin",
+                              "operator": "isEmpty"
+                            }
+                          }
+                        ]
+                      }
                     },
                     {
                       "widget": "text",
@@ -6911,12 +6976,23 @@
                       "widget-required": false,
                       "widget-data-path": "997676d3-7008-59f9-b23e-613ad79bbb08.fayda_fin",
                       "widget-data-options": {
-                        "action": "disable",
-                        "condition": {
-                          "field": "997676d3-7008-59f9-b23e-613ad79bbb08.last_authentication_status",
-                          "value": "SUCCESS",
-                          "operator": "equals"
-                        }
+                        "actions": [
+                          {
+                            "action": "disable",
+                            "condition": {
+                              "field": "997676d3-7008-59f9-b23e-613ad79bbb08.last_authentication_status",
+                              "value": "SUCCESS",
+                              "operator": "equals"
+                            }
+                          },
+                          {
+                            "action": "require",
+                            "condition": {
+                              "field": "997676d3-7008-59f9-b23e-613ad79bbb08.fayda_fan_id",
+                              "operator": "isEmpty"
+                            }
+                          }
+                        ]
                       },
                       "widget-data-validation": {
                         "pattern": "^[0-9]{12}$",
@@ -6944,6 +7020,15 @@
                         "foundationalIdPath": "997676d3-7008-59f9-b23e-613ad79bbb08.fayda_fin",
                         "internalRecordIdPath": "997676d3-7008-59f9-b23e-613ad79bbb08.internal_record_id"
                       }
+                    },
+                    {
+                      "widget": "display",
+                      "widget-id": "farmer_reference_status",
+                      "widget-type": "display",
+                      "widget-label": "Farmer reference",
+                      "widget-readonly": true,
+                      "widget-required": false,
+                      "widget-data-path": "997676d3-7008-59f9-b23e-613ad79bbb08.farmer_reference_status"
                     }
                   ],
                   "panel-id": "vertical_panel_ls_livestock_record_1",
@@ -7286,7 +7371,7 @@
                       "widget-type": "input",
                       "widget-label": "Fayda FAN ID",
                       "widget-readonly": false,
-                      "widget-required": true,
+                      "widget-required": false,
                       "widget-data-path": "f9c6a359-9563-5a43-b0fe-6c7e452037a3.fayda_fan_id"
                     },
                     {
@@ -7306,6 +7391,15 @@
                       "widget-readonly": false,
                       "widget-required": false,
                       "widget-data-path": "f9c6a359-9563-5a43-b0fe-6c7e452037a3.middle_name"
+                    },
+                    {
+                      "widget": "display",
+                      "widget-id": "farmer_reference_fin",
+                      "widget-type": "display",
+                      "widget-label": "Fayda FIN",
+                      "widget-readonly": true,
+                      "widget-required": false,
+                      "widget-data-path": "f9c6a359-9563-5a43-b0fe-6c7e452037a3.fayda_fin"
                     }
                   ],
                   "panel-id": "vertical_panel_ls_farmer_identity_1",

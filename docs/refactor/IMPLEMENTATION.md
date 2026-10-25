@@ -27,8 +27,9 @@ ONBOARDING_VERIFICATION.json. Native CELERY_IMPORTS resolves the previously
 reported worker-registration gap. Signed lookup, durable correlation, registered
 native reference application and dependency release are implemented. Real
 Farmer/Consent Manager, Kafka/AWE/portal behavior, remaining domain/metadata/job
-parity and preservation acceptance still block promotion. The user confirmed
-16-digit UID/FAN; the inspected OAN source's 12-digit FIN is not a substitute.
+parity and preservation acceptance still block promotion. The revised user contract accepts FIN12 or FAN16 in separate fields; a
+signed response must prove the declared identifier. Unresolved lookups permit
+business approval but keep native activation held (REVIEW_A_FIXES.md).
 
 Retain existing Jenkins jobs/agents/credential references/ECR paths and deploy
 helpers. Jenkins validates this source port; its deployment stages remain bound

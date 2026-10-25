@@ -98,13 +98,17 @@ http.createServer(async (req, res) => {
     if (!verify(body.signature, canonical({header:body.header,message:body.message}))) throw Error();
     const criteria = body.message.search_request[0].search_criteria;
     const query = criteria.query.value.expression.query;
-    if (query.functional_record_id.$eq !== 'FR-000000000001' || query.record_status.$eq !== 'ACTIVE' ||
-        (query.foundational_id?.$eq !== '0000000000000001' && query.internal_record_id?.$eq !== 'synthetic-source-person')) throw Error();
+    const finRequest = ['fin-valid','fin-zero','fin-wrong-identity'].includes(mode);
+    const expectedIdentity = finRequest ? '000000000001' : '0000000000000001';
+    if ((query.functional_record_id && query.functional_record_id.$eq !== 'FR-000000000001') ||
+        (!finRequest && !query.functional_record_id) || query.record_status.$eq !== 'ACTIVE' ||
+        (query.foundational_id?.$eq !== expectedIdentity && query.internal_record_id?.$eq !== 'synthetic-source-person')) throw Error();
     const consentToken = criteria.authorize.consent_jws;
     const [left, middle, right] = consentToken.split('.');
     if (!crypto.verify('RSA-SHA256',Buffer.from(`${left}.${middle}`),callerPublicKey,Buffer.from(right,'base64url'))) throw Error();
     const consent = JSON.parse(Buffer.from(middle,'base64url'));
-    if (consent.subject_id.value !== '0000000000000001' ||
+    if (consent.subject_id.value !== expectedIdentity ||
+        consent.subject_id.type !== (finRequest ? 'fayda_fin' : 'fayda_fan_id') ||
         consent.data_scopes.join(',') !== 'farmer_personal_details' ||
         Date.parse(consent.validity.valid_until) <= Date.now()) throw Error();
   } catch { res.statusCode=422; return res.end(JSON.stringify({error:'invalid signed request or consent'})); }
@@ -115,6 +119,8 @@ http.createServer(async (req, res) => {
   if (mode === 'wrong-identity') record.foundational_id='0000000000000002';
   if (mode === 'rotated') record.foundational_id='0000000000000002';
   if (mode === 'different-source-person') record.internal_record_id='another-source-person';
+  if (['fin-valid','fin-zero'].includes(mode)) record.foundational_id='000000000001';
+  if (mode === 'fin-wrong-identity') record.foundational_id='000000000002';
   if (mode === 'fin-is-not-uid') record.foundational_id='000000000001';
   if (mode === 'inactive') record.record_status='INACTIVE';
   if (mode === 'missing-source-id') delete record.internal_record_id;
@@ -131,7 +137,7 @@ http.createServer(async (req, res) => {
   const item = {reference_id:body.message.search_request[0].reference_id,status:'succ',data:{reg_records:[record]}};
   const message = {transaction_id:body.message.transaction_id,search_response:[item]};
   if (mode === 'multiple') item.data.reg_records.push(record);
-  if (mode === 'zero') item.data.reg_records=[];
+  if (mode === 'zero' || mode === 'fin-zero') item.data.reg_records=[];
   if (mode === 'wrong-correlation') message.transaction_id='other-transaction';
   if (mode === 'wrong-reference') item.reference_id='other-reference';
   if (mode === 'wrong-sender') header.sender_id='other-registry';

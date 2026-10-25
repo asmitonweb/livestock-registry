@@ -93,6 +93,7 @@ class G2PRegisterDomainServiceLivestock(AuditSnapshotMixin, G2PRegisterDomainSer
             if problems:
                 validation_error("; ".join(problems))
         for record in records:
+            record.pop("farmer_reference_status", None)
             # NOT required here, unlike the Farmer register's own copy of
             # these two fields: the "Farmer Details" section's farmer_id/
             # fayda_fan_id are a display-only mirror of the linked Farmer and

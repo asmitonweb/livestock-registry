@@ -1,0 +1,18 @@
+/usr/local/lib/python3.12/site-packages/authlib/integrations/httpx_client/assertion_client.py:5: AuthlibDeprecationWarning: The httpx module is deprecated; please use httpx2 instead.
+  from ._compat import httpx2
+/usr/local/lib/python3.12/site-packages/iam_core/user_auth/helpers/jwt_helper.py:3: AuthlibDeprecationWarning: authlib.jose module is deprecated, please use joserfc instead.
+It will be compatible before version 2.0.0.
+  from authlib.jose import JsonWebKey, jwt
+test_changed_declared_fin_cannot_reuse_pending_link (test_farmer_reference_pending.PendingLookupTests.test_changed_declared_fin_cannot_reuse_pending_link) ... Executing <Task pending name='Task-1' coro=<PendingLookupTests.asyncSetUp() running at /work/livestock-extension/tests/test_farmer_reference_pending.py:30> wait_for=<Future pending cb=[_chain_future.<locals>._call_check_cancel() at /usr/local/lib/python3.12/asyncio/futures.py:389, Task.task_wakeup()] created at /usr/local/lib/python3.12/asyncio/base_events.py:448> cb=[_run_until_complete_cb() at /usr/local/lib/python3.12/asyncio/base_events.py:181] created at /usr/local/lib/python3.12/asyncio/runners.py:100> took 0.244 seconds
+Executing <Task pending name='Task-1' coro=<PendingLookupTests.asyncSetUp() running at /work/livestock-extension/tests/test_farmer_reference_pending.py:30> wait_for=<Future pending cb=[BaseProtocol._on_waiter_completed(), Task.task_wakeup()] created at /usr/local/lib/python3.12/asyncio/base_events.py:448> cb=[_run_until_complete_cb() at /usr/local/lib/python3.12/asyncio/base_events.py:181] created at /usr/local/lib/python3.12/asyncio/runners.py:100> took 0.105 seconds
+Executing <Task pending name='Task-1' coro=<PendingLookupTests.asyncSetUp() running at /work/livestock-extension/tests/test_farmer_reference_pending.py:30> wait_for=<Future pending cb=[BaseProtocol._on_waiter_completed(), Task.task_wakeup()] created at /usr/local/lib/python3.12/asyncio/base_events.py:448> cb=[_run_until_complete_cb() at /usr/local/lib/python3.12/asyncio/base_events.py:181] created at /usr/local/lib/python3.12/asyncio/runners.py:100> took 0.101 seconds
+Executing <Task pending name='Task-3' coro=<PendingLookupTests.test_changed_declared_fin_cannot_reuse_pending_link() running at /work/livestock-extension/tests/test_farmer_reference_pending.py:143> wait_for=<Future pending cb=[BaseProtocol._on_waiter_completed(), Task.task_wakeup()] created at /usr/local/lib/python3.12/asyncio/base_events.py:448> cb=[_run_until_complete_cb() at /usr/local/lib/python3.12/asyncio/base_events.py:181] created at /usr/local/lib/python3.12/asyncio/runners.py:100> took 0.260 seconds
+ok
+test_domain_approval_is_held_without_manufacturing_a_reference (test_farmer_reference_pending.PendingLookupTests.test_domain_approval_is_held_without_manufacturing_a_reference) ... ok
+test_recovery_creates_one_real_pending_add_and_still_requires_reference_approval (test_farmer_reference_pending.PendingLookupTests.test_recovery_creates_one_real_pending_add_and_still_requires_reference_approval) ... ok
+test_unresolved_fin_persists_diagnostic_without_a_trusted_farmer_or_cr (test_farmer_reference_pending.PendingLookupTests.test_unresolved_fin_persists_diagnostic_without_a_trusted_farmer_or_cr) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 5.713s
+
+OK

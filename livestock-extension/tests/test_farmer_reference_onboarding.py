@@ -27,7 +27,8 @@ class Farmer(BaseORMModel):
     __tablename__ = "test_approved_farmers"
     internal_record_id: Mapped[str] = mapped_column(String, primary_key=True)
     farmer_id: Mapped[str] = mapped_column(String)
-    fayda_fan_id: Mapped[str] = mapped_column(String)
+    fayda_fan_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    fayda_fin: Mapped[str | None] = mapped_column(String, nullable=True)
     record_status: Mapped[str] = mapped_column(String, default="ACTIVE")
     last_approved_at: Mapped[str] = mapped_column(String, default="2026-10-24")
     last_approved_by: Mapped[str] = mapped_column(String, default="target-reviewer")
@@ -106,6 +107,19 @@ class OnboardingTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(await self.count(model), 1)
         self.assertEqual(await self.count(ledger.FarmerSubmissionDependency), 20)
         self.assertEqual(await self.count(Farmer), 0, "a pending request must not create a trusted shell")
+
+    async def test_concurrent_fin_fan_aliases_reuse_one_pending_reference_without_identity_conversion(self):
+        fin_source=replace(self.snapshot,profile={**{key:value for key,value in self.snapshot.profile.items() if key != "fayda_fan_id"},"fayda_fin":"001234567890"})
+        references=await asyncio.gather(*(self.submit(f"alternate-{index}",fin_source if index % 2 else self.snapshot) for index in range(20)))
+        self.assertEqual(len({reference.reference_id for reference in references}),1)
+        self.assertEqual(await self.count(ledger.FarmerReferenceRequest),1)
+        self.assertEqual(await self.count(NativeCr),1)
+        self.assertEqual(await self.count(ledger.FarmerSubmissionDependency),20)
+        self.assertEqual(await self.count(Farmer),0)
+        async with self.sessions() as session:
+            bindings=(await session.execute(select(ledger.FarmerSubmissionDependency))).scalars().all()
+            self.assertEqual(sum("fayda_fin" in row.identity_binding["identity"] for row in bindings),10)
+            self.assertEqual(sum("fayda_fan_id" in row.identity_binding["identity"] for row in bindings),10)
 
     async def test_concurrent_duplicate_submission_and_restart_are_idempotent(self):
         refs = await asyncio.gather(*(self.submit() for _ in range(12)))

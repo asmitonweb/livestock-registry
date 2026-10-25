@@ -1,3 +1,8 @@
+/usr/local/lib/python3.12/site-packages/authlib/integrations/httpx_client/assertion_client.py:5: AuthlibDeprecationWarning: The httpx module is deprecated; please use httpx2 instead.
+  from ._compat import httpx2
+/usr/local/lib/python3.12/site-packages/iam_core/user_auth/helpers/jwt_helper.py:3: AuthlibDeprecationWarning: authlib.jose module is deprecated, please use joserfc instead.
+It will be compatible before version 2.0.0.
+  from authlib.jose import JsonWebKey, jwt
 test_add_uses_verified_source_scope (test_farmer_reference_contract.GeographicPolicyTests.test_add_uses_verified_source_scope) ... ok
 test_after_address_approval_future_requests_use_new_scope (test_farmer_reference_contract.GeographicPolicyTests.test_after_address_approval_future_requests_use_new_scope) ... ok
 test_functional_role_and_policy_scope_are_both_required (test_farmer_reference_contract.GeographicPolicyTests.test_functional_role_and_policy_scope_are_both_required) ... ok
@@ -24,6 +29,8 @@ test_disallow_policy_wins_and_missing_assignment_grants_nothing (test_farmer_ref
 test_nested_standard_and_or_preserve_scope_intersection (test_farmer_reference_contract.PublishedPolicyTests.test_nested_standard_and_or_preserve_scope_intersection) ... ok
 test_standard_woreda_eq_and_in_have_finite_scopes (test_farmer_reference_contract.PublishedPolicyTests.test_standard_woreda_eq_and_in_have_finite_scopes) ... ok
 test_current_lookup_pins_immutable_person_and_allows_source_approved_uid_rotation (test_farmer_reference_http.HttpLookupTests.test_current_lookup_pins_immutable_person_and_allows_source_approved_uid_rotation) ... skipped 'Requires local Postman simulation; run ci/refactor/verify-onboarding'
+test_fin_http_no_match_is_pending_eligible_but_mismatch_is_refused (test_farmer_reference_http.HttpLookupTests.test_fin_http_no_match_is_pending_eligible_but_mismatch_is_refused) ... skipped 'Requires local Postman simulation; run ci/refactor/verify-onboarding'
+test_fin_only_signed_http_lookup_resolves_farmer_id_without_inventing_fan (test_farmer_reference_http.HttpLookupTests.test_fin_only_signed_http_lookup_resolves_farmer_id_without_inventing_fan) ... skipped 'Requires local Postman simulation; run ci/refactor/verify-onboarding'
 test_optional_omission_is_distinct_from_explicit_clear (test_farmer_reference_http.HttpLookupTests.test_optional_omission_is_distinct_from_explicit_clear) ... skipped 'Requires local Postman simulation; run ci/refactor/verify-onboarding'
 test_server_pinned_key_id_cannot_be_changed_by_source (test_farmer_reference_http.HttpLookupTests.test_server_pinned_key_id_cannot_be_changed_by_source) ... skipped 'Requires local Postman simulation; run ci/refactor/verify-onboarding'
 test_signature_correlation_consent_cardinality_and_freshness_fail_closed (test_farmer_reference_http.HttpLookupTests.test_signature_correlation_consent_cardinality_and_freshness_fail_closed) ... skipped 'Requires local Postman simulation; run ci/refactor/verify-onboarding'
@@ -32,6 +39,8 @@ test_source_contract_gaps_are_explicit_and_fin_is_not_converted (test_farmer_ref
 test_transport_failures_are_blocking_and_redirects_are_not_followed (test_farmer_reference_http.HttpLookupTests.test_transport_failures_are_blocking_and_redirects_are_not_followed) ... skipped 'Requires local Postman simulation; run ci/refactor/verify-onboarding'
 test_changed_native_payload_cannot_bypass_verified_snapshot (test_farmer_reference_native.NativeReferenceTests.test_changed_native_payload_cannot_bypass_verified_snapshot) ... skipped 'Requires isolated PostgreSQL'
 test_domain_approval_waits_without_worker_attempts_then_releases_same_native_submission (test_farmer_reference_native.NativeReferenceTests.test_domain_approval_waits_without_worker_attempts_then_releases_same_native_submission) ... skipped 'Requires isolated PostgreSQL'
+test_fin_alias_reuses_approved_fan_reference_without_rewriting_profile (test_farmer_reference_native.NativeReferenceTests.test_fin_alias_reuses_approved_fan_reference_without_rewriting_profile) ... skipped 'Requires isolated PostgreSQL'
+test_fin_only_native_add_stores_exact_fin_and_history_without_inventing_fan (test_farmer_reference_native.NativeReferenceTests.test_fin_only_native_add_stores_exact_fin_and_history_without_inventing_fan) ... skipped 'Requires isolated PostgreSQL'
 test_legacy_staff_approval_cannot_enqueue_an_unapproved_domain_dependency (test_farmer_reference_native.NativeReferenceTests.test_legacy_staff_approval_cannot_enqueue_an_unapproved_domain_dependency) ... skipped 'Requires isolated PostgreSQL'
 test_manual_approval_of_managed_reference_is_blocked (test_farmer_reference_native.NativeReferenceTests.test_manual_approval_of_managed_reference_is_blocked) ... skipped 'Requires isolated PostgreSQL'
 test_native_approved_callback_adds_farmer_history_and_releases_dependency (test_farmer_reference_native.NativeReferenceTests.test_native_approved_callback_adds_farmer_history_and_releases_dependency) ... skipped 'Requires isolated PostgreSQL'
@@ -41,12 +50,14 @@ test_native_http_directory_failure_blocks_with_visible_diagnostic_and_bounded_re
 test_native_http_update_routes_old_geography_and_retry_reuses_remote_request (test_farmer_reference_native.NativeReferenceTests.test_native_http_update_routes_old_geography_and_retry_reuses_remote_request) ... skipped 'Requires isolated PostgreSQL'
 test_native_rejection_closes_managed_dependency_and_duplicate_callback_is_idempotent (test_farmer_reference_native.NativeReferenceTests.test_native_rejection_closes_managed_dependency_and_duplicate_callback_is_idempotent) ... skipped 'Requires isolated PostgreSQL'
 test_native_update_preserves_omissions_and_projects_linked_domain_only_after_approval (test_farmer_reference_native.NativeReferenceTests.test_native_update_preserves_omissions_and_projects_linked_domain_only_after_approval) ... skipped 'Requires isolated PostgreSQL'
+test_unresolved_fin_business_approval_holds_then_releases_after_real_reference_approval (test_farmer_reference_native.NativeReferenceTests.test_unresolved_fin_business_approval_holds_then_releases_after_real_reference_approval) ... skipped 'Requires isolated PostgreSQL'
 test_workflow_context_uses_approved_old_geography_and_server_resolved_ids (test_farmer_reference_native.NativeReferenceTests.test_workflow_context_uses_approved_old_geography_and_server_resolved_ids) ... skipped 'Requires isolated PostgreSQL'
 test_enricher_returns_only_pair_and_template_never_emits_demographics (test_farmer_reference_notification.NotificationTests.test_enricher_returns_only_pair_and_template_never_emits_demographics) ... ok
 test_invalid_and_demographic_notifications_are_rejected (test_farmer_reference_notification.NotificationTests.test_invalid_and_demographic_notifications_are_rejected) ... ok
 test_missing_required_identity_is_rejected (test_farmer_reference_notification.NotificationTests.test_missing_required_identity_is_rejected) ... ok
 test_uid16_with_leading_zero_is_preserved (test_farmer_reference_notification.NotificationTests.test_uid16_with_leading_zero_is_preserved) ... ok
 test_update_requires_one_matching_internal_identity (test_farmer_reference_notification.NotificationTests.test_update_requires_one_matching_internal_identity) ... ok
+test_notification_fin_reference_creates_pending_update_then_native_approval (test_farmer_reference_notification_native.NativeNotificationTests.test_notification_fin_reference_creates_pending_update_then_native_approval) ... skipped 'Requires isolated PostgreSQL'
 test_notification_for_unreferenced_farmer_cannot_onboard (test_farmer_reference_notification_native.NativeNotificationTests.test_notification_for_unreferenced_farmer_cannot_onboard) ... skipped 'Requires isolated PostgreSQL'
 test_notification_from_wrong_partner_cannot_lookup_or_create_request (test_farmer_reference_notification_native.NativeNotificationTests.test_notification_from_wrong_partner_cannot_lookup_or_create_request) ... skipped 'Requires isolated PostgreSQL'
 test_notification_identity_mismatch_fails_before_lookup_or_cr (test_farmer_reference_notification_native.NativeNotificationTests.test_notification_identity_mismatch_fails_before_lookup_or_cr) ... skipped 'Requires isolated PostgreSQL'
@@ -58,6 +69,7 @@ test_notification_uses_actual_configured_signed_lookup_over_http (test_farmer_re
 test_ambiguous_or_mismatched_existing_identity_fails_closed (test_farmer_reference_onboarding.OnboardingTests.test_ambiguous_or_mismatched_existing_identity_fails_closed) ... skipped 'Requires isolated PostgreSQL; run ci/refactor/verify-onboarding'
 test_approval_releases_existing_dependency_without_recreating_intake (test_farmer_reference_onboarding.OnboardingTests.test_approval_releases_existing_dependency_without_recreating_intake) ... skipped 'Requires isolated PostgreSQL; run ci/refactor/verify-onboarding'
 test_concurrent_duplicate_submission_and_restart_are_idempotent (test_farmer_reference_onboarding.OnboardingTests.test_concurrent_duplicate_submission_and_restart_are_idempotent) ... skipped 'Requires isolated PostgreSQL; run ci/refactor/verify-onboarding'
+test_concurrent_fin_fan_aliases_reuse_one_pending_reference_without_identity_conversion (test_farmer_reference_onboarding.OnboardingTests.test_concurrent_fin_fan_aliases_reuse_one_pending_reference_without_identity_conversion) ... skipped 'Requires isolated PostgreSQL; run ci/refactor/verify-onboarding'
 test_duplicate_update_and_rejection_preserve_approved_local (test_farmer_reference_onboarding.OnboardingTests.test_duplicate_update_and_rejection_preserve_approved_local) ... skipped 'Requires isolated PostgreSQL; run ci/refactor/verify-onboarding'
 test_existing_approved_exact_reference_is_adopted_without_overwrite (test_farmer_reference_onboarding.OnboardingTests.test_existing_approved_exact_reference_is_adopted_without_overwrite) ... skipped 'Requires isolated PostgreSQL; run ci/refactor/verify-onboarding'
 test_expired_lookup_and_unverified_objects_rejected (test_farmer_reference_onboarding.OnboardingTests.test_expired_lookup_and_unverified_objects_rejected) ... skipped 'Requires isolated PostgreSQL; run ci/refactor/verify-onboarding'
@@ -69,11 +81,11 @@ test_stale_pending_update_rechecked_after_newer_approval (test_farmer_reference_
 test_twenty_concurrent_submissions_reuse_one_reference_cr_and_outbox (test_farmer_reference_onboarding.OnboardingTests.test_twenty_concurrent_submissions_reuse_one_reference_cr_and_outbox) ... skipped 'Requires isolated PostgreSQL; run ci/refactor/verify-onboarding'
 test_uid_rotation_requires_update_approval_before_new_domain_reuse (test_farmer_reference_onboarding.OnboardingTests.test_uid_rotation_requires_update_approval_before_new_domain_reuse) ... skipped 'Requires isolated PostgreSQL; run ci/refactor/verify-onboarding'
 test_unreferenced_kafka_update_does_not_onboard (test_farmer_reference_onboarding.OnboardingTests.test_unreferenced_kafka_update_does_not_onboard) ... skipped 'Requires isolated PostgreSQL; run ci/refactor/verify-onboarding'
-test_approved_update_projects_only_stable_links_and_preserves_business (test_farmer_reference_projection.ProjectionTests.test_approved_update_projects_only_stable_links_and_preserves_business) ... Executing <Task pending name='Task-1' coro=<ProjectionTests.asyncSetUp() running at /work/livestock-extension/tests/test_farmer_reference_projection.py:56> wait_for=<Future pending cb=[Task.task_wakeup()] created at /usr/local/lib/python3.12/asyncio/base_events.py:448> cb=[_run_until_complete_cb() at /usr/local/lib/python3.12/asyncio/base_events.py:181] created at /usr/local/lib/python3.12/asyncio/runners.py:100> took 0.667 seconds
-Executing <Task pending name='Task-1' coro=<ProjectionTests.asyncSetUp() running at /work/livestock-extension/tests/test_farmer_reference_projection.py:57> wait_for=<Future pending cb=[Task.task_wakeup()] created at /usr/local/lib/python3.12/asyncio/base_events.py:448> cb=[_run_until_complete_cb() at /usr/local/lib/python3.12/asyncio/base_events.py:181] created at /usr/local/lib/python3.12/asyncio/runners.py:100> took 0.108 seconds
-Executing <Task pending name='Task-5' coro=<ProjectionTests.test_approved_update_projects_only_stable_links_and_preserves_business() running at /work/livestock-extension/tests/test_farmer_reference_projection.py:82> wait_for=<Future pending cb=[Task.task_wakeup()] created at /usr/local/lib/python3.12/asyncio/base_events.py:448> cb=[_run_until_complete_cb() at /usr/local/lib/python3.12/asyncio/base_events.py:181] created at /usr/local/lib/python3.12/asyncio/runners.py:100> took 0.143 seconds
-Executing <Task pending name='Task-5' coro=<ProjectionTests.test_approved_update_projects_only_stable_links_and_preserves_business() running at /work/livestock-extension/tests/test_farmer_reference_projection.py:82> wait_for=<Future pending cb=[Task.task_wakeup()] created at /usr/local/lib/python3.12/asyncio/base_events.py:448> cb=[_run_until_complete_cb() at /usr/local/lib/python3.12/asyncio/base_events.py:181] created at /usr/local/lib/python3.12/asyncio/runners.py:100> took 0.106 seconds
-ok
+test_changed_declared_fin_cannot_reuse_pending_link (test_farmer_reference_pending.PendingLookupTests.test_changed_declared_fin_cannot_reuse_pending_link) ... skipped 'Requires owned disposable PostgreSQL'
+test_domain_approval_is_held_without_manufacturing_a_reference (test_farmer_reference_pending.PendingLookupTests.test_domain_approval_is_held_without_manufacturing_a_reference) ... skipped 'Requires owned disposable PostgreSQL'
+test_recovery_creates_one_real_pending_add_and_still_requires_reference_approval (test_farmer_reference_pending.PendingLookupTests.test_recovery_creates_one_real_pending_add_and_still_requires_reference_approval) ... skipped 'Requires owned disposable PostgreSQL'
+test_unresolved_fin_persists_diagnostic_without_a_trusted_farmer_or_cr (test_farmer_reference_pending.PendingLookupTests.test_unresolved_fin_persists_diagnostic_without_a_trusted_farmer_or_cr) ... skipped 'Requires owned disposable PostgreSQL'
+test_approved_update_projects_only_stable_links_and_preserves_business (test_farmer_reference_projection.ProjectionTests.test_approved_update_projects_only_stable_links_and_preserves_business) ... ok
 test_conflicting_farmer_id_rolls_back_instead_of_relinking (test_farmer_reference_projection.ProjectionTests.test_conflicting_farmer_id_rolls_back_instead_of_relinking) ... ok
 test_explicit_optional_name_clear_is_projected (test_farmer_reference_projection.ProjectionTests.test_explicit_optional_name_clear_is_projected) ... ok
 test_late_intake_reads_latest_approved_reference (test_farmer_reference_projection.ProjectionTests.test_late_intake_reads_latest_approved_reference) ... ok
@@ -83,6 +95,6 @@ test_unapproved_or_inactive_reference_blocks_projection (test_farmer_reference_p
 test_unlinked_ingest_rolls_back_without_guessing_owner (test_farmer_reference_projection.ProjectionTests.test_unlinked_ingest_rolls_back_without_guessing_owner) ... ok
 
 ----------------------------------------------------------------------
-Ran 79 tests in 3.545s
+Ran 90 tests in 1.962s
 
-OK (skipped=41)
+OK (skipped=52)

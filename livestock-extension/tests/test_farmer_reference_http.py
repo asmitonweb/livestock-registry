@@ -78,3 +78,19 @@ class HttpLookupTests(unittest.IsolatedAsyncioTestCase):
         client = lookup.FarmerLookup(replace(self.config, url=BASE + "/different-source-person"), self.contract)
         with self.assertRaisesRegex(Error, "SOURCE_ID_MISMATCH"):
             await client.lookup_current("FR-000000000001", "0000000000000001", "synthetic-source-person")
+
+
+    async def test_fin_only_signed_http_lookup_resolves_farmer_id_without_inventing_fan(self):
+        client=lookup.FarmerLookup(replace(self.config,url=BASE+"/fin-valid"),self.contract)
+        result=await client.lookup(None,fin="000000000001")
+        self.assertEqual(result.profile["farmer_id"],"FR-000000000001")
+        self.assertEqual(result.profile["fayda_fin"],"000000000001")
+        self.assertNotIn("fayda_fan_id",result.profile)
+
+    async def test_fin_http_no_match_is_pending_eligible_but_mismatch_is_refused(self):
+        client=lookup.FarmerLookup(replace(self.config,url=BASE+"/fin-zero"),self.contract)
+        with self.assertRaisesRegex(Error,"NOT_FOUND"):
+            await client.lookup(None,fin="000000000001")
+        client=lookup.FarmerLookup(replace(self.config,url=BASE+"/fin-wrong-identity"),self.contract)
+        with self.assertRaisesRegex(Error,"IDENTITY_MISMATCH"):
+            await client.lookup(None,fin="000000000001")

@@ -15,6 +15,7 @@ class G2PSchemaFarmer(G2PSchemaAdminArea):
 
     farmer_id: Optional[str] = None
     fayda_fan_id: Optional[str] = None
+    fayda_fin: Optional[str] = None
     farmer_name: Optional[str] = None
     first_name: Optional[str] = None
     middle_name: Optional[str] = None

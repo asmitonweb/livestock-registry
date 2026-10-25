@@ -48,8 +48,12 @@ for base, extension in ((runtime.G2PIntakeFormDataService, runtime.ReferenceInta
     mapping[base.__name__] = type(base.get_component()).__name__
 importlib.import_module("openg2p_registry_extensions.ingestion_pipeline.enricher_services")
 extension_app = importlib.import_module("openg2p_registry_extensions.app")
-assert len(extension_app.REFERENCE_MODELS) == 4
+assert {model.__tablename__ for model in extension_app.REFERENCE_MODELS} == {
+    "coss_farmer_references", "coss_farmer_reference_requests",
+    "coss_farmer_submission_dependencies", "coss_farmer_workflow_outbox",
+    "coss_farmer_pending_lookups",
+}
 print(json.dumps({"domain": domain, "mode": mode, "registered_services": mapping,
-                  "extension_tables_in_migration": 4, "native_extra_imports": "PASS",
+                  "extension_tables_in_migration": len(extension_app.REFERENCE_MODELS), "native_extra_imports": "PASS",
                   "duplicate_components": False, "network_accessed": False,
                   "beat_entries": len(celery_app.conf.beat_schedule) if celery_app else None}))

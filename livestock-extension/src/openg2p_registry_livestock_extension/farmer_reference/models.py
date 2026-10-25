@@ -1,5 +1,7 @@
 """Extension-owned correlation/outbox tables; native CR and intake remain owners."""
-from sqlalchemy import BigInteger, CheckConstraint, ForeignKey, JSON, String, UniqueConstraint, Uuid
+from datetime import datetime
+
+from sqlalchemy import DateTime, BigInteger, CheckConstraint, ForeignKey, JSON, String, UniqueConstraint, Uuid
 from sqlalchemy.orm import Mapped, mapped_column
 from openg2p_fastapi_common.models import BaseORMModel
 
@@ -41,6 +43,7 @@ class FarmerSubmissionDependency(BaseORMModel):
     submission_id: Mapped[str] = mapped_column(Uuid(as_uuid=False), primary_key=True)
     reference_id: Mapped[str] = mapped_column(ForeignKey("coss_farmer_references.reference_id"), nullable=False, index=True)
     farmer_request_id: Mapped[str | None] = mapped_column(ForeignKey("coss_farmer_reference_requests.request_id"), nullable=True)
+    identity_binding: Mapped[dict | None] = mapped_column(JSON, nullable=True)
 
 
 class FarmerWorkflowOutbox(BaseORMModel):
@@ -52,4 +55,14 @@ class FarmerWorkflowOutbox(BaseORMModel):
     last_error_code: Mapped[str | None] = mapped_column(String, nullable=True)
 
 
-REFERENCE_MODELS = (FarmerReference, FarmerReferenceRequest, FarmerSubmissionDependency, FarmerWorkflowOutbox)
+class FarmerPendingLookup(BaseORMModel):
+    __tablename__ = "coss_farmer_pending_lookups"
+    submission_id: Mapped[str] = mapped_column(Uuid(as_uuid=False), primary_key=True)
+    identity_json: Mapped[dict] = mapped_column(JSON, nullable=False)
+    state: Mapped[str] = mapped_column(String, nullable=False, default="PENDING", index=True)
+    attempts: Mapped[int] = mapped_column(nullable=False, default=0)
+    retry_after: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    last_error_code: Mapped[str | None] = mapped_column(String, nullable=True)
+
+
+REFERENCE_MODELS = (FarmerReference, FarmerReferenceRequest, FarmerSubmissionDependency, FarmerWorkflowOutbox, FarmerPendingLookup)

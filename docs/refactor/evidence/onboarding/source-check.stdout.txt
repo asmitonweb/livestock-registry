@@ -1,6 +1,6 @@
 {
   "domain": "livestock",
-  "python_files_parsed": 86,
+  "python_files_parsed": 93,
   "platform_pins": [
     "1.2.2-rc.557"
   ],

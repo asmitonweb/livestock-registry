@@ -18,9 +18,9 @@ from openg2p_registry_core.services.g2p_change_request_worker_service import G2P
 from openg2p_registry_core.services.g2p_awe_webhook_service import G2PAweWebhookService
 
 from .configuration import configured_lookup
-from .models import FarmerReference, FarmerReferenceRequest, FarmerSubmissionDependency
+from .models import FarmerReference, FarmerReferenceRequest, FarmerSubmissionDependency, FarmerPendingLookup
 from .onboarding import OnboardingService
-from .profile import FarmerReferenceError, identity_pair, PROFILE_FIELDS
+from .profile import FarmerReferenceError, reference_identity, intake_identity, model_identity, matches_declared_identity, PROFILE_FIELDS
 
 _approved_callback = ContextVar("coss_farmer_approved_callback", default=None)
 
@@ -48,7 +48,7 @@ async def create_native_request(session, local_id, profile, action, *, created_b
     section, tab_id = bindings[0]
     if action not in {"ADD", "UPDATE"} or set(profile) - PROFILE_FIELDS:
         raise FarmerReferenceError("FARMER_REFERENCE_MANAGED_PAYLOAD_REQUIRED")
-    identity_pair(profile.get("farmer_id"), profile.get("fayda_fan_id"))
+    reference_identity(profile)
     payload = {**profile, "internal_record_id": local_id, "edit_action": action}
     request = ChangeRequestRequestPayload(register_id=definition.register_id, register_mnemonic="Farmer",
         tab_id=tab_id, section_id=section.section_id, section_register_id=definition.register_id,
@@ -142,7 +142,8 @@ class ReferenceIntakeService(G2PIntakeFormDataService):
         if definition.register_mnemonic in {"CropSown", "Livestock"}:
             if not reference or reference.state != "APPROVED":
                 submission.register_ingest_process_status = "NOT_APPLICABLE"
-                suffix = "REQUIRED" if not reference else "REJECTED" if reference.state == "REJECTED" else "PENDING"
+                pending_lookup = await session.get(FarmerPendingLookup, submission_id)
+                suffix = "PENDING" if pending_lookup and pending_lookup.state == "PENDING" else "REQUIRED" if not reference else "REJECTED" if reference.state == "REJECTED" else "PENDING"
                 submission.register_ingest_process_last_error_code = "FARMER_REFERENCE_DEPENDENCY_" + suffix
                 await session.flush()
         return submission
@@ -161,7 +162,9 @@ class ReferenceIntakeService(G2PIntakeFormDataService):
             if len(rows) != 1:
                 raise FarmerReferenceError("FARMER_REFERENCE_SINGLE_DOMAIN_ROOT_REQUIRED")
             row = rows[0]
-            pair = identity_pair(row.farmer_id, row.fayda_fan_id)
+            declared = intake_identity(model_identity(row))
+            for field, value in declared.items():
+                setattr(row, field, value)
             sections = await self._get_form_sections(submission.form_id, session)
             farmer = await farmer_definition(session)
             if any(section.section_register_id == farmer.register_id for section in sections):
@@ -169,20 +172,40 @@ class ReferenceIntakeService(G2PIntakeFormDataService):
             dependency = await session.get(FarmerSubmissionDependency, submission_id)
             if dependency:
                 reference = await session.get(FarmerReference, dependency.reference_id)
-                if (reference.farmer_id, reference.uid) != pair:
-                    raise FarmerReferenceError("FARMER_REFERENCE_SUBMISSION_IDENTITY_CHANGED")
                 if reference.state == "REJECTED":
                     raise FarmerReferenceError("FARMER_REFERENCE_DEPENDENCY_REJECTED")
+                binding = dependency.identity_binding
+                if binding:
+                    if (binding.get("source_record_id") != reference.source_record_id or
+                            binding.get("source_system") != reference.source_system):
+                        raise FarmerReferenceError("FARMER_REFERENCE_SOURCE_ID_MISMATCH")
+                    expected = binding["identity"]
+                elif reference.state == "APPROVED":
+                    local = await onboarding_service().require_approved_dependency(session, submission_id)
+                    expected = model_identity(local)
+                else:
+                    request = await session.get(FarmerReferenceRequest, dependency.farmer_request_id)
+                    expected = request.profile if request else {}
+                if not matches_declared_identity(declared, expected):
+                    raise FarmerReferenceError("FARMER_REFERENCE_SUBMISSION_IDENTITY_CHANGED")
+                row.farmer_uuid, row.farmer_id = reference.local_farmer_id, reference.farmer_id
+                row.farmer_reference_status = ("Farmer reference linked" if reference.state == "APPROVED" else
+                    "Farmer reference awaiting approval; the record will be added after that approval")
             else:
                 live = await session.get(getattr(models, "G2PRegister" + definition.register_mnemonic), row.internal_record_id)
                 if live and live.last_approved_at and live.farmer_uuid:
-                    reference = await onboarding_service().link_approved_dependency(session, submission_id, live.farmer_uuid, *pair)
+                    if not matches_declared_identity(declared, model_identity(live)):
+                        raise FarmerReferenceError("FARMER_REFERENCE_SUBMISSION_IDENTITY_CHANGED")
+                    reference = await onboarding_service().link_approved_dependency(session, submission_id,
+                        live.farmer_uuid, declared.get("farmer_id"), declared.get("fayda_fan_id"), fin=declared.get("fayda_fin"),
+                        approved_domain_identity=model_identity(live), approved_domain_record_id=live.internal_record_id)
+                    row.farmer_uuid, row.farmer_id = reference.local_farmer_id, reference.farmer_id
+                    row.farmer_reference_status = "Farmer reference linked"
                 else:
-                    verified = await configured_lookup().lookup(*pair)
-                    reference = await onboarding_service().ensure_dependency(session, submission_id, verified,
-                        requester=submission.created_by)
-            row.farmer_uuid = reference.local_farmer_id
-            row.farmer_id, row.fayda_fan_id = pair
+                    from .pending import resolve_or_wait
+                    reference = await resolve_or_wait(session, submission, row)
+                if reference is None:
+                    submission.register_ingest_process_last_error_code = "FARMER_REFERENCE_DEPENDENCY_PENDING"
             await session.flush()
         if not bearer_token:
             # Native ingestion workers have no human bearer. A narrowly scoped
@@ -299,11 +322,13 @@ class ReferenceIngestionService(G2PChangeRequestWorkerService):
         if client.config.source_id != reference.source_system:
             raise FarmerReferenceError("FARMER_REFERENCE_SOURCE_ID_MISMATCH")
         # Notification demographic values are deliberately not read.
-        current = await client.lookup_current(reference.farmer_id, reference.uid, reference.source_record_id)
+        lookup_identifier = (notification_pair[1] if len(notification_pair[1]) == 12 and len(reference.uid) == 16
+                             else reference.uid)
+        current = await client.lookup_current(reference.farmer_id, lookup_identifier, reference.source_record_id)
         # An approved UID correction may be notified using the new UID. Only
         # the signed, consented lookup pinned to this same immutable source
         # person can establish that correction; the event cannot authorize it.
-        if notification_pair[1] not in {reference.uid, current.profile["fayda_fan_id"]}:
+        if notification_pair[1] not in {reference.uid, current.profile.get("fayda_fan_id"), current.profile.get("fayda_fin")}:
             raise FarmerReferenceError("FARMER_REFERENCE_IDENTITY_MISMATCH")
         request = await onboarding_service().queue_current_update(session, current)
         if request is None:

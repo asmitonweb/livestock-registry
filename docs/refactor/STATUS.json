@@ -22,7 +22,7 @@
     {
       "id": "B05",
       "capability": "Linked ADD dependency lifecycle",
-      "evidence": "Signed fail-closed lookup, PostgreSQL concurrent ADD reuse/provenance, native ADD/UPDATE/history application, held-domain release and projection are implemented. Real portal access for pending ADD, both approval orders/recovery across the actual pipeline, and preservation migration remain unaccepted."
+      "evidence": "Signed FIN/FAN lookup, durable unresolved-lookup recovery, PostgreSQL concurrent ADD reuse and per-submission identity provenance are implemented. Native ADD/UPDATE/history application, independent business approval with activation held, original-queue release and projection have isolated checks in ONBOARDING_VERIFICATION.json. Real portal access, both approval orders/recovery through actual pipelines and restored real-environment preservation remain unaccepted. Synthetic prior-native-database restore/migration x2 is separate evidence in evidence/identity-migration.json."
     },
     {
       "id": "B06",
@@ -37,7 +37,7 @@
     {
       "id": "B09",
       "capability": "Source identity/lookup contract",
-      "evidence": "User confirmed 16-digit UID/FAN. Inspected OAN Farmer 4901f11dba9e4debf710e182b769120f5906892a uses 12-digit FIN and its DCI personal template lacks the complete required identity/provenance/geography contract. Source inspection is not deployed-response proof. Do not substitute FIN or notification values; source-owner contract is required and Farmer changes are out of scope."
+      "evidence": "Revised user contract accepts FIN12 or FAN16 in separate fields. Signed consent-aware lookup resolves the declared identifier and matches a supplied Farmer ID; an omitted Farmer ID comes only from the signed source. Unresolved lookups are durable and permit business approval while holding live activation. The inspected source snapshot does not establish a complete deployed response/provenance/geography/consent contract. Source-owner confirmation and real signed lookup remain required; no identity conversion or notification demographic fallback is permitted."
     },
     {
       "id": "B10",

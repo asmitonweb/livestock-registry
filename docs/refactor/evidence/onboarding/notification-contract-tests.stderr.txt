@@ -5,6 +5,6 @@ test_uid16_with_leading_zero_is_preserved (test_farmer_reference_notification.No
 test_update_requires_one_matching_internal_identity (test_farmer_reference_notification.NotificationTests.test_update_requires_one_matching_internal_identity) ... ok
 
 ----------------------------------------------------------------------
-Ran 5 tests in 0.102s
+Ran 5 tests in 0.202s
 
 OK

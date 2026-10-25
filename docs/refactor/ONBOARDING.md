@@ -2,31 +2,36 @@
 
 This is an extension implementation candidate, not a completed refactor or live
 acceptance certificate. Installation/promotion gates remain enabled. The user
-confirmed that the receiving identity remains the **16-digit UID/FAN**; a
-12-digit FIN must not be stored as `fayda_fan_id`.
+confirmed FIN12 **or** FAN16 as the receiving identity. Store FIN only in
+`fayda_fin` and FAN only in `fayda_fan_id`; never pad or convert either.
+A supplied Farmer ID must match; an omitted Farmer ID comes only from the
+authenticated source response. See REVIEW_A_FIXES.md for the updated A-02 contract.
 
 ## Implemented ownership and lifecycle
 
-`farmer_reference/lookup.py` sends a signed DCI expression request with both
-Farmer ID and UID, a fresh signed consent assertion, and the active-record
+`farmer_reference/lookup.py` sends a signed DCI expression request with the declared
+FIN and/or FAN (and Farmer ID when supplied), a fresh signed consent assertion, and the active-record
 filter. It verifies the response with a configured source public key and key
 ID, correlates message/transaction/reference IDs, requires signature and consent
 enforcement, checks freshness/cardinality/approval provenance, and applies only
 the identity/contact/location allowlist. Source URLs/record mappings come from
 deployment configuration. Redirects are not followed. HTTP failures, ambiguous
-records, invalid signatures, mismatched identities and incomplete source
-contracts block submission. A notification is never a demographic data source.
+records, invalid signatures and incomplete source contracts cannot establish a
+trusted reference. Unavailable/unresolved lookups retain a durable pending marker
+and a visible intake diagnostic; finalization and business approval remain allowed.
+A signed identity mismatch is refused. Live activation always requires the approved
+Farmer dependency. A notification is never a demographic data source.
 
 `ReferenceIntakeService` is a registered subclass of the native intake service.
-Draft save does not call onboarding. Final submission captures the pair on the
+Draft save does not call onboarding. Final submission captures the declared identifier(s) on the
 domain root, looks up the approved source, binds the server-selected local
 Farmer UUID and creates/reuses a native Farmer ADD CR in the same transaction.
 An existing approved exact reference is reused without overwriting its approved
 profile. Later business intakes on an existing approved domain record reuse its
 stable approved reference. They do not onboard the Farmer again.
 
-The four extension-owned `coss_farmer_*` tables retain source provenance,
-source ordering, submission dependencies and AWE delivery. PostgreSQL
+The five extension-owned `coss_farmer_*` tables retain source provenance,
+source ordering, submission dependencies, unresolved lookups and AWE delivery. PostgreSQL
 transaction locks cover the absent-reference case; uniqueness constraints cover
 source identity, local UUID, UID and request versions. A pending ADD does not
 insert a live Farmer. CR/payload/correlation/outbox changes roll back together.
@@ -137,9 +142,15 @@ describes `foundational_id` as FIN. Its current personal-details DCI template
 does not expose the required complete identity/provenance/canonical geography
 contract for this receiving adapter. This is source inspection, not proof of a
 specific deployed response. No Farmer or OpenG2P code was changed. Live lookup
-and onboarding must remain blocked until a source-owner contract can prove the
-16-digit UID/FAN and required source identity/version/scope. Do not configure a
-FIN as a UID or use notification values to fill the gap.
+and activation remain unaccepted until a source-owner contract proves the
+selected FIN/FAN, required source identity/version/scope, signing and consent.
+Unresolved intakes may still finalize and receive business approval; their live
+activation stays held. Never configure FIN as UID or fill a contract gap from
+notification values. The new `fin`/`fin_query_field` and `uid`/`uid_query_field`
+record-contract settings map the two kinds separately; query defaults retain
+`foundational_id` compatibility. The default FIN response path is also
+`foundational_id`, so a source exposing separate FIN/FAN fields must configure
+those paths explicitly.
 
 ## Verification and remaining acceptance
 

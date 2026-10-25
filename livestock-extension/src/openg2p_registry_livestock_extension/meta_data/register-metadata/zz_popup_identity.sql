@@ -41,7 +41,7 @@ DO $$ BEGIN
    WHERE w->>'widget-data-path' = '997676d3-7008-59f9-b23e-613ad79bbb08.fayda_fin'
      AND w->>'widget' = 'text' AND w->>'widget-readonly' = 'false'
      AND w->>'widget-required' = 'false'
-     AND w->'widget-data-options'->'condition'->>'value' = 'SUCCESS') THEN
+     AND (w->'widget-data-options'->'condition'->>'value' = 'SUCCESS' OR jsonb_path_exists(w, 'lax $."widget-data-options".actions[*] ? (@.action == "disable" && @.condition.value == "SUCCESS")'))) THEN
    RAISE EXCEPTION 'Optional manual FIN fallback with the SUCCESS lock is missing';
  END IF;
  IF NOT EXISTS(SELECT 1 FROM g2p_register_definitions WHERE register_id='997676d3-7008-59f9-b23e-613ad79bbb08' AND requires_registrant_authentication) THEN

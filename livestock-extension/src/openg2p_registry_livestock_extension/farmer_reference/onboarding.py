@@ -15,7 +15,7 @@ from sqlalchemy import select, text
 
 from .lookup import VerifiedFarmer
 from .models import FarmerReference, FarmerReferenceRequest, FarmerSubmissionDependency, FarmerWorkflowOutbox
-from .profile import FarmerReferenceError, identity_pair, PROFILE_FIELDS
+from .profile import FarmerReferenceError, reference_identity, intake_identity, matches_declared_identity, model_identity, PROFILE_FIELDS
 
 
 def _json_profile(profile: dict) -> dict:
@@ -51,7 +51,7 @@ class OnboardingService:
         age = (datetime.now(timezone.utc) - source.fetched_at).total_seconds()
         if not -30 <= age <= 300:
             raise FarmerReferenceError("FARMER_REFERENCE_LOOKUP_EXPIRED")
-        return identity_pair(source.profile.get("farmer_id"), source.profile.get("fayda_fan_id"))
+        return reference_identity(source.profile)
 
     async def _reference(self, session, source: VerifiedFarmer, *, allow_create: bool):
         farmer_id, uid = self._validate_snapshot(source)
@@ -62,7 +62,9 @@ class OnboardingService:
         if reference:
             if reference.source_record_id != source.source_record_id:
                 raise FarmerReferenceError("FARMER_REFERENCE_SOURCE_ID_MISMATCH")
-            if reference.state != "APPROVED" and reference.uid != uid:
+            source_identifier = reference_identity(source.profile, preferred_identifier=reference.uid)[1]
+            if (reference.state != "APPROVED" and reference.uid != source_identifier
+                    and len(reference.uid) == len(source_identifier)):
                 raise FarmerReferenceError("FARMER_REFERENCE_PENDING_IDENTITY_CHANGED")
             return reference
         if not allow_create:
@@ -71,11 +73,12 @@ class OnboardingService:
         # Existing approved references can be adopted only by this verified exact
         # pair. Never pick an arbitrary row when identities are ambiguous.
         Farmer = self.farmer_model
+        identity_column = Farmer.fayda_fin if len(uid) == 12 else Farmer.fayda_fan_id
         rows = (await session.execute(select(Farmer).where(
-            (Farmer.farmer_id == farmer_id) | (Farmer.fayda_fan_id == uid)).with_for_update())).scalars().all()
+            (Farmer.farmer_id == farmer_id) | (identity_column == uid)).with_for_update())).scalars().all()
         local_id = None
         if rows:
-            if (len(rows) != 1 or identity_pair(rows[0].farmer_id, rows[0].fayda_fan_id) != (farmer_id, uid) or
+            if (len(rows) != 1 or reference_identity(model_identity(rows[0]), preferred_identifier=uid) != (farmer_id, uid) or
                     rows[0].record_status != "ACTIVE" or not rows[0].last_approved_at or not rows[0].last_approved_by):
                 raise FarmerReferenceError("FARMER_REFERENCE_EXISTING_IDENTITY_AMBIGUOUS")
             local_id = rows[0].internal_record_id
@@ -93,8 +96,16 @@ class OnboardingService:
         reference = await self._reference(session, source, allow_create=True)
         if reference.state == "REJECTED":
             raise FarmerReferenceError("FARMER_REFERENCE_DEPENDENCY_REJECTED")
-        if reference.uid != source.profile["fayda_fan_id"]:
+        source_identifier = reference_identity(source.profile, preferred_identifier=reference.uid)[1]
+        if reference.uid != source_identifier and len(reference.uid) == len(source_identifier):
             raise FarmerReferenceError("FARMER_REFERENCE_LOCAL_IDENTITY_UPDATE_REQUIRED")
+        # An alternate FIN/FAN kind may identify the same immutable source
+        # person. Reuse its existing approved/pending reference without changing
+        # that reference's approved profile or frozen ADD request. Retain the
+        # signed lookup binding on this submission instead of inventing an ID.
+        binding = {"basis": "signed_lookup", "identity": intake_identity(source.profile, require_farmer=True),
+                   "source_system": source.source_system, "source_record_id": source.source_record_id,
+                   "source_version": source.source_version, "response_digest": source.response_digest}
         existing = await session.get(FarmerSubmissionDependency, submission_id)
         if existing:
             if existing.reference_id != reference.reference_id:
@@ -104,7 +115,7 @@ class OnboardingService:
             request = await self._create_request(session, reference, source, "ADD", requester=requester)
             reference.pending_add_request_id = request.request_id
         session.add(FarmerSubmissionDependency(submission_id=submission_id, reference_id=reference.reference_id,
-            farmer_request_id=reference.pending_add_request_id))
+            farmer_request_id=reference.pending_add_request_id, identity_binding=binding))
         await session.flush()
         return reference
 
@@ -143,13 +154,18 @@ class OnboardingService:
         if reference.state != "APPROVED":
             code = "REJECTED" if reference.state == "REJECTED" else "PENDING"
             raise FarmerReferenceError("FARMER_REFERENCE_DEPENDENCY_" + code)
+        binding = dependency.identity_binding
+        if binding and (binding.get("source_system") != reference.source_system or
+                        binding.get("source_record_id") != reference.source_record_id or
+                        binding.get("identity", {}).get("farmer_id") != reference.farmer_id):
+            raise FarmerReferenceError("FARMER_REFERENCE_SOURCE_ID_MISMATCH")
         farmer = await session.get(self.farmer_model, reference.local_farmer_id, with_for_update=True)
         if (not farmer or farmer.record_status != "ACTIVE" or
                 not farmer.last_approved_at or not farmer.last_approved_by):
             raise FarmerReferenceError("FARMER_REFERENCE_APPROVED_LOCAL_REQUIRED")
         return farmer
 
-    async def link_approved_dependency(self, session, submission_id: str, local_id: str, farmer_id: str, uid: str):
+    async def link_approved_dependency(self, session, submission_id: str, local_id: str, farmer_id: str | None, uid: str | None, *, fin: str | None = None, approved_domain_identity=None, approved_domain_record_id=None):
         """Later domain intake reuses its existing approved stable reference.
 
         The caller must derive local_id from the already approved domain row,
@@ -159,13 +175,23 @@ class OnboardingService:
             FarmerReference.local_farmer_id == local_id).with_for_update())).scalar_one_or_none()
         if not reference or reference.state != "APPROVED":
             raise FarmerReferenceError("FARMER_REFERENCE_APPROVED_LOCAL_REQUIRED")
-        if identity_pair(farmer_id, uid) != (reference.farmer_id, reference.uid):
+        declared = intake_identity({"farmer_id": farmer_id, "fayda_fan_id": uid, "fayda_fin": fin})
+        farmer = await session.get(self.farmer_model, local_id)
+        expected = approved_domain_identity if approved_domain_identity is not None else model_identity(farmer) if farmer else {}
+        if not farmer or not matches_declared_identity(declared, expected):
             raise FarmerReferenceError("FARMER_REFERENCE_SUBMISSION_IDENTITY_CHANGED")
+        binding = None
+        if approved_domain_identity is not None:
+            if not approved_domain_record_id:
+                raise FarmerReferenceError("FARMER_REFERENCE_APPROVED_LOCAL_REQUIRED")
+            binding = {"basis": "approved_domain", "identity": intake_identity(expected, require_farmer=True),
+                       "source_system": reference.source_system, "source_record_id": reference.source_record_id,
+                       "domain_record_id": approved_domain_record_id}
         existing = await session.get(FarmerSubmissionDependency, submission_id)
         if existing and existing.reference_id != reference.reference_id:
             raise FarmerReferenceError("FARMER_REFERENCE_SUBMISSION_IDENTITY_CHANGED")
         if not existing:
-            session.add(FarmerSubmissionDependency(submission_id=submission_id, reference_id=reference.reference_id))
+            session.add(FarmerSubmissionDependency(submission_id=submission_id, reference_id=reference.reference_id, identity_binding=binding))
             await session.flush()
         await self.require_approved_dependency(session, submission_id)
         return reference
@@ -205,10 +231,9 @@ class OnboardingService:
         if approved:
             farmer = await session.get(self.farmer_model, reference.local_farmer_id)
             if (not farmer or farmer.record_status != "ACTIVE" or
-                    identity_pair(farmer.farmer_id, farmer.fayda_fan_id) !=
-                    identity_pair(request.profile["farmer_id"], request.profile["fayda_fan_id"])):
+                    not matches_declared_identity(request.profile, model_identity(farmer))):
                 raise FarmerReferenceError("FARMER_REFERENCE_APPROVED_LOCAL_REQUIRED")
-            reference.uid = request.profile["fayda_fan_id"]
+            reference.uid = reference_identity(request.profile, preferred_identifier=reference.uid)[1]
             reference.applied_version = request.source_version
             reference.state = "APPROVED"
         elif request.action == "ADD":

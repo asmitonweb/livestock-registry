@@ -3,6 +3,12 @@
 24 October 2026. This continues the foundation commits on the existing registered
 `develop-refactor` worktrees. The full refactor is still incomplete and gated.
 
+25 October identity follow-up: the current allowlist also permits approved FIN
+(`approved_fin` -> `fayda_fin`) separately from approved UID/FAN16. FIN/FAN are
+never converted. The revised lifecycle and current verification are described in
+[REVIEW_A_FIXES.md](REVIEW_A_FIXES.md) and [ONBOARDING.md](ONBOARDING.md); dated
+implementation checkpoints below remain historical.
+
 The connected Atlassian reader verified page **203653123**, snapshot **v:5**,
 updated **23 October 2026 at 09:43:47.742 UTC**. Its revision message requires a
 local Farmer UPDATE CR and target approval for Kafka changes. The credential

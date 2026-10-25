@@ -22,6 +22,7 @@ class FarmerReferenceError(ValueError):
 SOURCE_TO_LOCAL_FIELDS = {
     "farmer_id": "farmer_id",
     "approved_uid": "fayda_fan_id",
+    "approved_fin": "fayda_fin",
     "first_name": "first_name",
     "middle_name": "middle_name",
     "last_name": "last_name",
@@ -52,7 +53,7 @@ SOURCE_TO_LOCAL_FIELDS = {
 }
 PROFILE_FIELDS = frozenset(SOURCE_TO_LOCAL_FIELDS.values()) | {"farmer_name"}
 NAME_FIELDS = ("first_name", "middle_name", "last_name")
-IDENTITY_FIELDS = frozenset({"farmer_id", "fayda_fan_id"})
+IDENTITY_FIELDS = frozenset({"farmer_id", "fayda_fan_id", "fayda_fin"})
 
 
 def normalize_farmer_id(value: object) -> str:
@@ -76,13 +77,56 @@ def identity_pair(farmer_id: object, uid: object) -> tuple[str, str]:
     return normalize_farmer_id(farmer_id), normalize_uid(uid)
 
 
+def normalize_fin(value: object) -> str:
+    if not isinstance(value, str) or not re.fullmatch(r"[0-9]{12}", value.strip()):
+        raise FarmerReferenceError("FIN (Fayda ID): enter exactly 12 digits. Use the FAN field for a 16-digit FAN")
+    return value.strip()
+
+
+def intake_identity(record: Mapping, *, required=True, require_farmer=False) -> dict:
+    """Validate declared IDs without asserting source approval or onboarding.
+
+    FIN and FAN remain separate. A signed source response may resolve an omitted
+    Farmer ID; a supplied Farmer ID must still match that same source person.
+    """
+    result = {}
+    for field, normalizer in (("farmer_id", normalize_farmer_id),
+                              ("fayda_fan_id", normalize_uid), ("fayda_fin", normalize_fin)):
+        value = record.get(field)
+        if value is not None and (not isinstance(value, str) or value.strip()):
+            result[field] = normalizer(value)
+    if required and not (result.get("fayda_fan_id") or result.get("fayda_fin")):
+        raise FarmerReferenceError("Fayda ID: enter a 12-digit FIN or a 16-digit FAN, or verify with Fayda")
+    if require_farmer and not result.get("farmer_id"):
+        raise FarmerReferenceError("FARMER_REFERENCE_SOURCE_IDENTITY_REQUIRED")
+    return result
+
+
+def reference_identity(record: Mapping, *, preferred_identifier=None) -> tuple[str, str]:
+    """The approved source Farmer ID and exact identifier held by its ledger.
+
+    Existing ledgers retain their FIN/FAN kind when the source supplies both;
+    identity rotation still requires a signed current-source UPDATE and approval.
+    """
+    values = intake_identity(record, require_farmer=True)
+    preferred_field = "fayda_fin" if isinstance(preferred_identifier, str) and len(preferred_identifier) == 12 else "fayda_fan_id"
+    identifier = values.get(preferred_field) or values.get("fayda_fan_id") or values.get("fayda_fin")
+    return values["farmer_id"], identifier
+
+
+def matches_declared_identity(declared: Mapping, approved: Mapping) -> bool:
+    wanted = intake_identity(declared)
+    actual = intake_identity(approved, require_farmer=True)
+    return all(actual.get(field) == value for field, value in wanted.items())
+
+
 def validate_identity_fields(record: dict) -> None:
     """Normalize only fields present in a partial draft; never start onboarding.
 
     Blank draft fields stay blank. Final submission still needs the separate
     authenticated pair lookup and dependency service, not just format checks.
     """
-    for field, normalizer in (("farmer_id", normalize_farmer_id), ("fayda_fan_id", normalize_uid)):
+    for field, normalizer in (("farmer_id", normalize_farmer_id), ("fayda_fan_id", normalize_uid), ("fayda_fin", normalize_fin)):
         if field in record and record[field] not in (None, ""):
             record[field] = normalizer(record[field])
 
@@ -129,7 +173,8 @@ def merge_profile(approved: Mapping, proposed: Mapping) -> dict:
         raise FarmerReferenceError("FARMER_REFERENCE_FIELD_OUTSIDE_ALLOWLIST")
     result = {field: deepcopy(value) for field, value in approved.items() if field in PROFILE_FIELDS}
     result.update(deepcopy(dict(proposed)))
-    result["farmer_id"], result["fayda_fan_id"] = identity_pair(result.get("farmer_id"), result.get("fayda_fan_id"))
+    validate_identity_fields(result)
+    reference_identity(result)
     if any(field in proposed for field in NAME_FIELDS):
         parts = [result.get(field) for field in NAME_FIELDS]
         if any(value is not None and not isinstance(value, str) for value in parts):
@@ -150,10 +195,14 @@ def prepare_update(approved: Mapping, source: Mapping, *, expected_source_id: st
     if (type(applied_version) is not int or applied_version < 0 or
             type(fetched_version) is not int or fetched_version <= applied_version):
         raise FarmerReferenceError("FARMER_REFERENCE_STALE_SOURCE_VERSION")
-    if "farmer_id" not in source or "approved_uid" not in source:
+    if "farmer_id" not in source or not (source.get("approved_uid") or source.get("approved_fin")):
         raise FarmerReferenceError("FARMER_REFERENCE_SOURCE_IDENTITY_REQUIRED")
     # Farmer ID remains stable; an approved UID rotation is on the same source
     # person and must not change the local reference or recreate domain intakes.
     if normalize_farmer_id(source["farmer_id"]) != normalize_farmer_id(approved.get("farmer_id")):
         raise FarmerReferenceError("FARMER_REFERENCE_FARMER_ID_MISMATCH")
     return merge_profile(approved, local_profile(source))
+
+
+def model_identity(row) -> dict:
+    return {field: getattr(row, field, None) for field in IDENTITY_FIELDS}
