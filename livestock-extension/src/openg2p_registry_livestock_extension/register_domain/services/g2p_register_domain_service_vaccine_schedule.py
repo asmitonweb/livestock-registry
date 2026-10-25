@@ -20,6 +20,8 @@ _REQUIRED_FIELDS = {
 class G2PRegisterDomainServiceVaccineSchedule(AuditSnapshotMixin, G2PRegisterDomainService):
 
     async def validate_domain_attributes(self, records: list[dict]):
+        from .field_rules import validate_record_fields
+        await validate_record_fields(records, table=True)
         for record in records:
             self._validate_required_fields(record)
             self._validate_positive(record, "interval_days")

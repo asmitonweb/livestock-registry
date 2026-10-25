@@ -68,3 +68,61 @@ restore: 100 tables preserved through two additive migration passes. New files
 pass Ruff check/format; the pre-existing reference-module style findings remain
 outside this batch. Actual Kafka/AWE engine and restored real-environment
 acceptance are still NOT RUN.
+
+## A-05 / A-07: field patterns, person names and supplied dates
+
+Editable Farmer ID, FIN and FAN widgets use issuer patterns and translated
+problem-and-fix messages. FAN accepts compact or space-separated digits, and FIN
+and FAN stay separate. The FIN/FAN conditional requirement uses the pinned native
+widget operator `empty`; A-02's unsupported `isEmpty` spelling is corrected.
+Verify still needs no FIN on the main form.
+
+`register_domain/services/field_rules.py` checks supplied fields through every
+registered domain service's `validate_domain_attributes` entry point. It trims
+person-name/identifier whitespace; names allow letters, spaces, hyphens and
+apostrophes, have a 100-character bound and reject digits, underscores and emoji.
+Ethiopic names work, and explicitly Amharic fields require Ethiopic letters.
+Botanical, animal, coded-list and account-username fields keep their separate
+contracts. Livestock veterinary and AI-technician names are included. Table errors
+identify the row without echoing personal values. Only the native `edit_action:
+DELETE` contract skips these checks; legacy client delete flags cannot bypass them.
+
+All Date-typed domain fields reject supplied malformed dates and dates before
+Gregorian 1900, while optional blanks stay optional. Existing accepted display
+formats normalize to ISO GC. Registration's native `today` default remains valid.
+Birth/registration dates also reject future values; existing domain-specific
+chronology rules still run. Native date metadata supplies the matching minimum
+and past-only setting for those historical fields. The EC widget port and old EC
+string twins are separately tracked under A-06; this batch does not claim that
+calendar/UI work is complete.
+
+Managed Farmer CR snapshots trim the same name whitespace before the frozen
+payload is stored, preserving signed-response provenance and every other profile
+value. The normalized proposed value still needs native target approval.
+
+Translations run after native language-row creation, so the first installation
+and repeated seed agree. Existing custom message wording wins over defaults.
+The metadata rehearsal now exits with failure on SQL errors or differing repeated
+configuration, in addition to retaining the evidence JSON.
+
+`ci/refactor/widget_rules_probe.mjs` executes the pinned native widget package
+against effective metadata, with no compiled-asset edits. Run after the normal
+UI materialization/dependency step:
+
+```sh
+node ci/refactor/widget_rules_probe.mjs docs/refactor/new-dev/target-pass-1.json ui/staff-ui/.app/node_modules/@openg2p/registry-widgets/dist/index.esm.js
+```
+
+`evidence/field-widgets.json` records package version, hashes and actual native
+engine assertions. This establishes identity/name engine behavior and date-bound
+configuration. Browser blur/Next/CR interactions and live receiving acceptance
+remain NOT RUN. No receiving runtime or existing records changed in this batch.
+
+2026-10-25 Livestock A-05/A-07 verification: **160 fast native tests passed**, 82
+DB/HTTP-gated skips; the full isolated runner passes all **20 checks**, including
+all native CR, workflow HTTP, notification and signed lookup cases. Full metadata
+replay twice is identical with zero SQL errors. The pinned native widget engine
+passes **93 assertions** over six editable identity widgets, nine person-name
+widgets, 16 date-bound configurations and one conditional FAN widget. New Python
+files pass Ruff check/format. These are source/isolated checks; live receiving
+runtime/browser acceptance remains unrun.

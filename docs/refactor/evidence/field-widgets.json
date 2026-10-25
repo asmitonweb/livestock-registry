@@ -1,0 +1,14 @@
+{
+  "native_widget_version": "1.1.9-dev.13",
+  "metadata_sha256": "907b345f84f8bb9268166c91d4dadb812c247600b339396801d36cf8ce643137",
+  "assertions": 93,
+  "identity_widgets": 6,
+  "name_widgets": 9,
+  "date_bound_metadata": 16,
+  "conditional_fan_widgets": 1,
+  "native_engine_result": "PASS",
+  "browser_blur_next_and_cr": "NOT RUN",
+  "registry_runtime_changed": false,
+  "probe_sha256": "8067f5d492d60e506534d9c9158a3296453566f0661d1b196cdb04e80e9f088a",
+  "native_module_sha256": "7cad26691343201db273d263a30297c7937d7ae42406eac0f9619fad2a94635f"
+}

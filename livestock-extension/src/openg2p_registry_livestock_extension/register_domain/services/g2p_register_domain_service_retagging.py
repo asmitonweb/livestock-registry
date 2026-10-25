@@ -103,6 +103,8 @@ async def ear_tag_is_retired(ear_tag_id: str) -> bool:
 class G2PRegisterDomainServiceRetagging(AuditSnapshotMixin, G2PRegisterDomainService):
 
     async def validate_domain_attributes(self, records: list[dict]):
+        from .field_rules import validate_record_fields
+        await validate_record_fields(records, table=True)
         applied_ids = await self._applied_record_ids(records)
         seen_old: set[str] = set()
         seen_new: set[str] = set()

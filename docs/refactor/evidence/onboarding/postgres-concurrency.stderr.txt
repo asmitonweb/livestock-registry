@@ -1,4 +1,4 @@
-test_ambiguous_or_mismatched_existing_identity_fails_closed (test_farmer_reference_onboarding.OnboardingTests.test_ambiguous_or_mismatched_existing_identity_fails_closed) ... Executing <Task pending name='Task-1' coro=<OnboardingTests.asyncSetUp() running at /work/livestock-extension/tests/test_farmer_reference_onboarding.py:58> wait_for=<Future pending cb=[_chain_future.<locals>._call_check_cancel() at /usr/local/lib/python3.12/asyncio/futures.py:389, Task.task_wakeup()] created at /usr/local/lib/python3.12/asyncio/base_events.py:448> cb=[_run_until_complete_cb() at /usr/local/lib/python3.12/asyncio/base_events.py:181] created at /usr/local/lib/python3.12/asyncio/runners.py:100> took 0.122 seconds
+test_ambiguous_or_mismatched_existing_identity_fails_closed (test_farmer_reference_onboarding.OnboardingTests.test_ambiguous_or_mismatched_existing_identity_fails_closed) ... Executing <Task pending name='Task-1' coro=<OnboardingTests.asyncSetUp() running at /work/livestock-extension/tests/test_farmer_reference_onboarding.py:58> wait_for=<Future pending cb=[_chain_future.<locals>._call_check_cancel() at /usr/local/lib/python3.12/asyncio/futures.py:389, Task.task_wakeup()] created at /usr/local/lib/python3.12/asyncio/base_events.py:448> cb=[_run_until_complete_cb() at /usr/local/lib/python3.12/asyncio/base_events.py:181] created at /usr/local/lib/python3.12/asyncio/runners.py:100> took 0.123 seconds
 ok
 test_approval_releases_existing_dependency_without_recreating_intake (test_farmer_reference_onboarding.OnboardingTests.test_approval_releases_existing_dependency_without_recreating_intake) ... ok
 test_concurrent_duplicate_submission_and_restart_are_idempotent (test_farmer_reference_onboarding.OnboardingTests.test_concurrent_duplicate_submission_and_restart_are_idempotent) ... ok
@@ -11,11 +11,13 @@ test_no_draft_side_effect_and_pending_dependency_cannot_activate (test_farmer_re
 test_rejected_add_blocks_retries_and_other_submissions (test_farmer_reference_onboarding.OnboardingTests.test_rejected_add_blocks_retries_and_other_submissions) ... ok
 test_source_person_cannot_be_replaced_for_same_farmer_id (test_farmer_reference_onboarding.OnboardingTests.test_source_person_cannot_be_replaced_for_same_farmer_id) ... ok
 test_stale_pending_update_rechecked_after_newer_approval (test_farmer_reference_onboarding.OnboardingTests.test_stale_pending_update_rechecked_after_newer_approval) ... ok
-test_twenty_concurrent_submissions_reuse_one_reference_cr_and_outbox (test_farmer_reference_onboarding.OnboardingTests.test_twenty_concurrent_submissions_reuse_one_reference_cr_and_outbox) ... ok
+test_twenty_concurrent_submissions_reuse_one_reference_cr_and_outbox (test_farmer_reference_onboarding.OnboardingTests.test_twenty_concurrent_submissions_reuse_one_reference_cr_and_outbox) ... Executing <Task pending name='Task-304' coro=<OnboardingTests.submit() running at /work/livestock-extension/tests/test_farmer_reference_onboarding.py:78> wait_for=<Future pending cb=[BaseProtocol._on_waiter_completed(), Task.task_wakeup()] created at /usr/local/lib/python3.12/asyncio/base_events.py:448> cb=[gather.<locals>._done_callback() at /usr/local/lib/python3.12/asyncio/tasks.py:767] created at /usr/local/lib/python3.12/asyncio/tasks.py:695> took 0.169 seconds
+Executing <Task pending name='Task-296' coro=<OnboardingTests.submit() running at /work/livestock-extension/tests/test_farmer_reference_onboarding.py:78> wait_for=<Future pending cb=[BaseProtocol._on_waiter_completed(), Task.task_wakeup()] created at /usr/local/lib/python3.12/asyncio/base_events.py:448> cb=[gather.<locals>._done_callback() at /usr/local/lib/python3.12/asyncio/tasks.py:767] created at /usr/local/lib/python3.12/asyncio/tasks.py:695> took 0.109 seconds
+ok
 test_uid_rotation_requires_update_approval_before_new_domain_reuse (test_farmer_reference_onboarding.OnboardingTests.test_uid_rotation_requires_update_approval_before_new_domain_reuse) ... ok
 test_unreferenced_kafka_update_does_not_onboard (test_farmer_reference_onboarding.OnboardingTests.test_unreferenced_kafka_update_does_not_onboard) ... ok
 
 ----------------------------------------------------------------------
-Ran 15 tests in 17.445s
+Ran 15 tests in 15.333s
 
 OK

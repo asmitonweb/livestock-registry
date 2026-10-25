@@ -41,6 +41,8 @@ _CYCLE_WINDOW_DAYS = 21
 class G2PRegisterDomainServiceBreeding(AuditSnapshotMixin, G2PRegisterDomainService):
 
     async def validate_domain_attributes(self, records: list[dict]):
+        from .field_rules import validate_record_fields
+        await validate_record_fields(records, table=True)
         records = live_rows(records)
         # The platform hands us this section's rows with no submission context;
         # rows it has already saved carry their application_reference, which

@@ -104,6 +104,8 @@ class G2PRegisterDomainServiceAnimal(AuditSnapshotMixin, G2PRegisterDomainServic
         await refresh_total_animals(session, link)
 
     async def validate_domain_attributes(self, records: list[dict]):
+        from .field_rules import validate_record_fields
+        await validate_record_fields(records, table=True)
         records = live_rows(records)
         for record in records:
             # The dialog's Registration Date defaults to the literal string

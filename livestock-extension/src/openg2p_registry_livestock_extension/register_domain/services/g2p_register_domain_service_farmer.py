@@ -40,6 +40,8 @@ FARMER_REGISTER_ID = "f9c6a359-9563-5a43-b0fe-6c7e452037a3"
 class G2PRegisterDomainServiceFarmer(AuditSnapshotMixin, G2PRegisterDomainService):
 
     async def validate_domain_attributes(self, records: list[dict]):
+        from .field_rules import validate_record_fields
+        await validate_record_fields(records)
         for record in records:
             try:
                 validate_identity_fields(record)

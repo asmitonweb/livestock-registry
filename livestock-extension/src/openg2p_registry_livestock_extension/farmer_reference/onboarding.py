@@ -19,6 +19,13 @@ from .profile import FarmerReferenceError, reference_identity, intake_identity, 
 
 
 def _json_profile(profile: dict) -> dict:
+    # Canonical name whitespace belongs in the managed payload and its frozen
+    # snapshot, not just a throwaway validation copy. Signed response provenance
+    # still hashes the original authoritative response.
+    name_fields = {"farmer_name"} | {part + suffix for part in ("first_name", "middle_name", "last_name")
+                                   for suffix in ("", "_amh", "_other")}
+    profile = {field: value.strip() if field in name_fields and isinstance(value, str) else value
+               for field, value in profile.items()}
     return json.loads(json.dumps(profile, default=lambda value: value.isoformat() if isinstance(value, (date, datetime)) else _bad_value()))
 
 

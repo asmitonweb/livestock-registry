@@ -25,6 +25,6 @@ test_nested_standard_and_or_preserve_scope_intersection (test_farmer_reference_c
 test_standard_woreda_eq_and_in_have_finite_scopes (test_farmer_reference_contract.PublishedPolicyTests.test_standard_woreda_eq_and_in_have_finite_scopes) ... ok
 
 ----------------------------------------------------------------------
-Ran 25 tests in 0.009s
+Ran 25 tests in 0.007s
 
 OK

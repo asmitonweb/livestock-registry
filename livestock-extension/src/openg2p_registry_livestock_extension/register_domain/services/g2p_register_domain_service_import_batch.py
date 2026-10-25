@@ -12,6 +12,8 @@ _logger = logging.getLogger("g2p-register-domain-service")
 class G2PRegisterDomainServiceImportBatch(AuditSnapshotMixin, G2PRegisterDomainService):
 
     async def validate_domain_attributes(self, records: list[dict]):
+        from .field_rules import validate_record_fields
+        await validate_record_fields(records, table=True)
         for record in records:
             self._validate_row_counts(record)
 

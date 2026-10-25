@@ -71,6 +71,8 @@ def main(domain, pipeline=False):
         (output / "seed-rehearsal.json").write_text(json.dumps(proof,indent=2)+"\n",encoding="utf-8",newline="\n")
         print(json.dumps({"registry":domain,"repeat_metadata_identical":proof["repeat_metadata_identical"],
             "files_with_errors":len([step for step in steps if step["sqlstate_errors"]])}),flush=True)
+        if not proof["repeat_metadata_identical"] or any(step["sqlstate_errors"] or step["psql_exit_code"] for step in steps):
+            raise RuntimeError("Metadata rehearsal failed: SQL errors or non-identical repeated configuration; inspect seed-rehearsal.json")
     finally:
         if created_database:
             run("docker","rm","--force",database)

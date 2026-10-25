@@ -86,6 +86,8 @@ def _extension_models():
 class G2PRegisterDomainServiceLivestock(AuditSnapshotMixin, G2PRegisterDomainService):
 
     async def validate_domain_attributes(self, records: list[dict]):
+        from .field_rules import validate_record_fields
+        await validate_record_fields(records)
         from .identity_verification import OANRegistrantAuthenticationService
         verifier = OANRegistrantAuthenticationService.get_component()
         if verifier:
