@@ -30,6 +30,11 @@ permissions:
   contents: write
   packages: write
 
+# One run at a time: two concurrent mirrors race on the force-push ("cannot lock ref").
+concurrency:
+  group: oan-images
+  cancel-in-progress: false
+
 jobs:
   mirror:
     runs-on: ubuntu-latest
