@@ -1,0 +1,102 @@
+# For a personal fork of a COSS repository, when the organisation's packages cannot be
+# made public (only repository admins get admin on an org package).
+#
+# Lives on a dedicated branch of the fork (`oan-ci`, the fork's default branch so the schedule
+# runs; ci/install-fork-workflow.sh in oan-developer writes it, filling in the env block and the
+# matrix below). It never commits to the mirrored branches:
+#   mirror  force-pushes the upstream MIRROR_BRANCH (and `staging` when it exists) into the fork
+#   images  builds the images from upstream MIRROR_BRANCH and pushes them to the fork owner's
+#           GHCR:  ghcr.io/<owner>/<product>/<role>:latest | :<branch> | :<12-char sha>
+# Nothing is rebuilt when upstream has not moved (the <sha> tag already exists), so the hourly
+# run is a few seconds long most of the time.
+# Make each package public once (Package settings → Change visibility); pushes keep it.
+name: Mirror COSS and publish OAN images
+
+on:
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+  push:
+    branches: [oan-ci]
+
+env:
+  UPSTREAM: Centre-for-Open-Societal-Systems/livestock-registry
+  # image path segment used by the charts: ghcr.io/<owner>/<PRODUCT>/<role>
+  PRODUCT: livestock-registry
+  # upstream branch that is mirrored and built (develop everywhere: main is a stub in most repos)
+  MIRROR_BRANCH: develop
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    outputs:
+      sha12: ${{ steps.up.outputs.sha12 }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - id: up
+        name: Mirror upstream branches into this fork
+        run: |
+          git remote add upstream "https://github.com/${UPSTREAM}.git"
+          git fetch --no-tags upstream "$MIRROR_BRANCH"
+          git push --force origin "refs/remotes/upstream/$MIRROR_BRANCH:refs/heads/$MIRROR_BRANCH"
+          if git fetch --no-tags upstream staging 2>/dev/null; then
+            git push --force origin refs/remotes/upstream/staging:refs/heads/staging
+          fi
+          sha=$(git rev-parse "refs/remotes/upstream/$MIRROR_BRANCH")
+          echo "sha12=${sha:0:12}" >> "$GITHUB_OUTPUT"
+          echo "upstream $MIRROR_BRANCH at ${sha:0:12}"
+
+  images:
+    needs: mirror
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # role: image name segment; dockerfile: path in the upstream repo; context: build context
+        include:
+          - { role: staff-api, dockerfile: docker/staff-api/Dockerfile, context: . }
+          - { role: partner-api, dockerfile: docker/partner-api/Dockerfile, context: . }
+          - { role: celery, dockerfile: docker/celery/Dockerfile, context: . }
+          - { role: db-seed, dockerfile: docker/db-seed/Dockerfile, context: . }
+          - { role: staff-ui, dockerfile: docker/staff-ui/Dockerfile, context: . }
+    steps:
+      - uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: meta
+        shell: bash
+        run: |
+          owner=$(tr '[:upper:]' '[:lower:]' <<<"${{ github.repository_owner }}")
+          image="ghcr.io/$owner/$PRODUCT/${{ matrix.role }}"
+          echo "image=$image" >> "$GITHUB_OUTPUT"
+          # Already published for this upstream commit (and this is not a manual run): nothing to do.
+          if [ "${{ github.event_name }}" != workflow_dispatch ] && docker manifest inspect "$image:${{ needs.mirror.outputs.sha12 }}" >/dev/null 2>&1; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.meta.outputs.skip != 'true'
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ env.UPSTREAM }}
+          ref: ${{ env.MIRROR_BRANCH }}
+      - if: steps.meta.outputs.skip != 'true'
+        uses: docker/setup-buildx-action@v4
+      - if: steps.meta.outputs.skip != 'true'
+        uses: docker/build-push-action@v7
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.dockerfile }}
+          push: true
+          tags: |
+            ${{ steps.meta.outputs.image }}:latest
+            ${{ steps.meta.outputs.image }}:${{ env.MIRROR_BRANCH }}
+            ${{ steps.meta.outputs.image }}:${{ needs.mirror.outputs.sha12 }}
+          cache-from: type=gha,scope=${{ matrix.role }}
+          cache-to: type=gha,scope=${{ matrix.role }},mode=max
