@@ -39,6 +39,7 @@ jobs:
   mirror:
     runs-on: ubuntu-latest
     outputs:
+      sha: ${{ steps.up.outputs.sha }}
       sha12: ${{ steps.up.outputs.sha12 }}
     steps:
       - uses: actions/checkout@v7
@@ -46,16 +47,20 @@ jobs:
           fetch-depth: 0
       - id: up
         name: Mirror upstream branches into this fork
+        # A refused push (GITHUB_TOKEN may not update .github/workflows files that changed upstream)
+        # is reported, not fatal: the images are built from upstream directly, not from the mirror.
         run: |
           git remote add upstream "https://github.com/${UPSTREAM}.git"
           git fetch --no-tags upstream "$MIRROR_BRANCH"
-          git push --force origin "refs/remotes/upstream/$MIRROR_BRANCH:refs/heads/$MIRROR_BRANCH"
-          if git fetch --no-tags upstream staging 2>/dev/null; then
-            git push --force origin refs/remotes/upstream/staging:refs/heads/staging
-          fi
           sha=$(git rev-parse "refs/remotes/upstream/$MIRROR_BRANCH")
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
           echo "sha12=${sha:0:12}" >> "$GITHUB_OUTPUT"
           echo "upstream $MIRROR_BRANCH at ${sha:0:12}"
+          git push --force origin "refs/remotes/upstream/$MIRROR_BRANCH:refs/heads/$MIRROR_BRANCH" \
+            || echo "::warning::could not mirror $MIRROR_BRANCH into this fork (workflow files changed upstream?); images are still built"
+          if git fetch --no-tags upstream staging 2>/dev/null; then
+            git push --force origin refs/remotes/upstream/staging:refs/heads/staging || echo "::warning::could not mirror staging"
+          fi
 
   images:
     needs: mirror
@@ -90,7 +95,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: ${{ env.UPSTREAM }}
-          ref: ${{ env.MIRROR_BRANCH }}
+          ref: ${{ needs.mirror.outputs.sha }}
       - if: steps.meta.outputs.skip != 'true'
         uses: docker/setup-buildx-action@v4
       - if: steps.meta.outputs.skip != 'true'
